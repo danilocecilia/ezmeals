@@ -1,10 +1,17 @@
 import { Button } from '@components/ui/button'
 import { GraduationCap } from 'lucide-react'
 import Link from 'next/link'
+import { auth } from '@root/auth'
+import { UserNav } from '@root/components/user-nav'
 
-export default function Home() {
+export const Home = async () => {
+  const session = await auth()
+
+  const user = session?.user
+
   return (
     <main className="max-w-7xl container mx-auto my-12 space-y-10">
+      <UserNav user={user} />
       <aside className="space-y-2">
         <span className="block text-4xl font-bold bg-gradient-to-r from-foreground/80 via-foreground/70 to-foreground/90 text-transparent bg-clip-text">
           Welcome to this{' '}
@@ -28,3 +35,5 @@ export default function Home() {
     </main>
   )
 }
+
+export default Home
