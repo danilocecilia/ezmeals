@@ -62,8 +62,11 @@ export function UserNav({ user }) {
           </DropdownMenuContent>
         </DropdownMenu>
       ) : (
-        <Button>
-          <Mail className="mr-2 h-4 w-4" /> Login with Email
+        <Button asChild>
+          <span>
+            <Mail className="mr-2 h-4 w-4" />
+            <Link href="/login">Login with Email</Link>
+          </span>
         </Button>
       )}
     </>

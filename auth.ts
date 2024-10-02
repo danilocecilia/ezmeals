@@ -26,8 +26,13 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           .collection('users')
           .findOne({ email: credentials?.email })
 
+        if (!user) {
+          console.error('User not found')
+          return null // or throw an error
+        }
+
         // eslint-disable-next-line @typescript-eslint/no-require-imports
-        const bcrypt = require('bcrypt')
+        const bcrypt = require('bcryptjs')
 
         const passwordCorrect = await bcrypt.compare(
           credentials?.password,
@@ -37,11 +42,15 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         if (passwordCorrect) {
           return {
             id: user?._id,
+            name: user?.name,
             email: user?.email,
+            address: user?.address,
+            city: user?.city,
+            postal_code: user?.postal_code,
+            province: user?.province,
+            phone: user?.phone,
           }
         }
-
-        console.log('credentials', credentials)
         return null
       },
     }),
@@ -50,9 +59,24 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   callbacks: {
     jwt: async ({ user, token, trigger, session }) => {
       if (trigger === 'update') {
-        return { ...token, ...session.user }
+        return { ...token, ...session }
       }
-      return { ...token, ...user }
+      return { ...token, user: user || token.user }
+    },
+    session: async ({ session, token }) => {
+      return {
+        ...session,
+        token: {
+          sub: token.sub,
+          iat: token.iat,
+          exp: token.exp,
+          jti: token.jti,
+        },
+        user: {
+          ...(typeof token.user === 'object' ? token.user : {}),
+          image: session.user?.image || '',
+        },
+      }
     },
   },
 })
