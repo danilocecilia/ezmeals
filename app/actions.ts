@@ -1,26 +1,26 @@
-'use server'
-import { signIn, signOut } from '@root/auth'
+'use server';
+import { signIn, signOut } from '@root/auth';
 
 export const signInWithGoogle = async () => {
-  await signIn('google')
-}
+  await signIn('google');
+};
 
 export const signinWithGitHub = async () => {
-  await signIn('github')
-}
+  await signIn('github');
+};
 
 export const signout = async () => {
-  await signOut()
-}
+  await signOut();
+};
 
 export const signInWithCreds = async (
   email: string,
   password: string,
   redirect: boolean = false
 ) => {
-  await signIn('credentials', {
+  return await signIn('credentials', {
     email,
     password,
-    redirect,
-  })
-}
+    redirect
+  });
+};

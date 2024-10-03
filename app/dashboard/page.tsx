@@ -1,16 +1,16 @@
-import React from 'react'
-import { redirect } from 'next/navigation'
-import DashboardForm from './Form'
-import { auth } from '@root/auth'
+import { auth } from '@root/auth';
+import { redirect } from 'next/navigation';
+
+import DashboardForm from './Form';
 
 const page = async () => {
-  const session = await auth()
+  const session = await auth();
 
   if (!session) {
-    redirect('/login')
+    redirect('/login');
   }
 
-  const user = session?.user
+  const user = session?.user;
 
   return (
     <main className="max-w-7xl mx-auto my-12 space-y-5 container">
@@ -19,7 +19,7 @@ const page = async () => {
       </h1>
       <DashboardForm email={session?.user?.email as string} />
     </main>
-  )
-}
+  );
+};
 
-export default page
+export default page;

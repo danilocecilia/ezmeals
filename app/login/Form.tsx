@@ -1,70 +1,71 @@
-'use client'
-
-import React from 'react'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-
-import { Button } from '@components/ui/button'
+'use client';
+import { Button } from '@components/ui/button';
 import {
   Form,
   FormControl,
-  // FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
-} from '@components/ui/form'
-import { Input } from '@components/ui/input'
-import { toast } from 'sonner'
-import Link from 'next/link'
-// import { signIn } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
-import Image from 'next/image'
-import { Label } from '@components/ui/label'
-import { signInWithCreds, signInWithGoogle } from '../actions'
+  FormMessage
+} from '@components/ui/form';
+import { Input } from '@components/ui/input';
+import { Label } from '@components/ui/label';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useCurrentSession } from '@hooks/useCurrentSession';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
+
+import { signInWithCreds, signInWithGoogle } from '../actions';
 
 const formSchema = z.object({
   email: z
     .string()
     .min(1, {
-      message: 'This field has to be filled.',
+      message: 'This field has to be filled.'
     })
     .email('This is not a valid email')
     .max(300, {
-      message: "Password can't be longer than 300 characters.",
+      message: "Password can't be longer than 300 characters."
     }),
   password: z
     .string()
-    .min(6, { message: 'Password has to be at least 6 characters long.' }),
-})
+    .min(6, { message: 'Password has to be at least 6 characters long.' })
+});
 
 const LoginForm = () => {
+  const { session } = useCurrentSession();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {},
-  })
+    defaultValues: {}
+  });
 
-  const router = useRouter()
+  const router = useRouter();
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const response = (await signInWithCreds(
       values.email,
       values.password
-    )) as any
+    )) as any;
+
+    session?.update();
 
     if (response?.error) {
       toast.error('Error', {
-        description: 'Invalid credentials, please try again',
-      })
-      return
+        description: 'Invalid credentials, please try again'
+      });
+      return;
     }
 
     if (!response?.error) {
-      router.push('/dashboard')
+      router.push('/dashboard');
     }
 
-    toast.success('You are now signed in!')
+    toast.success('You are now signed in!');
   }
 
   return (
@@ -110,7 +111,8 @@ const LoginForm = () => {
                             <Label htmlFor="password">Password</Label>
                             <Link
                               href="/forgot-password"
-                              className="ml-auto inline-block text-sm underline">
+                              className="ml-auto inline-block text-sm underline"
+                            >
                               Forgot your password?
                             </Link>
                           </div>
@@ -128,11 +130,12 @@ const LoginForm = () => {
                 </Button>
                 <Button
                   onClick={(e) => {
-                    e.preventDefault()
-                    signInWithGoogle()
+                    e.preventDefault();
+                    signInWithGoogle();
                   }}
                   variant="outline"
-                  className="w-full">
+                  className="w-full"
+                >
                   Login with Google
                 </Button>
               </div>
@@ -156,7 +159,7 @@ const LoginForm = () => {
         </div>
       </form>
     </Form>
-  )
-}
+  );
+};
 
-export default LoginForm
+export default LoginForm;

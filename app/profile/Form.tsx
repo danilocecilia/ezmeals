@@ -1,12 +1,14 @@
-'use client'
+'use client';
 
-import React from 'react'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { Check, ChevronsUpDown } from 'lucide-react'
-import { Button } from '@components/ui/button'
-import { cn } from '@lib/utils'
+import { Button } from '@components/ui/button';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList
+} from '@components/ui/command';
 import {
   Form,
   FormControl,
@@ -14,36 +16,33 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
-} from '@components/ui/form'
-import { useSession } from 'next-auth/react'
-import { reloadSession } from '@lib/funcs'
-import { Input } from '@components/ui/input'
-import { toast } from 'sonner'
-// import Link from 'next/link'
-// import { signIn } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
-// import Image from 'next/image'
-// import { Label } from '@components/ui/label'
-// import { updateUserProfile } from '@/api/updateProfile/updateProfile'
-import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'
-import { isValidPhoneNumber } from 'react-phone-number-input'
+  FormMessage
+} from '@components/ui/form';
+import { Input } from '@components/ui/input';
+import { PhoneInput } from '@components/ui/phone-input';
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@components/ui/command'
-import { PhoneInput } from '@components/ui/phone-input'
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from '@components/ui/popover';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { reloadSession } from '@lib/funcs';
+import { cn } from '@lib/utils';
+import { Check, ChevronsUpDown } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { isValidPhoneNumber } from 'react-phone-number-input';
+import { toast } from 'sonner';
+import { z } from 'zod';
 
 const formSchema = z.object({
   full_name: z.string(),
   phone_number: z
     .string()
     .refine((val) => val === '' || isValidPhoneNumber(val), {
-      message: 'Invalid phone number',
+      message: 'Invalid phone number'
     })
     .optional(),
   address: z.string().optional(),
@@ -51,9 +50,9 @@ const formSchema = z.object({
   city: z.string().optional(),
   province: z.string().optional(),
   email: z.string().email('This is not a valid email').max(300, {
-    message: "Email can't be longer than 300 characters.",
-  }),
-})
+    message: "Email can't be longer than 300 characters."
+  })
+});
 
 const provinces = [
   { label: 'Alberta', value: 'AB' },
@@ -68,11 +67,11 @@ const provinces = [
   { label: 'Prince Edward Island', value: 'PE' },
   { label: 'Quebec', value: 'QC' },
   { label: 'Saskatchewan', value: 'SK' },
-  { label: 'Yukon', value: 'YT' },
-] as const
+  { label: 'Yukon', value: 'YT' }
+] as const;
 
 const ProfileForm = ({ user }) => {
-  const { data: session, update } = useSession()
+  const { data: session, update } = useSession();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -83,48 +82,47 @@ const ProfileForm = ({ user }) => {
       address: user?.address,
       city: user?.city,
       postal_code: user?.postal_code,
-      province: user?.province,
-    },
-  })
+      province: user?.province
+    }
+  });
 
-  const router = useRouter()
+  const router = useRouter();
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const response = await fetch(`/api/updateProfile`, {
       method: 'POST',
-      body: JSON.stringify(values),
-    })
+      body: JSON.stringify(values)
+    });
 
     if (!response.ok) {
       toast.error('Error', {
-        description: 'Failed to update profile, please try again',
-      })
-      return
+        description: 'Failed to update profile, please try again'
+      });
+      return;
     }
 
-    const responseData = await response.json()
+    const responseData = await response.json();
 
     if (responseData?.error) {
       toast.error('Error', {
-        description: 'Invalid credentials, please try again',
-      })
-      return
+        description: 'Invalid credentials, please try again'
+      });
+      return;
     }
 
-    const newSession = await update({
+    await update({
       ...session,
       user: {
         ...values,
         name: values.full_name,
-        phone: values.phone_number,
-      },
-    })
+        phone: values.phone_number
+      }
+    });
 
-    reloadSession()
-    router.refresh()
-    console.log('newSession', newSession)
+    reloadSession();
+    router.refresh();
 
-    toast.success('You are now signed in!')
+    toast.success('Profile updated successfully');
   }
 
   return (
@@ -259,7 +257,8 @@ const ProfileForm = ({ user }) => {
                               className={cn(
                                 'w-[200px] justify-between',
                                 !field.value && 'text-muted-foreground'
-                              )}>
+                              )}
+                            >
                               {field.value
                                 ? provinces.find(
                                     (province) => province.value === field.value
@@ -280,8 +279,9 @@ const ProfileForm = ({ user }) => {
                                     value={province.label}
                                     key={province.value}
                                     onSelect={() => {
-                                      form.setValue('province', province.value)
-                                    }}>
+                                      form.setValue('province', province.value);
+                                    }}
+                                  >
                                     <Check
                                       className={cn(
                                         'mr-2 h-4 w-4',
@@ -312,7 +312,7 @@ const ProfileForm = ({ user }) => {
         </div>
       </form>
     </Form>
-  )
-}
+  );
+};
 
-export default ProfileForm
+export default ProfileForm;

@@ -1,13 +1,13 @@
-"use client"
+'use client';
 
-import React from 'react'
-import { DropdownMenuItem } from './ui/dropdown-menu'
-import { signout } from '@/app/actions'
+import React from 'react';
+
+import { DropdownMenuItem } from './ui/dropdown-menu';
+
+import { signout } from '@/actions';
 
 const SignOutButton = () => {
-  return (
-    <DropdownMenuItem onClick={() => signout()}>Logout</DropdownMenuItem>
-  )
-}
+  return <DropdownMenuItem onClick={() => signout()}>Logout</DropdownMenuItem>;
+};
 
-export default SignOutButton
+export default SignOutButton;

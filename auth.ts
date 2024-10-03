@@ -1,13 +1,14 @@
-import NextAuth from 'next-auth'
-import GitHub from 'next-auth/providers/github'
-import Google from 'next-auth/providers/google'
-import Credentials from 'next-auth/providers/credentials'
-import clientPromise from '@lib/mongodb'
-import { MongoDBAdapter } from '@auth/mongodb-adapter'
+import { MongoDBAdapter } from '@auth/mongodb-adapter';
+import clientPromise from '@lib/mongodb';
+import { Db } from 'mongodb';
+import NextAuth from 'next-auth';
+import Credentials from 'next-auth/providers/credentials';
+import GitHub from 'next-auth/providers/github';
+import Google from 'next-auth/providers/google';
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   session: {
-    strategy: 'jwt',
+    strategy: 'jwt'
   },
   providers: [
     GitHub,
@@ -16,52 +17,53 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       name: 'Credentials',
       credentials: {
         email: {},
-        password: {},
+        password: {}
       },
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       async authorize(credentials, req) {
-        const client = await clientPromise
-        const db = client.db() as any
+        const client = await clientPromise;
+        const db = client.db() as Db;
 
         const user = await db
           .collection('users')
-          .findOne({ email: credentials?.email })
+          .findOne({ email: credentials?.email });
 
         if (!user) {
-          console.error('User not found')
-          return null // or throw an error
+          console.error('User not found');
+          return null; // or throw an error
         }
 
         // eslint-disable-next-line @typescript-eslint/no-require-imports
-        const bcrypt = require('bcryptjs')
+        const bcrypt = require('bcryptjs');
 
         const passwordCorrect = await bcrypt.compare(
           credentials?.password,
           user?.password
-        )
+        );
 
         if (passwordCorrect) {
           return {
-            id: user?._id,
+            id: user?._id.toString(),
             name: user?.name,
             email: user?.email,
             address: user?.address,
             city: user?.city,
             postal_code: user?.postal_code,
             province: user?.province,
-            phone: user?.phone,
-          }
+            phone: user?.phone
+          };
         }
-        return null
-      },
-    }),
+        return null;
+      }
+    })
   ],
   adapter: MongoDBAdapter(clientPromise),
   callbacks: {
     jwt: async ({ user, token, trigger, session }) => {
       if (trigger === 'update') {
-        return { ...token, ...session }
+        return { ...token, ...session };
       }
-      return { ...token, user: user || token.user }
+      return { ...token, user: user || token.user };
     },
     session: async ({ session, token }) => {
       return {
@@ -70,13 +72,13 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           sub: token.sub,
           iat: token.iat,
           exp: token.exp,
-          jti: token.jti,
+          jti: token.jti
         },
         user: {
           ...(typeof token.user === 'object' ? token.user : {}),
-          image: session.user?.image || '',
-        },
-      }
-    },
-  },
-})
+          image: session.user?.image || ''
+        }
+      };
+    }
+  }
+});

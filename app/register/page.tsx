@@ -1,13 +1,14 @@
-import React from 'react'
-import { redirect } from 'next/navigation'
-import RegisterForm from './Form'
-import { auth } from '@root/auth'
+import { auth } from '@root/auth';
+import { redirect } from 'next/navigation';
+import React from 'react';
+
+import RegisterForm from './Form';
 
 const page = async () => {
-  const session = await auth()
+  const session = await auth();
 
   if (session) {
-    redirect('/')
+    redirect('/');
   }
 
   return (
@@ -16,7 +17,7 @@ const page = async () => {
         <RegisterForm />
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default page
+export default page;

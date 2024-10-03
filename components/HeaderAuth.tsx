@@ -1,49 +1,59 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar'
-import { Button } from '@components/ui/button'
-import Link from 'next/link'
+import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
+import Link from 'next/link';
+import React from 'react';
+
+import SignOutButton from './SignOutButton';
+import { Button } from './ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from '@components/ui/dropdown-menu'
-import { Mail } from 'lucide-react'
+  DropdownMenuGroup,
+  DropdownMenuShortcut
+} from './ui/dropdown-menu';
 
-export function UserNav({ user }) {
+const HeaderAuth: React.FC = ({ session, status }) => {
   return (
-    <>
-      {user ? (
+    <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
+      <form className="ml-auto flex-1 sm:flex-initial"></form>
+      {status !== 'unauthenticated' && session ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-8 w-8 rounded-full">
               <Avatar className="h-8 w-8">
                 <AvatarImage
                   src="https://github.com/shadcn.png"
-                  alt="@shadcn"
+                  alt={`@${session?.user?.name}`}
                 />
-                <AvatarFallback>SC</AvatarFallback>
+                <AvatarFallback>
+                  {session.user?.name?.slice(0, 2) ||
+                    session.user?.email?.slice(0, 2)}
+                </AvatarFallback>
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56" align="end" forceMount>
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">shadcn</p>
+                <p className="text-sm font-medium leading-none">
+                  {session.user?.name}
+                </p>
                 <p className="text-xs leading-none text-muted-foreground">
-                  {user.email}
+                  {session.user?.email}
                 </p>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Link href="/profile">Profile</Link>
-                <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-              </DropdownMenuItem>
+              <Link href="/profile">
+                <DropdownMenuItem>
+                  Profile
+                  <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                </DropdownMenuItem>
+              </Link>
               <DropdownMenuItem>
                 Billing
                 <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
@@ -52,23 +62,21 @@ export function UserNav({ user }) {
                 Settings
                 <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
               </DropdownMenuItem>
-              <DropdownMenuItem>New Team</DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              Log out
+              <SignOutButton />
               <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       ) : (
         <Button asChild>
-          <span>
-            <Mail className="mr-2 h-4 w-4" />
-            <Link href="/login">Login with Email</Link>
-          </span>
+          <Link href={`/login`}>Sign in</Link>
         </Button>
       )}
-    </>
-  )
-}
+    </div>
+  );
+};
+
+export default HeaderAuth;

@@ -1,15 +1,14 @@
-import React from 'react'
-import { redirect } from 'next/navigation'
-// import RegisterForm from './Form'
-import LoginForm from './Form'
-import { auth } from '@root/auth'
-// import GoogleLoginButton from '@components/oauth/GoogleLoginButton'
+import { auth } from '@root/auth';
+import { redirect } from 'next/navigation';
+import React from 'react';
+
+import LoginForm from './Form';
 
 const page = async () => {
-  const session = await auth()
+  const session = await auth();
 
   if (session) {
-    redirect('/dashboard')
+    redirect('/dashboard');
   }
 
   return (
@@ -18,7 +17,7 @@ const page = async () => {
         <LoginForm />
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default page
+export default page;
