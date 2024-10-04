@@ -64,10 +64,7 @@ const HeaderAuth: React.FC = ({ session, status }) => {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <SignOutButton />
-              <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-            </DropdownMenuItem>
+            <SignOutButton></SignOutButton>
           </DropdownMenuContent>
         </DropdownMenu>
       ) : (

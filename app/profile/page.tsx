@@ -8,7 +8,7 @@ const UserProfile = async () => {
 
   const user = session?.user;
   return (
-    <div className="user-profile">
+    <div className="px-4">
       <ProfileForm user={user} />
     </div>
   );

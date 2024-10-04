@@ -1,5 +1,6 @@
 'use client';
 
+import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
 import { Button } from '@components/ui/button';
 import {
   Command,
@@ -12,7 +13,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -29,6 +29,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { reloadSession } from '@lib/funcs';
 import { cn } from '@lib/utils';
 import { Check, ChevronsUpDown } from 'lucide-react';
+import { redirect } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import React from 'react';
@@ -71,6 +72,11 @@ const provinces = [
 ] as const;
 
 const ProfileForm = ({ user }) => {
+  if (!user) {
+    redirect('/login');
+  }
+
+  console.log('🚀 ~ ProfileForm ~ user:', user);
   const { data: session, update } = useSession();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -130,8 +136,27 @@ const ProfileForm = ({ user }) => {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="flex items-center justify-center py-12">
           <div className="mx-auto grid w-[400px] gap-6">
-            <div className="grid gap-2 text-center">
-              <h1 className="text-3xl font-bold">Edit Profile</h1>
+            <div className="grid grid-cols-2 gap-8 space-between max-w-[300px] justify-self-center mb-10">
+              <Avatar className="h-28 w-28 justify-self-center">
+                <AvatarImage
+                  src="https://github.com/shadcn.png"
+                  alt={`@${user?.name}`}
+                />
+
+                <AvatarFallback>
+                  {user?.name?.slice(0, 2).toUpperCase() ||
+                    user?.email?.slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+
+              <div className="flex flex-col justify-center">
+                <div className="text-xl font-semibold">{user?.name}</div>
+                <div>
+                  {user?.city && user.province
+                    ? `${user.city}, ${user.province}`
+                    : ''}
+                </div>
+              </div>
             </div>
             <div className="grid gap-6">
               <div className="grid gap-2">
@@ -255,7 +280,7 @@ const ProfileForm = ({ user }) => {
                               variant="outline"
                               role="combobox"
                               className={cn(
-                                'w-[200px] justify-between',
+                                'w-[170px] sm:w-[200px] md:w-[200px] justify-between',
                                 !field.value && 'text-muted-foreground'
                               )}
                             >

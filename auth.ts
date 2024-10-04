@@ -50,7 +50,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             city: user?.city,
             postal_code: user?.postal_code,
             province: user?.province,
-            phone: user?.phone
+            phone: user?.phone,
+            image: user?.image
           };
         }
         return null;
