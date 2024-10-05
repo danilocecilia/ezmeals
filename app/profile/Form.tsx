@@ -76,7 +76,6 @@ const ProfileForm = ({ user }) => {
     redirect('/login');
   }
 
-  console.log('🚀 ~ ProfileForm ~ user:', user);
   const { data: session, update } = useSession();
 
   const form = useForm<z.infer<typeof formSchema>>({

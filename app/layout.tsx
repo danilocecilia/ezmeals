@@ -37,9 +37,11 @@ export default async function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <Navbar />
-          {children}
-          <Toaster />
+          <div className="container mx-auto">
+            <Navbar />
+            {children}
+            <Toaster />
+          </div>
         </body>
       </html>
     </SessionWrapper>
