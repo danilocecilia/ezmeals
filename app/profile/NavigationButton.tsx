@@ -8,7 +8,7 @@ interface NavigationButtonProps {
   type: IconType;
   title: string;
   isSelected: boolean;
-  onClick: (type: string) => void;
+  onClick: (type: IconType) => void;
 }
 
 const NavigationButton = (props: NavigationButtonProps) => {

@@ -4,10 +4,21 @@ import { useState, useEffect } from 'react';
 
 import ProfileForm from './Form';
 import NavigationButton from './NavigationButton';
+import Orders from './Orders';
 
+type IconType = 'profile' | 'orders';
+interface UserProps {
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  postal_code: string;
+  province: string;
+}
 const UserProfile = () => {
   const [selectedSection, setSelectedSection] = useState('profile');
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<UserProps | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -30,12 +41,12 @@ const UserProfile = () => {
     fetchSession();
   }, []);
 
-  const sections = [
+  const sections: { type: IconType; title: string }[] = [
     { type: 'profile', title: 'User Profile' },
     { type: 'orders', title: 'Orders' }
   ];
 
-  const handleNavigationClick = (type: string) => {
+  const handleNavigationClick = (type: IconType) => {
     setSelectedSection(type);
   };
 
@@ -61,7 +72,8 @@ const UserProfile = () => {
             />
           ))}
         </div>
-        <ProfileForm user={user} />
+        {user && <ProfileForm user={user} />}
+        {<Orders />}
       </div>
     </div>
   );
