@@ -71,7 +71,17 @@ const provinces = [
   { label: 'Yukon', value: 'YT' }
 ] as const;
 
-const ProfileForm = ({ user }) => {
+interface UserProps {
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  postal_code: string;
+  province: string;
+}
+
+const ProfileForm = ({ user }: { user: UserProps }) => {
   if (!user) {
     redirect('/login');
   }
