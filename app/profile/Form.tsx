@@ -38,6 +38,8 @@ import { isValidPhoneNumber } from 'react-phone-number-input';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
+import { UserProps } from '@/interfaces/UserInterfaces';
+
 const formSchema = z.object({
   full_name: z.string(),
   phone_number: z
@@ -70,16 +72,6 @@ const provinces = [
   { label: 'Saskatchewan', value: 'SK' },
   { label: 'Yukon', value: 'YT' }
 ] as const;
-
-interface UserProps {
-  name: string;
-  email: string;
-  phone: string;
-  address: string;
-  city: string;
-  postal_code: string;
-  province: string;
-}
 
 const ProfileForm = ({ user }: { user: UserProps }) => {
   if (!user) {

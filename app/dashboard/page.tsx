@@ -5,6 +5,7 @@ import DashboardForm from './Form';
 
 const page = async () => {
   const session = await auth();
+  console.log('🚀 ~ page ~ session:', session);
 
   if (!session) {
     redirect('/login');
