@@ -1,6 +1,6 @@
 interface BaseUser {
-  name?: string | null;
-  email?: string | null;
+  name?: string | undefined;
+  email?: string | undefined;
 }
 
 interface User extends Partial<BaseUser> {

@@ -13,7 +13,7 @@ export default async function handler(
     const { status } = req.body;
 
     const client = await clientPromise;
-    const db = client.db('yourdbname');
+    const db = client.db();
 
     // Update order
     try {

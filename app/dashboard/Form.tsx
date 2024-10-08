@@ -12,12 +12,12 @@ import {
 } from '@components/ui/form';
 import { Input } from '@components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
-// import { toast } from 'sonner'
 import { reloadSession } from '@lib/funcs';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 const formSchema = z.object({
@@ -52,7 +52,7 @@ const DashboardForm = ({ email }: { email: string }) => {
     const data = await response.json();
 
     if (data.error) {
-      // toast.error(data.error)
+      toast.error(data.error);
       return;
     }
 
@@ -67,7 +67,7 @@ const DashboardForm = ({ email }: { email: string }) => {
     reloadSession();
     router.refresh();
 
-    // toast.success('Email changed!')
+    toast.success('Email changed!');
   }
 
   return (

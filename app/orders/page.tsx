@@ -1,14 +1,22 @@
-import React from 'react';
+import { Orders, columns } from './Columns';
+import { DataTable } from './DataTable';
 
-const OrdersPage: React.FC = () => {
+async function getData(): Promise<Orders[]> {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/admin/orders/getAll`
+  );
+  console.log('response:', response);
+  const data = await response.json();
+  return data;
+}
+
+export default async function OrdersPage() {
+  const data = await getData();
+  console.log('🚀 ~ OrdersPage ~ data:', data.orders);
+
   return (
-    <div>
-      <h1>Orders</h1>
-      <p>
-        Welcome to the Orders page. Here you can view and manage your orders.
-      </p>
+    <div className="container mx-auto py-10">
+      <DataTable columns={columns} data={data?.orders} />
     </div>
   );
-};
-
-export default OrdersPage;
+}

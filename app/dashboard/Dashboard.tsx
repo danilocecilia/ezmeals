@@ -33,7 +33,7 @@ import {
   useReactTable
 } from '@tanstack/react-table';
 import { ArrowUpDownIcon, ChevronDownIcon, EllipsisIcon } from 'lucide-react';
-import * as React from 'react';
+import { useState, useEffect } from 'react';
 
 const data: Payment[] = [
   {
@@ -167,13 +167,11 @@ export const columns: ColumnDef<Payment>[] = [
 ];
 
 export function DataTableDemo() {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
+  const [orders, setOrders] = useState([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
 
   const table = useReactTable({
     data,
@@ -193,6 +191,22 @@ export function DataTableDemo() {
       rowSelection
     }
   });
+
+  useEffect(() => {
+    async function fetchOrders() {
+      try {
+        const response = await fetch('/api/admin/orders');
+        const orders = await response.json();
+        console.log('🚀 ~ fetchOrders ~ orders:', orders);
+
+        table.setData(orders);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    fetchOrders();
+  }, []);
 
   return (
     <div className="w-full">
