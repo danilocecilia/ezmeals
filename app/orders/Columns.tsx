@@ -1,7 +1,7 @@
-import { ColumnDef } from '@tanstack/react-table';
-// import { format } from 'date-fns';
-
-// const formatDate = (date: Date) => format(date, 'MM/dd/yyyy');
+'use client';
+import { Button } from '@components/ui/button';
+import { ColumnDef, HeaderContext } from '@tanstack/react-table';
+import { ArrowUpDown } from 'lucide-react';
 
 export type Orders = {
   userId: string;
@@ -15,38 +15,52 @@ export type Orders = {
   items: Array<{ name: string; quantity: number; price: number }>;
 };
 
+const handleSorting = (
+  column: HeaderContext<Orders, unknown>['column'],
+  content: string
+) => {
+  return (
+    <Button
+      variant="ghost"
+      onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+    >
+      {content}
+      <ArrowUpDown className="ml-2 h-4 w-4" />
+    </Button>
+  );
+};
+
 export const columns: ColumnDef<Orders>[] = [
   {
     accessorKey: 'userId',
-    header: 'User ID'
+    header: ({ column }) => handleSorting(column, 'User ID')
   },
   {
     accessorKey: 'customerName',
-    header: 'Customer Name'
+    header: ({ column }) => handleSorting(column, 'Customer Name')
   },
   {
     accessorKey: 'deliveryAddress',
-    header: 'Delivery Address'
+    header: ({ column }) => handleSorting(column, 'Delivery Address')
   },
   {
     accessorKey: 'deliveryMethod',
-    header: 'Delivery Method'
+    header: ({ column }) => handleSorting(column, 'Delivery Method')
   },
   {
     accessorKey: 'createdAt',
-    header: 'Created At'
-    // cell: ({ value }) => formatDate(new Date(value))
+    header: ({ column }) => handleSorting(column, 'Created At')
   },
   {
     accessorKey: 'orderId',
-    header: 'Order ID'
+    header: ({ column }) => handleSorting(column, 'Order ID')
   },
   {
     accessorKey: 'quantity',
-    header: 'Quantity'
+    header: ({ column }) => handleSorting(column, 'Quantity')
   },
   {
     accessorKey: 'total',
-    header: 'Total'
+    header: ({ column }) => handleSorting(column, 'Total')
   }
 ];

@@ -33,7 +33,7 @@ const Navbar = () => {
           Dashboard
         </Link>
         <Link
-          href="#"
+          href="/orders"
           className="text-muted-foreground transition-colors hover:text-foreground"
         >
           Orders
