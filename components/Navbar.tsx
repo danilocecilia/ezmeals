@@ -38,6 +38,12 @@ const Navbar = () => {
         >
           Orders
         </Link>
+        <Link
+          href="/meals"
+          className="text-muted-foreground transition-colors hover:text-foreground"
+        >
+          Meals
+        </Link>
       </nav>
       <Sheet>
         <SheetTrigger asChild>
@@ -66,6 +72,12 @@ const Navbar = () => {
               className="text-muted-foreground hover:text-foreground"
             >
               Orders
+            </Link>
+            <Link
+              href="/meals"
+              className="text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Meals
             </Link>
           </nav>
         </SheetContent>

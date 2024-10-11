@@ -34,44 +34,12 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { isValidPhoneNumber } from 'react-phone-number-input';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { UserProps } from '@/interfaces/UserInterfaces';
-
-const formSchema = z.object({
-  full_name: z.string(),
-  phone_number: z
-    .string()
-    .refine((val) => val === '' || isValidPhoneNumber(val), {
-      message: 'Invalid phone number'
-    })
-    .optional(),
-  address: z.string().optional(),
-  postal_code: z.string().optional(),
-  city: z.string().optional(),
-  province: z.string().optional(),
-  email: z.string().email('This is not a valid email').max(300, {
-    message: "Email can't be longer than 300 characters."
-  })
-});
-
-const provinces = [
-  { label: 'Alberta', value: 'AB' },
-  { label: 'British Columbia', value: 'BC' },
-  { label: 'Manitoba', value: 'MB' },
-  { label: 'New Brunswick', value: 'NB' },
-  { label: 'Newfoundland and Labrador', value: 'NL' },
-  { label: 'Northwest Territories', value: 'NT' },
-  { label: 'Nova Scotia', value: 'NS' },
-  { label: 'Nunavut', value: 'NU' },
-  { label: 'Ontario', value: 'ON' },
-  { label: 'Prince Edward Island', value: 'PE' },
-  { label: 'Quebec', value: 'QC' },
-  { label: 'Saskatchewan', value: 'SK' },
-  { label: 'Yukon', value: 'YT' }
-] as const;
+import { formSchema } from '@/schemas/profileSchema';
+import { provinces } from '@/utils/provinces';
 
 const ProfileForm = ({ user }: { user: UserProps }) => {
   if (!user) {
