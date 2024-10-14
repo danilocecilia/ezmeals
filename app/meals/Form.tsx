@@ -91,7 +91,7 @@ const CustomForm: React.FC = () => {
     defaultValues: {}
   });
 
-  const [selectedAllergen, setSelectedAllergen] = useState<string[]>(['', '']);
+  const [selectedAllergen, setSelectedAllergen] = useState<string[]>([]);
 
   const allergensList = [
     { value: 'milk', label: 'Milk (Diary)' },
@@ -116,7 +116,7 @@ const CustomForm: React.FC = () => {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="flex items-center justify-center py-12">
           <div className="grid gap-6">
-            <div className="grid gap-2">
+            <div className="grid gap-4">
               <FormField
                 control={form.control}
                 name="name"
@@ -136,19 +136,84 @@ const CustomForm: React.FC = () => {
               />
             </div>
 
-            <div className="grid gap-2">
+            <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="price"
+                name="category"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Price</FormLabel>
+                    <FormLabel>Category</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        id="price"
-                        placeholder=""
-                        {...field}
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              className={cn(
+                                'flex w-full p-1 items-center justify-around'
+                              )}
+                            >
+                              {field.value
+                                ? mealCategories.find(
+                                    (category) => category.value === field.value
+                                  )?.label
+                                : 'Select Category'}
+                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[200px] p-0">
+                          <Command>
+                            <CommandInput placeholder="Search meal category..." />
+                            <CommandList>
+                              <CommandEmpty>No category found.</CommandEmpty>
+                              <CommandGroup>
+                                {mealCategories.map((category) => (
+                                  <CommandItem
+                                    value={category.label}
+                                    key={category.value}
+                                    onSelect={() => {
+                                      form.setValue('category', category.value);
+                                    }}
+                                  >
+                                    <Check
+                                      className={cn(
+                                        'mr-2 h-4 w-4',
+                                        category.value === field.value
+                                          ? 'opacity-100'
+                                          : 'opacity-0'
+                                      )}
+                                    />
+                                    {category.label}
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="allergens"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Allergens</FormLabel>
+                    <FormControl>
+                      <MultiSelect
+                        options={allergensList}
+                        onValueChange={setSelectedAllergen}
+                        defaultValue={selectedAllergen}
+                        placeholder="Select allergens"
+                        variant="inverted"
+                        // animation={2}
+                        maxCount={1}
                       />
                     </FormControl>
                     <FormMessage />
@@ -157,7 +222,7 @@ const CustomForm: React.FC = () => {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
                 name="portionSize"
@@ -183,21 +248,21 @@ const CustomForm: React.FC = () => {
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
-                name="allergens"
+                name="price"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Allergens</FormLabel>
+                    <FormLabel>Price</FormLabel>
                     <FormControl>
-                      <MultiSelect
-                        options={allergensList}
-                        onValueChange={setSelectedAllergen}
-                        defaultValue={selectedAllergen}
-                        placeholder="Select frameworks"
-                        variant="inverted"
-                        // animation={2}
-                        maxCount={1}
+                      <Input
+                        id="price"
+                        type="text"
+                        pattern="[0-9]*"
+                        inputMode="numeric"
+                        placeholder="0.00"
+                        {...field}
                       />
                     </FormControl>
                     <FormMessage />
@@ -206,132 +271,78 @@ const CustomForm: React.FC = () => {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid">
               <FormField
                 control={form.control}
                 name="notes"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Notes</FormLabel>
+                    <FormLabel>Special Instructions/Notes</FormLabel>
                     <FormControl>
-                      <Input id="notes" placeholder="Notes" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="category"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Category</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant="outline"
-                            role="combobox"
-                            className={cn(
-                              'w-[170px] sm:w-[200px] md:w-[200px] justify-between',
-                              !field.value && 'text-muted-foreground'
-                            )}
-                          >
-                            {field.value
-                              ? mealCategories.find(
-                                  (category) => category.value === field.value
-                                )?.label
-                              : 'Select Category'}
-                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-[200px] p-0">
-                        <Command>
-                          <CommandInput placeholder="Search meal category..." />
-                          <CommandList>
-                            <CommandEmpty>No category found.</CommandEmpty>
-                            <CommandGroup>
-                              {mealCategories.map((category) => (
-                                <CommandItem
-                                  value={category.label}
-                                  key={category.value}
-                                  onSelect={() => {
-                                    form.setValue('category', category.value);
-                                  }}
-                                >
-                                  <Check
-                                    className={cn(
-                                      'mr-2 h-4 w-4',
-                                      category.value === field.value
-                                        ? 'opacity-100'
-                                        : 'opacity-0'
-                                    )}
-                                  />
-                                  {category.label}
-                                </CommandItem>
-                              ))}
-                            </CommandGroup>
-                          </CommandList>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="grid gap-2">
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col items-start">
-                      <FormLabel className="text-left">Description</FormLabel>
-                      <FormControl className="w-full">
-                        <Textarea
-                          id="description"
-                          placeholder="A brief description of the meal, including ingredients or any special notes."
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </div>
-
-            <FormField
-              control={form.control}
-              name="image"
-              render={({ field }) => (
-                <div className="space-y-6">
-                  <FormItem className="w-full">
-                    <FormLabel>Image</FormLabel>
-                    <FormControl>
-                      <FileUploader
-                        value={field.value}
-                        onValueChange={field.onChange}
-                        maxFileCount={1}
-                        maxSize={4 * 1024 * 1024}
-                        progresses={progresses}
-                        // pass the onUpload function here for direct upload
-                        // onUpload={uploadFiles}
-                        disabled={isUploading}
+                      <Textarea
+                        id="notes"
+                        placeholder="Any special notes or instructions related to the meal (e.g., 'Spicy level', 'No nuts')."
+                        {...field}
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
-                  {uploadedFiles.length > 0 ? (
-                    <UploadedFilesCard uploadedFiles={uploadedFiles} />
-                  ) : null}
-                </div>
-              )}
-            />
+                )}
+              />
+            </div>
+
+            <div className="grid">
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col items-start">
+                    <FormLabel className="text-left">Description</FormLabel>
+                    <FormControl className="w-full">
+                      <Textarea
+                        id="description"
+                        placeholder="A brief description of the meal, including ingredients or any special notes."
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="grid">
+              <FormField
+                control={form.control}
+                name="image"
+                render={({ field }) => (
+                  <div className="space-y-6">
+                    <FormItem className="w-full">
+                      <FormLabel>Image</FormLabel>
+                      <FormControl>
+                        <FileUploader
+                          value={field.value}
+                          onValueChange={field.onChange}
+                          maxFileCount={1}
+                          maxSize={4 * 1024 * 1024}
+                          progresses={progresses}
+                          // pass the onUpload function here for direct upload
+                          // onUpload={uploadFiles}
+                          disabled={isUploading}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                    {uploadedFiles.length > 0 ? (
+                      <UploadedFilesCard uploadedFiles={uploadedFiles} />
+                    ) : null}
+                  </div>
+                )}
+              />
+            </div>
 
             <Button type="submit" className="w-full">
-              Save Changes
+              Save
             </Button>
           </div>
         </div>
