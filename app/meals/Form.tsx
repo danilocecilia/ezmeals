@@ -32,57 +32,45 @@ import {
   SelectValue
 } from '@components/ui/select';
 import { Textarea } from '@components/ui/textarea';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@components/ui/tooltip';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useUploadFile } from '@hooks/use-upload-file';
 import { cn } from '@lib/utils';
 import { MultiSelect } from '@root/components/ui/multi-select';
 import { UploadedFilesCard } from '@root/components/uploaded-files-card';
-import { Check, ChevronsUpDown } from 'lucide-react';
+import { Check, ChevronsUpDown, InfoIcon } from 'lucide-react';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { mealSchema } from '@/schemas/mealSchema';
+import { allergensList } from '@/utils/allergensList';
 import { mealCategories } from '@/utils/mealsCategory';
 
 const CustomForm: React.FC = () => {
   async function onSubmit(values: z.infer<typeof mealSchema>) {
-    const response = await fetch(`/api/updateProfile`, {
+    const response = await fetch(`/api/admin/addMeal`, {
       method: 'POST',
       body: JSON.stringify(values)
     });
 
     if (!response.ok) {
-      // toast.error('Error', {
-      //   description: 'Failed to update profile, please try again'
-      // });
+      toast.error('Error', {
+        description: 'Failed to update profile, please try again'
+      });
       return;
     }
 
-    const responseData = await response.json();
-
-    if (responseData?.error) {
-      // toast.error('Error', {
-      //   description: 'Invalid credentials, please try again'
-      // });
-      return;
-    }
-
-    // await update({
-    //   ...session,
-    //   user: {
-    //     ...values,
-    //     name: values.full_name,
-    //     phone: values.phone_number
-    //   }
-    // });
-
-    // reloadSession();
-    // router.refresh();
-
-    // toast.success('Profile updated successfully');
+    toast.success('Meal created successfully');
   }
-  const { onUpload, progresses, uploadedFiles, isUploading } = useUploadFile(
+
+  const { progresses, uploadedFiles, isUploading } = useUploadFile(
     'imageUploader',
     { defaultUploadedFiles: [] }
   );
@@ -92,24 +80,6 @@ const CustomForm: React.FC = () => {
   });
 
   const [selectedAllergen, setSelectedAllergen] = useState<string[]>([]);
-
-  const allergensList = [
-    { value: 'milk', label: 'Milk (Diary)' },
-    { value: 'eggs', label: 'Eggs' },
-    { value: 'peanuts', label: 'Peanuts' },
-    { value: 'tree-nuts', label: 'Tree Nuts' },
-    { value: 'fish', label: 'Fish' },
-    { value: 'shellfish', label: 'Shellfish' },
-    { value: 'soy', label: 'Soy' },
-    { value: 'wheat', label: 'Wheat' },
-    { value: 'gluten', label: 'Gluten' },
-    { value: 'sesame', label: 'Sesame' },
-    { value: 'sulphites', label: 'Sulphites' },
-    { value: 'lupin', label: 'Lupin' },
-    { value: 'celery', label: 'Celery' },
-    { value: 'moluscs', label: 'Moluscs' },
-    { value: 'glucose', label: 'Glucose' }
-  ];
 
   return (
     <Form {...form}>
@@ -122,7 +92,9 @@ const CustomForm: React.FC = () => {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Meal Name</FormLabel>
+                    <FormLabel>
+                      Meal Name <span>*</span>
+                    </FormLabel>
                     <FormControl>
                       <Input
                         id="name"
@@ -142,7 +114,27 @@ const CustomForm: React.FC = () => {
                 name="category"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Category</FormLabel>
+                    <FormLabel className="flex gap-2 p-1">
+                      Category
+                      <span>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <InfoIcon strokeWidth={1.5} size={16} />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>
+                                Meal category/type (e.g.,
+                                &quot;Vegetarian&quot;, &quot;Vegan&quot;,
+                                &quot;Meat&quot;, &quot;Dessert&quot;,
+                                &quot;Beverage&quot;).
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </span>
+                    </FormLabel>
+
                     <FormControl>
                       <Popover>
                         <PopoverTrigger asChild>
@@ -204,12 +196,32 @@ const CustomForm: React.FC = () => {
                 name="allergens"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Allergens</FormLabel>
+                    <FormLabel className="flex gap-2 p-1">
+                      Allergens
+                      <span>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <InfoIcon strokeWidth={1.5} size={16} />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>
+                                Any allergens associated with the meal (e.g.,
+                                &quot;Peanuts&quot;, &quot;Dairy&quot;).
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </span>
+                    </FormLabel>
                     <FormControl>
                       <MultiSelect
                         options={allergensList}
-                        onValueChange={setSelectedAllergen}
                         defaultValue={selectedAllergen}
+                        onValueChange={(values) => {
+                          setSelectedAllergen(values);
+                          field.onChange(values);
+                        }}
                         placeholder="Select allergens"
                         variant="inverted"
                         // animation={2}
@@ -228,9 +240,12 @@ const CustomForm: React.FC = () => {
                 name="portionSize"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Portion Size</FormLabel>
+                    <FormLabel>Portion Size *</FormLabel>
                     <FormControl>
-                      <Select>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
                         <SelectTrigger>
                           <SelectValue placeholder="Select portion" />
                         </SelectTrigger>
@@ -254,11 +269,11 @@ const CustomForm: React.FC = () => {
                 name="price"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Price</FormLabel>
+                    <FormLabel>Price *</FormLabel>
                     <FormControl>
                       <Input
                         id="price"
-                        type="text"
+                        type="number"
                         pattern="[0-9]*"
                         inputMode="numeric"
                         placeholder="0.00"
