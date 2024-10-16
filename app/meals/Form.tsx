@@ -44,7 +44,7 @@ import { cn } from '@lib/utils';
 import { MultiSelect } from '@root/components/ui/multi-select';
 import { UploadedFilesCard } from '@root/components/uploaded-files-card';
 import { Check, ChevronsUpDown, InfoIcon } from 'lucide-react';
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -54,6 +54,20 @@ import { allergensList } from '@/utils/allergensList';
 import { mealCategories } from '@/utils/mealsCategory';
 
 const CustomForm: React.FC = () => {
+  const form = useForm<z.infer<typeof mealSchema>>({
+    resolver: zodResolver(mealSchema),
+    defaultValues: {
+      name: undefined,
+      category: '',
+      allergens: [],
+      portionSize: undefined,
+      price: '',
+      notes: '',
+      description: '',
+      image: undefined
+    }
+  });
+
   async function onSubmit(values: z.infer<typeof mealSchema>) {
     const response = await fetch(`/api/admin/addMeal`, {
       method: 'POST',
@@ -74,12 +88,21 @@ const CustomForm: React.FC = () => {
     'imageUploader',
     { defaultUploadedFiles: [] }
   );
-  const form = useForm<z.infer<typeof mealSchema>>({
-    resolver: zodResolver(mealSchema),
-    defaultValues: {}
-  });
 
-  const [selectedAllergen, setSelectedAllergen] = useState<string[]>([]);
+  React.useEffect(() => {
+    if (form.formState.isSubmitSuccessful) {
+      form.reset({
+        name: '',
+        category: '',
+        allergens: [],
+        portionSize: '',
+        price: '',
+        notes: '',
+        description: '',
+        image: []
+      });
+    }
+  }, [form, form.formState.isSubmitSuccessful]);
 
   return (
     <Form {...form}>
@@ -108,7 +131,7 @@ const CustomForm: React.FC = () => {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-[330px_minmax(330px,_1fr)]">
               <FormField
                 control={form.control}
                 name="category"
@@ -143,7 +166,7 @@ const CustomForm: React.FC = () => {
                               variant="outline"
                               role="combobox"
                               className={cn(
-                                'flex w-full p-1 items-center justify-around'
+                                'flex w-full items-center justify-between'
                               )}
                             >
                               {field.value
@@ -217,9 +240,9 @@ const CustomForm: React.FC = () => {
                     <FormControl>
                       <MultiSelect
                         options={allergensList}
-                        defaultValue={selectedAllergen}
+                        defaultValue={field.value}
                         onValueChange={(values) => {
-                          setSelectedAllergen(values);
+                          form.setValue('allergens', values);
                           field.onChange(values);
                         }}
                         placeholder="Select allergens"
@@ -245,13 +268,13 @@ const CustomForm: React.FC = () => {
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
+                        value={field.value}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Select portion" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
-                            {/* <SelectLabel>Portion Size</SelectLabel> */}
                             <SelectItem value="S">Small - 300g</SelectItem>
                             <SelectItem value="M">Medium - 500g</SelectItem>
                             <SelectItem value="L">Large - 800g</SelectItem>
@@ -333,7 +356,7 @@ const CustomForm: React.FC = () => {
                 render={({ field }) => (
                   <div className="space-y-6">
                     <FormItem className="w-full">
-                      <FormLabel>Image</FormLabel>
+                      <FormLabel>Image *</FormLabel>
                       <FormControl>
                         <FileUploader
                           value={field.value}
@@ -356,9 +379,11 @@ const CustomForm: React.FC = () => {
               />
             </div>
 
-            <Button type="submit" className="w-full">
-              Save
-            </Button>
+            <div className="flex justify-center">
+              <Button className="w-72" type="submit">
+                Save
+              </Button>
+            </div>
           </div>
         </div>
       </form>

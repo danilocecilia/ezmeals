@@ -9,13 +9,18 @@ export const mealSchema = z.object({
     z
       .number()
       .positive()
+      .or(
+        z.string().refine((val) => !isNaN(parseFloat(val)), {
+          message: 'Price must be a number'
+        })
+      )
       // Regex to ensure the price is a valid number format
       .refine((val) => /^[0-9]*\.?[0-9]+$/.test(val.toString()), {
         message: 'Price must be a number'
       })
   ),
   image: z.array(z.instanceof(File)),
-  portionSize: z.union([z.string(), z.undefined()]).optional(),
+  portionSize: z.string(),
   preparationTime: z.string().optional(),
   allergens: z.array(z.string()).optional(),
   notes: z.string().optional()

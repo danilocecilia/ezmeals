@@ -43,8 +43,8 @@ export async function POST(req: Request) {
     const result = await db.collection('meals').insertOne(newMeal);
 
     return NextResponse.json(
-      { message: 'Meal created successfully', mealId: result.insertedId },
-      { status: 201 }
+      { message: 'success', mealId: result.insertedId },
+      { status: 200 }
     );
   } catch (error) {
     return NextResponse.json(
