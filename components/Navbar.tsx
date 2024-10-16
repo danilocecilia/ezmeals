@@ -3,6 +3,7 @@
 import { useCurrentSession } from '@hooks/useCurrentSession';
 import { Menu, Package2 } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
@@ -23,7 +24,13 @@ const Navbar = () => {
           href="/"
           className="flex items-center gap-2 text-lg font-semibold md:text-base"
         >
-          <Package2 className="h-6 w-6" />
+          <Image
+            src="/logo.png"
+            width={500}
+            height={500}
+            alt="Picture of the author"
+          />
+          {/* <Package2 className="h-6 w-6" /> */}
           <span className="sr-only">Acme Inc</span>
         </Link>
         <Link
