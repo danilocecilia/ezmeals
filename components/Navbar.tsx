@@ -25,9 +25,9 @@ const Navbar = () => {
           className="flex items-center gap-2 text-lg font-semibold md:text-base"
         >
           <Image
-            src="/logo.png"
-            width={500}
-            height={500}
+            src="/logo.jpg"
+            width={80}
+            height={80}
             alt="Picture of the author"
           />
           {/* <Package2 className="h-6 w-6" /> */}
