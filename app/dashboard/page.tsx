@@ -17,7 +17,7 @@ const page = async () => {
 
   return (
     <main className="max-w-7xl mx-auto my-12 space-y-5 container">
-      <h1 className="text-2xl font-semibold">Orders History</h1>
+      <h1 className="text-2xl font-semibold"></h1>
       {/* <OrdersPage /> */}
       {/* <DataTableDemo /> */}
       {/* <DashboardForm email={session?.user?.email as string} /> */}

@@ -147,13 +147,14 @@ const LoginForm = () => {
               </div>
             </div>
           </div>
-          <div className="hidden bg-muted lg:block">
+          <div className="hidden lg:block self-center">
             <Image
-              src="/placeholder.svg"
+              src="/logo.jpg"
               alt="Image"
-              width="1920"
-              height="1080"
-              className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+              layout="intrinsic"
+              className="opacity-80"
+              width={500} // Required, but sets the aspect ratio
+              height={500} // Will adjust automatically based on width
             />
           </div>
         </div>

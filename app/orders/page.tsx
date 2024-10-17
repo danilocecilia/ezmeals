@@ -1,3 +1,6 @@
+import { auth } from '@root/auth';
+import { redirect } from 'next/navigation';
+
 import { Orders } from './Columns';
 import OrdersPage from './Orders';
 
@@ -11,7 +14,12 @@ async function getData(): Promise<Orders[]> {
 }
 
 export default async function page() {
-  const data = await getData();
+  const session = await auth();
+  const { orders } = await getData();
 
-  return <OrdersPage data={data?.orders} />;
+  if (!session) {
+    redirect('/login');
+  }
+
+  return <OrdersPage data={orders} />;
 }

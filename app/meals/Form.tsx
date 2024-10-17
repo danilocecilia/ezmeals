@@ -69,19 +69,31 @@ const CustomForm: React.FC = () => {
   });
 
   async function onSubmit(values: z.infer<typeof mealSchema>) {
-    const response = await fetch(`/api/admin/addMeal`, {
-      method: 'POST',
-      body: JSON.stringify(values)
-    });
+    try {
+      const response = await fetch(`/api/admin/addMeal`, {
+        method: 'POST',
+        body: JSON.stringify(values)
+      });
 
-    if (!response.ok) {
+      if (!response.ok) {
+        form.setError('root', {
+          type: 'manual',
+          message: 'Server error, please try again later.'
+        });
+
+        toast.error('Error', {
+          description: 'Failed to update profile, please try again'
+        });
+        return;
+      }
+
+      toast.success('Meal created successfully');
+    } catch (error) {
+      console.error('Error:', error);
       toast.error('Error', {
         description: 'Failed to update profile, please try again'
       });
-      return;
     }
-
-    toast.success('Meal created successfully');
   }
 
   const { progresses, uploadedFiles, isUploading } = useUploadFile(
@@ -389,8 +401,6 @@ const CustomForm: React.FC = () => {
       </form>
     </Form>
   );
-
-  return null;
 };
 
 export default CustomForm;

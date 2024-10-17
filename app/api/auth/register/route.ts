@@ -24,7 +24,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const createAccount = await db
+    await db
       .collection('users')
       .insertOne({ email: email, password: hashedPassword });
 

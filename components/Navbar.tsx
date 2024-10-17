@@ -19,20 +19,21 @@ const Navbar = () => {
 
   return (
     <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
+      <Link
+        href="/"
+        className="hidden flex md:flex items-center gap-2 text-lg font-semibold md:text-base"
+      >
+        <Image
+          src="/logo_nav.png"
+          width={50}
+          height={50}
+          alt="Picture of the author"
+          style={{ objectFit: 'cover', maxWidth: '100%' }}
+        />
+        {/* <Package2 className="h-6 w-6" /> */}
+        <span className="sr-only">Acme Inc</span>
+      </Link>
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
-        <Link
-          href="/"
-          className="flex items-center gap-2 text-lg font-semibold md:text-base"
-        >
-          <Image
-            src="/logo.jpg"
-            width={80}
-            height={80}
-            alt="Picture of the author"
-          />
-          {/* <Package2 className="h-6 w-6" /> */}
-          <span className="sr-only">Acme Inc</span>
-        </Link>
         <Link
           href="/dashboard"
           className="text-muted-foreground transition-colors hover:text-foreground"

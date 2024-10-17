@@ -12,7 +12,7 @@ const page = async () => {
   }
 
   return (
-    <section className="container flex items-center justify-center py-12">
+    <section className="container mx-auto flex items-center justify-center py-12">
       <div className="w-[500px]">
         <RegisterForm />
       </div>
