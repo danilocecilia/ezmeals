@@ -1,38 +1,23 @@
-import { ratelimit } from '@lib/rate-limit';
+// import { ratelimit } from '@lib/rate-limit';
+import { auth } from '@root/auth';
 import { createUploadthing, type FileRouter } from 'uploadthing/next';
 import { UploadThingError } from 'uploadthing/server';
 
 const f = createUploadthing();
 
-// Fake auth function
-async function auth(req: Request) {
-  await new Promise((resolve) => setTimeout(resolve, 100));
-  return { id: 'fakeId' };
-}
-
 // FileRouter for your app, can contain multiple FileRoutes
 export const ourFileRouter = {
-  // Define as many FileRoutes as you like, each with a unique routeSlug
   imageUploader: f({ image: { maxFileSize: '4MB', maxFileCount: 8 } })
     // Set permissions and file types for this FileRoute
     .middleware(async ({ req }) => {
-      // Rate limit the upload
-      const ip = req.ip ?? '127.0.0.1';
-
-      const { success } = await ratelimit.limit(ip);
-
-      if (!success) {
-        throw new UploadThingError('Rate limit exceeded');
-      }
-
       // This code runs on your server before upload
-      const user = await auth(req);
+      const session = await auth();
+      console.log('🚀 ~ .middleware ~ session:', session);
 
-      // If you throw, the user will not be able to upload
-      if (!user) throw new UploadThingError('Unauthorized');
+      if (!session) throw new UploadThingError('Unauthorized');
 
       // Whatever is returned here is accessible in onUploadComplete as `metadata`
-      return { userId: user.id };
+      return { userId: session?.user?.email };
     })
     .onUploadComplete(async ({ metadata, file }) => {
       // This code RUNS ON YOUR SERVER after upload

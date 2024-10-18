@@ -53,26 +53,41 @@ import { mealSchema } from '@/schemas/mealSchema';
 import { allergensList } from '@/utils/allergensList';
 import { mealCategories } from '@/utils/mealsCategory';
 
-const CustomForm: React.FC = () => {
+const CustomForm: React.FC = ({ meal }) => {
+  let mealDefaultValues;
+
+  const { progresses, uploadedFiles, isUploading, onUpload } = useUploadFile(
+    'imageUploader',
+    { defaultUploadedFiles: [] }
+  );
+
+  const _defaultValues = {
+    name: undefined,
+    category: '',
+    allergens: [],
+    portionSize: undefined,
+    price: '',
+    notes: '',
+    description: '',
+    image: undefined
+  };
+
+  if (meal) {
+    mealDefaultValues = {
+      ..._defaultValues,
+      ...meal
+    };
+  }
   const form = useForm<z.infer<typeof mealSchema>>({
     resolver: zodResolver(mealSchema),
-    defaultValues: {
-      name: undefined,
-      category: '',
-      allergens: [],
-      portionSize: undefined,
-      price: '',
-      notes: '',
-      description: '',
-      image: undefined
-    }
+    defaultValues: mealDefaultValues || _defaultValues
   });
 
   async function onSubmit(values: z.infer<typeof mealSchema>) {
     try {
-      const response = await fetch(`/api/admin/addMeal`, {
+      const response = await fetch('/api/admin/addMeal', {
         method: 'POST',
-        body: JSON.stringify(values)
+        body: JSON.stringify({ ...values, image: uploadedFiles })
       });
 
       if (!response.ok) {
@@ -95,11 +110,6 @@ const CustomForm: React.FC = () => {
       });
     }
   }
-
-  const { progresses, uploadedFiles, isUploading } = useUploadFile(
-    'imageUploader',
-    { defaultUploadedFiles: [] }
-  );
 
   React.useEffect(() => {
     if (form.formState.isSubmitSuccessful) {
@@ -376,8 +386,7 @@ const CustomForm: React.FC = () => {
                           maxFileCount={1}
                           maxSize={4 * 1024 * 1024}
                           progresses={progresses}
-                          // pass the onUpload function here for direct upload
-                          // onUpload={uploadFiles}
+                          onUpload={onUpload}
                           disabled={isUploading}
                         />
                       </FormControl>

@@ -112,7 +112,7 @@ export function FileUploader(props: FileUploaderProps) {
     prop: valueProp,
     onChange: onValueChange
   });
-
+  console.log('🚀 ~ FileUploader ~ files:', files);
   const onDrop = React.useCallback(
     (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
       if (!multiple && maxFileCount === 1 && acceptedFiles.length > 1) {
@@ -132,7 +132,7 @@ export function FileUploader(props: FileUploaderProps) {
       );
 
       const updatedFiles = files ? [...files, ...newFiles] : newFiles;
-
+      debugger;
       setFiles(updatedFiles);
 
       if (rejectedFiles.length > 0) {
@@ -245,6 +245,7 @@ export function FileUploader(props: FileUploaderProps) {
           </div>
         )}
       </Dropzone>
+
       {files?.length ? (
         <ScrollArea className="h-fit w-full px-3">
           <div className="flex max-h-48 flex-col gap-4">
@@ -302,19 +303,24 @@ function FileCard({ file, progress, onRemove }: FileCardProps) {
   );
 }
 
-function isFileWithPreview(file: File): file is File & { preview: string } {
-  return 'preview' in file && typeof file.preview === 'string';
+function isFileWithPreview(
+  file: File & { preview: string; url: string }
+): file is File & { preview: string; url: string } {
+  return (
+    ('preview' in file && typeof file.preview === 'string') ||
+    typeof file?.url === 'string'
+  );
 }
 
 interface FilePreviewProps {
-  file: File & { preview: string };
+  file: File & { preview: string; url: string };
 }
 
 function FilePreview({ file }: FilePreviewProps) {
   if (file.type.startsWith('image/')) {
     return (
       <Image
-        src={file.preview}
+        src={file.preview || file?.url}
         alt={file.name}
         width={48}
         height={48}

@@ -4,8 +4,9 @@ import { DatePickerWithRange } from '@root/components/DateRangePicker';
 import { format } from 'date-fns';
 import { useState, useEffect } from 'react';
 
+import { DataTable } from '../utils/DataTable';
+
 import { Orders, columns } from './Columns';
-import { DataTable } from './DataTable';
 
 type DateRange = { from: Date | undefined; to?: Date | undefined };
 

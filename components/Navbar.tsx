@@ -1,5 +1,11 @@
 'use client';
 // import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@components/ui/dropdown-menu';
 import { useCurrentSession } from '@hooks/useCurrentSession';
 import { Menu, Package2 } from 'lucide-react';
 import dynamic from 'next/dynamic';
@@ -46,12 +52,23 @@ const Navbar = () => {
         >
           Orders
         </Link>
-        <Link
-          href="/meals"
-          className="text-muted-foreground transition-colors hover:text-foreground"
-        >
-          Meals
-        </Link>
+        <DropdownMenu>
+          <DropdownMenuTrigger>Meals</DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <Link
+              href="/meals/add"
+              className="transition-colors hover:text-foreground"
+            >
+              <DropdownMenuItem>Add Meal</DropdownMenuItem>
+            </Link>
+            <Link
+              href="/meals"
+              className="transition-colors hover:text-foreground"
+            >
+              <DropdownMenuItem>List All</DropdownMenuItem>
+            </Link>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </nav>
       <Sheet>
         <SheetTrigger asChild>

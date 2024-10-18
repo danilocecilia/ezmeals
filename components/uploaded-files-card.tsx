@@ -18,8 +18,8 @@ export function UploadedFilesCard({ uploadedFiles }: UploadedFilesCardProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Uploaded files</CardTitle>
-        <CardDescription>View the uploaded files here</CardDescription>
+        <CardTitle>Uploaded file</CardTitle>
+        <CardDescription>View the uploaded file here</CardDescription>
       </CardHeader>
       <CardContent>
         {uploadedFiles.length > 0 ? (

@@ -24,7 +24,6 @@ export async function GET() {
 
     // Fetch all orders
     const orders = await db.collection('orders').find({}).toArray();
-    console.log('🚀 ~ GET ~ orders:', orders);
 
     // Transform documents to Order type
     const transformedOrders: Order[] = orders.map((order) => ({
