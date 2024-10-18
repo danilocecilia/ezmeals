@@ -19,9 +19,22 @@ export const mealSchema = z.object({
         message: 'Price must be a number'
       })
   ),
-  image: z.array(z.instanceof(File)),
+  image: z.array(
+    z.object({
+      name: z.string(),
+      size: z.number(),
+      key: z.string(),
+      lastModified: z.number(),
+      serverData: z.object({ uploadedBy: z.string() }),
+      url: z.string().url(),
+      appUrl: z.string().url(),
+      customId: z.nullable(z.string()),
+      type: z.string(),
+      fileHash: z.string()
+    })
+  ),
   portionSize: z.string(),
-  preparationTime: z.string().optional(),
+  preparationTime: z.string().optional().nullable(),
   allergens: z.array(z.string()).optional(),
   notes: z.string().optional()
 });
