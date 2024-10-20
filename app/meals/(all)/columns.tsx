@@ -41,6 +41,17 @@ const handleSorting = (
   );
 };
 
+const sanitizePortionSize = (portionSize: string) => {
+  switch (portionSize) {
+    case 'S':
+      return 'Small (300g)';
+    case 'M':
+      return 'Medium (500g)';
+    case 'L':
+      return 'Large (800g)';
+  }
+};
+
 export const columns: ColumnDef<Meal>[] = [
   {
     accessorKey: 'name',
@@ -56,7 +67,8 @@ export const columns: ColumnDef<Meal>[] = [
   },
   {
     accessorKey: 'portionSize',
-    header: ({ column }) => handleSorting(column, 'Portion Size')
+    header: ({ column }) => handleSorting(column, 'Portion Size'),
+    accessorFn: (row) => sanitizePortionSize(row.portionSize)
   },
   {
     accessorKey: 'preparationTime',

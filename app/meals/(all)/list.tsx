@@ -64,7 +64,7 @@ export function DataTableDemo({ mealsData }: { mealsData: Meal[] }) {
     <div className="w-full">
       <div className="flex items-center gap-2 py-4">
         <Input
-          placeholder="Filter meal..."
+          placeholder="Filter by Name..."
           value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
           onChange={(event) =>
             table.getColumn('name')?.setFilterValue(event.target.value)
