@@ -5,17 +5,14 @@ import React from 'react';
 import { Meal } from './columns';
 import { DataTableDemo } from './list';
 
-const AllMeals = () => {
+const AllMealsTable = () => {
   const [meals, setMeals] = React.useState<Meal[]>([]);
 
   React.useEffect(() => {
     async function fetchData() {
       const getAllMeals = async () => {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/admin/listMeal`,
-          {
-            cache: 'no-cache'
-          }
+          `${process.env.NEXT_PUBLIC_API_URL}/api/admin/listMeal`
         );
 
         const data = await response.json();
@@ -31,4 +28,4 @@ const AllMeals = () => {
   return <DataTableDemo mealsData={meals} />;
 };
 
-export default AllMeals;
+export default AllMealsTable;
