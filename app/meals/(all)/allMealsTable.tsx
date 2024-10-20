@@ -6,6 +6,7 @@ import { Meal } from './columns';
 import { DataTableDemo } from './list';
 
 const AllMealsTable = () => {
+  const [loading, setLoading] = React.useState<boolean>(true);
   const [meals, setMeals] = React.useState<Meal[]>([]);
 
   React.useEffect(() => {
@@ -21,11 +22,12 @@ const AllMealsTable = () => {
       };
       const data = await getAllMeals();
       setMeals(data.meals);
+      setLoading(false);
     }
     fetchData();
   }, []);
 
-  return <DataTableDemo mealsData={meals} />;
+  return loading ? <p> Loading ... </p> : <DataTableDemo mealsData={meals} />;
 };
 
 export default AllMealsTable;
