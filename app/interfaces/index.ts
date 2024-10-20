@@ -1,1 +1,1 @@
-export * from './UserInterfaces';
+export * from './user-interface';

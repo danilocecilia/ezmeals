@@ -37,7 +37,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-import { UserProps } from '@/interfaces/UserInterfaces';
+import { UserProps } from '@/interfaces/user-interface';
 import { formSchema } from '@/schemas/profileSchema';
 import { provinces } from '@/utils/provinces';
 

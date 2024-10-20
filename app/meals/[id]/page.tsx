@@ -1,17 +1,17 @@
-import CustomForm from '../add/Form';
+import CustomForm from '../edit/form';
 
-const getMealById = async (id: string) => {
-  console.log('🚀 ~ getMealById ~ id:', id);
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/admin/getMeal/${id}`
+interface PageProps {
+  params: {
+    id: string;
+  };
+}
+
+const Page = async ({ params }: PageProps) => {
+  return (
+    <div className="container px-4">
+      <CustomForm id={params.id} />
+    </div>
   );
-  const data = await response.json();
-  return data;
-};
-
-const Page = async ({ params }) => {
-  const mealData = await getMealById(params.id);
-  return <CustomForm meal={mealData} />;
 };
 
 export default Page;

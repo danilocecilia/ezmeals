@@ -112,7 +112,7 @@ export function FileUploader(props: FileUploaderProps) {
     prop: valueProp,
     onChange: onValueChange
   });
-  console.log('🚀 ~ FileUploader ~ files:', files);
+
   const onDrop = React.useCallback(
     (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
       if (!multiple && maxFileCount === 1 && acceptedFiles.length > 1) {
@@ -132,7 +132,7 @@ export function FileUploader(props: FileUploaderProps) {
       );
 
       const updatedFiles = files ? [...files, ...newFiles] : newFiles;
-      debugger;
+
       setFiles(updatedFiles);
 
       if (rejectedFiles.length > 0) {

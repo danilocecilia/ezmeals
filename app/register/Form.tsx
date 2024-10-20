@@ -45,7 +45,6 @@ const RegisterForm = () => {
       });
 
       const data = await response.json();
-      console.log('🚀 ~ onSubmit ~ data:', data);
 
       if (data.error) {
         form.setError('root', {

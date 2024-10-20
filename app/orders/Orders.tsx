@@ -29,7 +29,7 @@ const OrdersPage = ({ data }: { data: Orders[] }) => {
           order.createdAt <= format(date.to, 'dd/MM/yyyy')
         );
       });
-      console.log('filteredData', filteredData);
+
       setOrdersData(filteredData);
     }
   }, [date, data]);

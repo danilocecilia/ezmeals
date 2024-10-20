@@ -6,7 +6,7 @@ import ProfileForm from './Form';
 import NavigationButton from './NavigationButton';
 import Orders from './Orders';
 
-import { UserProps } from '@/interfaces/UserInterfaces';
+import { UserProps } from '@root/app/interfaces/user-interface';
 
 type IconType = 'profile' | 'orders';
 

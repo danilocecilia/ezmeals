@@ -30,7 +30,7 @@ import {
 import { ChevronDownIcon } from 'lucide-react';
 import * as React from 'react';
 
-import { columns, Meal } from './Columns';
+import { columns, Meal } from './columns';
 
 export function DataTableDemo({ mealsData }: { mealsData: Meal[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);

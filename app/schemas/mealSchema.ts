@@ -4,21 +4,18 @@ export const mealSchema = z.object({
   name: z.string(),
   description: z.string().optional(),
   category: z.string().optional(),
-  price: z.preprocess(
-    (val) => parseFloat(val as string),
-    z
-      .number()
-      .positive()
-      .or(
-        z.string().refine((val) => !isNaN(parseFloat(val)), {
-          message: 'Price must be a number'
-        })
-      )
-      // Regex to ensure the price is a valid number format
-      .refine((val) => /^[0-9]*\.?[0-9]+$/.test(val.toString()), {
-        message: 'Price must be a number'
-      })
-  ),
+  price: z
+    .string()
+    .refine((value) => !isNaN(Number(value)), {
+      message: 'Price must be a valid number'
+    })
+    .transform((value) => parseFloat(value))
+    .refine((value) => value > 0, {
+      message: 'Price must be a positive number'
+    })
+    .refine((value) => Number(value.toFixed(2)) === value, {
+      message: 'Price can only have up to 2 decimal places'
+    }),
   image: z.array(
     z.object({
       name: z.string(),

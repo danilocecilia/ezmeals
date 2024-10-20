@@ -26,7 +26,6 @@ export async function GET() {
 
     // Fetch all meals
     const meals = await db.collection('meals').find({}).toArray();
-    console.log('🚀 ~ GET ~ meals:', meals);
 
     // Transform documents to Order type
     const transformedMeals: Meal[] = meals.map((meal) => ({

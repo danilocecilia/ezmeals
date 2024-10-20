@@ -44,7 +44,6 @@ import { cn } from '@lib/utils';
 import { MultiSelect } from '@root/components/ui/multi-select';
 import { UploadedFilesCard } from '@root/components/uploaded-files-card';
 import { Check, ChevronsUpDown, InfoIcon } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -54,36 +53,43 @@ import { mealSchema } from '@/schemas/mealSchema';
 import { allergensList } from '@/utils/allergensList';
 import { mealCategories } from '@/utils/mealsCategory';
 
-const CustomForm: React.FC = () => {
-  const router = useRouter();
+interface CustomFormProps {
+  id: string;
+}
 
+const CustomForm: React.FC<CustomFormProps> = ({ id }) => {
   const { progresses, uploadedFiles, isUploading, onUpload } = useUploadFile(
     'imageUploader',
     { defaultUploadedFiles: [] }
   );
 
+  const _defaultValues = {
+    name: undefined,
+    category: '',
+    allergens: [],
+    portionSize: '',
+    price: '',
+    notes: '',
+    description: '',
+    image: undefined
+  };
+
   const form = useForm<z.infer<typeof mealSchema>>({
     resolver: zodResolver(mealSchema),
-    defaultValues: {
-      name: undefined,
-      category: '',
-      allergens: [],
-      portionSize: undefined,
-      price: undefined,
-      notes: '',
-      description: '',
-      image: undefined
-    }
+    defaultValues: _defaultValues
   });
 
   async function onSubmit(values: z.infer<typeof mealSchema>) {
     try {
-      const response = await fetch('/api/admin/addMeal', {
-        method: 'POST',
-        body: JSON.stringify({ ...values, image: uploadedFiles })
+      const response = await fetch(`/api/admin/updateMeal/${id}`, {
+        next: { tags: ['updateMeal'] },
+        method: 'PUT',
+        body: JSON.stringify({
+          ...values,
+          _id: id,
+          image: uploadedFiles.length > 0 ? uploadedFiles : values.image
+        })
       });
-
-      const data = await response.json();
 
       if (!response.ok) {
         form.setError('root', {
@@ -92,13 +98,12 @@ const CustomForm: React.FC = () => {
         });
 
         toast.error('Error', {
-          description: 'Failed to add meal, please try again'
+          description: 'Failed to update meal, please try again'
         });
         return;
       }
 
-      toast.success('Meal created successfully');
-      router.push(`/meals/${data.mealId}`);
+      toast.success('Meal updated successfully');
     } catch (error) {
       console.error('Error:', error);
       toast.error('Error', {
@@ -106,6 +111,23 @@ const CustomForm: React.FC = () => {
       });
     }
   }
+
+  React.useEffect(() => {
+    async function fetchData() {
+      const getMealById = async (id: string) => {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/admin/getMeal/${id}`,
+          { cache: 'no-store' }
+        );
+
+        const meal = await response.json();
+        return meal;
+      };
+      const mealData = await getMealById(id);
+      form.reset(mealData);
+    }
+    fetchData();
+  }, [form, id]);
 
   return (
     <Form {...form}>

@@ -1,31 +1,37 @@
 import { auth } from '@root/auth';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 import React from 'react';
 
-import { Meal } from './all/Columns';
-import { DataTableDemo } from './all/List';
+import AllMeals from './(all)/allMeals';
 
-async function getData(): Promise<Meal[]> {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/admin/listMeal`
-  );
+// import { Meal, DataTableDemo } from './(all)';
 
-  const data = await response.json();
-  return data;
-}
+// async function getData(): Promise<Meal[]> {
+//   const response = await fetch(
+//     `${process.env.NEXT_PUBLIC_API_URL}/api/admin/listMeal`,
+//     {
+//       cache: 'no-cache'
+//     }
+//   );
+
+//   const data = await response.json();
+//   revalidateTag('updateMeal');
+//   return data;
+// }
 
 const MealsPage: React.FC = async () => {
   const session = await auth();
-  const { meals } = await getData();
-  console.log('🚀 ~ constMealsPage:React.FC= ~ meals:', meals);
+  // const { meals } = await getData();
 
   if (!session) {
     redirect('/login');
   }
 
+  // revalidatePath('/meals/[id]', 'page');
   return (
     <div className="px-4">
-      <DataTableDemo mealsData={meals} />
+      <AllMeals />
     </div>
   );
 };

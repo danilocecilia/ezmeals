@@ -197,7 +197,6 @@ export function DataTableDemo() {
       try {
         const response = await fetch('/api/admin/orders');
         const orders = await response.json();
-        console.log('🚀 ~ fetchOrders ~ orders:', orders);
 
         table.setData(orders);
       } catch (error) {
