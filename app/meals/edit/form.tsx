@@ -12,6 +12,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -42,6 +43,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useUploadFile } from '@hooks/use-upload-file';
 import { cn } from '@lib/utils';
 import { MultiSelect } from '@root/components/ui/multi-select';
+import { Switch } from '@root/components/ui/switch';
 import { UploadedFilesCard } from '@root/components/uploaded-files-card';
 import { Check, ChevronsUpDown, InfoIcon } from 'lucide-react';
 import React from 'react';
@@ -67,8 +69,8 @@ const CustomForm: React.FC<CustomFormProps> = ({ id }) => {
     name: undefined,
     category: '',
     allergens: [],
-    portionSize: '',
-    price: '',
+    portionSize: undefined,
+    price: undefined,
     notes: '',
     description: '',
     image: undefined
@@ -141,7 +143,7 @@ const CustomForm: React.FC<CustomFormProps> = ({ id }) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Meal Name <span>*</span>
+                      Name <span>*</span>
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -272,7 +274,7 @@ const CustomForm: React.FC<CustomFormProps> = ({ id }) => {
                         }}
                         placeholder="Select allergens"
                         variant="inverted"
-                        // animation={2}
+                        animation={2}
                         maxCount={1}
                       />
                     </FormControl>
@@ -369,6 +371,31 @@ const CustomForm: React.FC<CustomFormProps> = ({ id }) => {
                       />
                     </FormControl>
                     <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="grid">
+              <FormField
+                control={form.control}
+                name="side"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                    <div className="space-y-0.5">
+                      <FormLabel className="text-base">
+                        Meal with Add-ons
+                      </FormLabel>
+                      <FormDescription>
+                        This meal can be added as portion to other meals.
+                      </FormDescription>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
                   </FormItem>
                 )}
               />

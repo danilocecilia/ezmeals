@@ -17,7 +17,8 @@ export async function PUT(req: Request) {
       portionSize,
       preparationTime,
       allergens,
-      notes
+      notes,
+      side
     } = body;
 
     // Ensure mealId is passed as a string
@@ -42,6 +43,7 @@ export async function PUT(req: Request) {
           preparationTime,
           allergens,
           notes,
+          side,
           updatedAt: new Date()
         }
       },

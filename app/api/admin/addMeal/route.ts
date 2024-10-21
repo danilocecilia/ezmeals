@@ -13,7 +13,8 @@ export async function POST(req: Request) {
       portionSize,
       preparationTime,
       allergens,
-      notes
+      notes,
+      side
     } = body;
 
     // Simple validation
@@ -37,6 +38,7 @@ export async function POST(req: Request) {
       preparationTime,
       allergens,
       notes,
+      side,
       createdAt: new Date()
     };
 

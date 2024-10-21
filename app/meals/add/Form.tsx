@@ -15,7 +15,8 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
+  FormMessage,
+  FormDescription
 } from '@components/ui/form';
 import { Input } from '@components/ui/input';
 import {
@@ -42,6 +43,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useUploadFile } from '@hooks/use-upload-file';
 import { cn } from '@lib/utils';
 import { MultiSelect } from '@root/components/ui/multi-select';
+import { Switch } from '@root/components/ui/switch';
 import { UploadedFilesCard } from '@root/components/uploaded-files-card';
 import { Check, ChevronsUpDown, InfoIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -119,7 +121,7 @@ const CustomForm: React.FC = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Meal Name <span>*</span>
+                      Name <span>*</span>
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -134,7 +136,7 @@ const CustomForm: React.FC = () => {
               />
             </div>
 
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-[330px_minmax(330px,_1fr)]">
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-[200px_minmax(200px,_1fr)]">
               <FormField
                 control={form.control}
                 name="category"
@@ -250,8 +252,8 @@ const CustomForm: React.FC = () => {
                         }}
                         placeholder="Select allergens"
                         variant="inverted"
-                        // animation={2}
-                        maxCount={1}
+                        // animation={1}
+                        maxCount={2}
                       />
                     </FormControl>
                     <FormMessage />
@@ -347,6 +349,31 @@ const CustomForm: React.FC = () => {
                       />
                     </FormControl>
                     <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="grid">
+              <FormField
+                control={form.control}
+                name="side"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                    <div className="space-y-0.5">
+                      <FormLabel className="text-base">
+                        Meal with Add-ons
+                      </FormLabel>
+                      <FormDescription>
+                        This meal can be added as portion to other meals.
+                      </FormDescription>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
                   </FormItem>
                 )}
               />
