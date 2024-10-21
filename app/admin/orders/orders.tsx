@@ -1,5 +1,4 @@
 'use client';
-
 import { DatePickerWithRange } from '@root/components/DateRangePicker';
 import { format } from 'date-fns';
 import { useState, useEffect } from 'react';

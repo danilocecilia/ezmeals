@@ -24,58 +24,64 @@ const Navbar = () => {
   const { session, status } = useCurrentSession();
 
   return (
-    <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
-      <Link
-        href="/"
-        className="hidden flex md:flex items-center gap-2 text-lg font-semibold md:text-base"
-      >
-        <Image
-          src="/logo_nav.png"
-          width={50}
-          height={50}
-          alt="Picture of the author"
-          style={{ objectFit: 'cover', maxWidth: '100%' }}
-        />
-        {/* <Package2 className="h-6 w-6" /> */}
-        <span className="sr-only">Acme Inc</span>
-      </Link>
-      <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
-        <Link
-          href="/dashboard"
-          className="text-muted-foreground transition-colors hover:text-foreground"
-        >
-          Dashboard
-        </Link>
-        <Link
-          href="/orders"
-          className="text-muted-foreground transition-colors hover:text-foreground"
-        >
-          Orders
-        </Link>
-        <DropdownMenu>
-          <DropdownMenuTrigger>Meals</DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <Link
-              href="/meals/add"
-              className="transition-colors hover:text-foreground"
-            >
-              <DropdownMenuItem>Add Meal</DropdownMenuItem>
-            </Link>
-            <Link
-              href="/meals"
-              className="transition-colors hover:text-foreground"
-            >
-              <DropdownMenuItem>List All</DropdownMenuItem>
-            </Link>
-          </DropdownMenuContent>
-        </DropdownMenu>
+    <header className="sticky top-0 flex h-16 items-center gap-6 border-b bg-background px-4 md:px-6">
+      <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6 w-full justify-between">
+        <div className="flex gap-8 items-center">
+          <Link
+            href="/"
+            className="hidden flex md:flex items-center gap-2 text-lg font-semibold md:text-base"
+          >
+            <Image
+              src="/logo_nav.png"
+              width={50}
+              height={50}
+              alt="Easy Meal Logo"
+              style={{ objectFit: 'cover', maxWidth: 'unset' }}
+            />
+            <span className="sr-only">Acme Inc</span>
+          </Link>
+          <Link
+            href="/dashboard"
+            className="text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Dashboard
+          </Link>
+          <Link
+            href="/orders"
+            className="text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Orders
+          </Link>
+          <DropdownMenu>
+            <DropdownMenuTrigger className="text-muted-foreground transition-colors hover:text-foreground">
+              Meals
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <Link
+                href="/admin/meals/add"
+                className="transition-colors hover:text-foreground"
+              >
+                <DropdownMenuItem>Add Meal</DropdownMenuItem>
+              </Link>
+              <Link
+                href="/admin/meals"
+                className="transition-colors hover:text-foreground"
+              >
+                <DropdownMenuItem>List All</DropdownMenuItem>
+              </Link>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
-        <Link
-          href="/schedule"
-          className="text-muted-foreground transition-colors hover:text-foreground min-w-max"
-        >
-          Meal Planner
-        </Link>
+          <Link
+            href="/admin/planner"
+            className="text-muted-foreground transition-colors hover:text-foreground min-w-max"
+          >
+            Meal Planner
+          </Link>
+        </div>
+        <div>
+          <DynamicHeaderAuth session={session} status={status} />
+        </div>
       </nav>
       <Sheet>
         <SheetTrigger asChild>
@@ -106,7 +112,7 @@ const Navbar = () => {
               Orders
             </Link>
             <Link
-              href="/meals"
+              href="/admin/meals"
               className="text-muted-foreground transition-colors hover:text-foreground"
             >
               Meals
@@ -114,7 +120,6 @@ const Navbar = () => {
           </nav>
         </SheetContent>
       </Sheet>
-      <DynamicHeaderAuth session={session} status={status} />
     </header>
   );
 };
