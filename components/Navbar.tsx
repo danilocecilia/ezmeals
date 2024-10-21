@@ -69,6 +69,13 @@ const Navbar = () => {
             </Link>
           </DropdownMenuContent>
         </DropdownMenu>
+
+        <Link
+          href="/schedule"
+          className="text-muted-foreground transition-colors hover:text-foreground min-w-max"
+        >
+          Meal Planner
+        </Link>
       </nav>
       <Sheet>
         <SheetTrigger asChild>
