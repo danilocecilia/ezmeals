@@ -57,7 +57,7 @@ const MealFormPlanner: React.FC = () => {
     defaultValues: {
       dateFrom: '',
       dateTo: '',
-      meals: [],
+      selectedMeals: [],
       deliveryDate: ''
     }
   });
@@ -122,18 +122,12 @@ const MealFormPlanner: React.FC = () => {
   }, []);
 
   const addSelectedRangeMeals = () => {
-    const {
-      dateFrom,
-      dateTo,
-      meals: mealsIds,
-      deliveryDate
-    } = form.getValues();
-    debugger;
-    const selectedMeals = meals.map((meal) => meal._id);
+    const { dateFrom, dateTo, selectedMeals, deliveryDate } = form.getValues();
+
     const range = {
       dateFrom,
       dateTo,
-      meals: selectedMeals,
+      selectedMeals,
       deliveryDate
     };
 
@@ -205,7 +199,7 @@ const MealFormPlanner: React.FC = () => {
             <div className="grid grid-cols-1 gap-4">
               <FormField
                 control={form.control}
-                name="meals"
+                name="selectedMeals"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="flex gap-2 p-1">Meals *</FormLabel>
@@ -215,9 +209,9 @@ const MealFormPlanner: React.FC = () => {
                           label: meal.name,
                           value: meal._id
                         }))}
-                        defaultValue={field.value.map((meal: Meal) => meal._id)}
+                        defaultValue={field.value}
                         onValueChange={(values) => {
-                          form.setValue('meals', values);
+                          form.setValue('selectedMeals', values);
                           field.onChange(values);
 
                           // debugger;
