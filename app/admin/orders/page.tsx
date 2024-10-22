@@ -1,8 +1,8 @@
 import { auth } from '@root/auth';
 import { redirect } from 'next/navigation';
 
-import { Orders } from './Columns';
-import OrdersPage from './Orders';
+import { Orders } from './columns';
+import OrdersPage from './orders';
 
 async function getData(): Promise<Orders[]> {
   const response = await fetch(

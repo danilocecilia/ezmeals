@@ -24,8 +24,8 @@ const Navbar = () => {
   const { session, status } = useCurrentSession();
 
   return (
-    <header className="sticky top-0 flex h-16 items-center gap-6 border-b bg-background px-4 md:px-6">
-      <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6 w-full justify-between">
+    <header className="sticky top-0 flex h-16 items-center gap-6 px-4 md:px-6 border-b">
+      <nav className="container mx-auto hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6 w-full justify-between">
         <div className="flex gap-8 items-center">
           <Link
             href="/"

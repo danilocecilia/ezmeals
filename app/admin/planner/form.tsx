@@ -3,21 +3,12 @@
 import { Button } from '@components/ui/button';
 import { Calendar } from '@components/ui/calendar';
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList
-} from '@components/ui/command';
-import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
-  FormDescription
+  FormMessage
 } from '@components/ui/form';
 import { Input } from '@components/ui/input';
 import {
@@ -25,17 +16,10 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@components/ui/popover';
-import { Textarea } from '@components/ui/textarea';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from '@components/ui/tooltip';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { cn } from '@lib/utils';
+import { MultiSelect } from '@root/components/ui/multi-select';
 import { format } from 'date-fns';
-import { Check, ChevronsUpDown, InfoIcon } from 'lucide-react';
 import { Calendar as CalendarIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React from 'react';
@@ -46,7 +30,21 @@ import { z } from 'zod';
 
 import { mealPlannerSchema } from '@/schemas/mealPlanner';
 
+type Meal = {
+  _id: string;
+  name: string;
+};
+
+interface MealPlanner {
+  dateFrom: string;
+  dateTo: string;
+  meals: Meal[];
+  deliveryDate: string;
+}
+
 const MealFormPlanner: React.FC = () => {
+  const [meals, setMeals] = React.useState<Meal[]>([]);
+  const [loading, setLoading] = React.useState<boolean>(true);
   const router = useRouter();
 
   const [date, setDate] = React.useState<DateRange | undefined>({
@@ -54,14 +52,14 @@ const MealFormPlanner: React.FC = () => {
     to: undefined
   });
 
-  // const { progresses, uploadedFiles, isUploading, onUpload } = useUploadFile(
-  //   'imageUploader',
-  //   { defaultUploadedFiles: [] }
-  // );
-
   const form = useForm<z.infer<typeof mealPlannerSchema>>({
     resolver: zodResolver(mealPlannerSchema),
-    defaultValues: {}
+    defaultValues: {
+      dateFrom: '',
+      dateTo: '',
+      meals: [],
+      deliveryDate: ''
+    }
   });
 
   async function onSubmit(values: z.infer<typeof mealPlannerSchema>) {
@@ -95,146 +93,106 @@ const MealFormPlanner: React.FC = () => {
     }
   }
 
+  React.useEffect(() => {
+    async function fetchData() {
+      const getAllMeals = async () => {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/admin/listMeal`
+        );
+
+        const data = await response.json();
+
+        return data;
+      };
+      const data = await getAllMeals();
+
+      if (data?.meals?.length > 0) {
+        const transformedMeals = data.meals.map(
+          (meal: { _id: string; name: string }) => {
+            return { _id: meal._id, name: meal.name };
+          }
+        );
+
+        setMeals(transformedMeals);
+      }
+
+      setLoading(false);
+    }
+    fetchData();
+  }, []);
+
+  const addSelectedRangeMeals = () => {
+    const {
+      dateFrom,
+      dateTo,
+      meals: mealsIds,
+      deliveryDate
+    } = form.getValues();
+    debugger;
+    const selectedMeals = meals.map((meal) => meal._id);
+    const range = {
+      dateFrom,
+      dateTo,
+      meals: selectedMeals,
+      deliveryDate
+    };
+
+    console.log('range', range);
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="flex items-center justify-center py-12">
+        <div className="flex items-center justify-center">
           <div className="grid gap-6">
             <div className="grid gap-2">
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    id="date"
-                    variant={'outline'}
-                    className={cn(
-                      'w-[300px] justify-start text-left font-normal',
-                      !date && 'text-muted-foreground'
-                    )}
-                  >
-                    <CalendarIcon />
-                    {date?.from ? (
-                      date.to ? (
-                        <>
-                          {format(date.from, 'LLL dd, y')} -{' '}
-                          {format(date.to, 'LLL dd, y')}
-                        </>
-                      ) : (
-                        format(date.from, 'LLL dd, y')
-                      )
-                    ) : (
-                      <span>Pick a date</span>
-                    )}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    initialFocus
-                    mode="range"
-                    defaultMonth={date?.from}
-                    selected={date}
-                    onSelect={setDate}
-                    numberOfMonths={2}
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-            {/* <div className="grid gap-4">
               <FormField
                 control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Name <span>*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        id="name"
-                        placeholder="Grilled Chicken Salad"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div> */}
-
-            {/* <div className="grid grid-cols-1 gap-4 lg:grid-cols-[200px_minmax(200px,_1fr)]">
-              <FormField
-                control={form.control}
-                name="category"
+                name="quantity"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="flex gap-2 p-1">
-                      Category
-                      <span>
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger>
-                              <InfoIcon strokeWidth={1.5} size={16} />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>
-                                Meal category/type (e.g.,
-                                &quot;Vegetarian&quot;, &quot;Vegan&quot;,
-                                &quot;Meat&quot;, &quot;Dessert&quot;,
-                                &quot;Beverage&quot;).
-                              </p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </span>
+                      Schedule From / To <span>*</span>
                     </FormLabel>
-
                     <FormControl>
                       <Popover>
                         <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant="outline"
-                              role="combobox"
-                              className={cn(
-                                'flex w-full items-center justify-between'
-                              )}
-                            >
-                              {field.value
-                                ? mealCategories.find(
-                                    (category) => category.value === field.value
-                                  )?.label
-                                : 'Select Category'}
-                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                            </Button>
-                          </FormControl>
+                          <Button
+                            id="date"
+                            variant={'outline'}
+                            className={cn(
+                              'w-[300px] justify-start text-left font-normal',
+                              !field.value && 'text-muted-foreground'
+                            )}
+                          >
+                            <CalendarIcon className="mr-4" />
+                            {date?.from ? (
+                              date.to ? (
+                                <>
+                                  {format(date.from, 'LLL dd, y')} -{' '}
+                                  {format(date.to, 'LLL dd, y')}
+                                </>
+                              ) : (
+                                format(date.from, 'LLL dd, y')
+                              )
+                            ) : (
+                              <span>Pick a date range From / To</span>
+                            )}
+                          </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="w-[200px] p-0">
-                          <Command>
-                            <CommandInput placeholder="Search meal category..." />
-                            <CommandList>
-                              <CommandEmpty>No category found.</CommandEmpty>
-                              <CommandGroup>
-                                {mealCategories.map((category) => (
-                                  <CommandItem
-                                    value={category.label}
-                                    key={category.value}
-                                    onSelect={() => {
-                                      form.setValue('category', category.value);
-                                    }}
-                                  >
-                                    <Check
-                                      className={cn(
-                                        'mr-2 h-4 w-4',
-                                        category.value === field.value
-                                          ? 'opacity-100'
-                                          : 'opacity-0'
-                                      )}
-                                    />
-                                    {category.label}
-                                  </CommandItem>
-                                ))}
-                              </CommandGroup>
-                            </CommandList>
-                          </Command>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            initialFocus
+                            mode="range"
+                            defaultMonth={date?.from}
+                            selected={date}
+                            onSelect={(date) => {
+                              setDate(date);
+                              form.setValue('dateFrom', date?.from);
+                              form.setValue('dateTo', date?.to);
+                            }}
+                            numberOfMonths={2}
+                          />
                         </PopoverContent>
                       </Popover>
                     </FormControl>
@@ -242,93 +200,66 @@ const MealFormPlanner: React.FC = () => {
                   </FormItem>
                 )}
               />
+            </div>
 
+            <div className="grid grid-cols-1 gap-4">
               <FormField
                 control={form.control}
-                name="allergens"
+                name="meals"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex gap-2 p-1">
-                      Allergens
-                      <span>
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger>
-                              <InfoIcon strokeWidth={1.5} size={16} />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>
-                                Any allergens associated with the meal (e.g.,
-                                &quot;Peanuts&quot;, &quot;Dairy&quot;).
-                              </p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </span>
-                    </FormLabel>
+                    <FormLabel className="flex gap-2 p-1">Meals *</FormLabel>
                     <FormControl>
                       <MultiSelect
-                        options={allergensList}
-                        defaultValue={field.value}
+                        options={meals.map((meal) => ({
+                          label: meal.name,
+                          value: meal._id
+                        }))}
+                        defaultValue={field.value.map((meal: Meal) => meal._id)}
                         onValueChange={(values) => {
-                          form.setValue('allergens', values);
+                          form.setValue('meals', values);
                           field.onChange(values);
+
+                          // debugger;
+                          // const selectedMeals = values.map((id) =>
+                          //   meals.find((meal) => meal._id === id)
+                          // );
+                          // form.setValue(
+                          //   'meals',
+                          //   selectedMeals.filter(
+                          //     (meal): meal is Meal => meal !== undefined
+                          //   )
+                          // );
+                          // field.onChange(values);
                         }}
-                        placeholder="Select allergens"
+                        placeholder="Select Meals"
                         variant="inverted"
                         // animation={1}
-                        maxCount={2}
+                        maxCount={3}
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-            </div> */}
+            </div>
 
-            {/* <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4 lg:grid-cols-[1fr_minmax(430px,100px)]">
               <FormField
                 control={form.control}
-                name="portionSize"
+                name="quantity"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Portion Size *</FormLabel>
-                    <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        value={field.value}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select portion" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectItem value="S">Small - 300g</SelectItem>
-                            <SelectItem value="M">Medium - 500g</SelectItem>
-                            <SelectItem value="L">Large - 800g</SelectItem>
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="price"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Price *</FormLabel>
+                    <FormLabel>
+                      Quantity <span>*</span>
+                    </FormLabel>
                     <FormControl>
                       <Input
-                        id="price"
+                        id="name"
                         type="number"
                         pattern="[0-9]*"
                         inputMode="numeric"
-                        placeholder="0.00"
+                        placeholder="0"
                         {...field}
                       />
                     </FormControl>
@@ -336,101 +267,58 @@ const MealFormPlanner: React.FC = () => {
                   </FormItem>
                 )}
               />
-            </div> */}
 
-            {/* <div className="grid">
               <FormField
                 control={form.control}
-                name="notes"
+                name="deliveryDate"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Special Instructions/Notes</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        id="notes"
-                        placeholder="Any special notes or instructions related to the meal (e.g., 'Spicy level', 'No nuts')."
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div> */}
-
-            {/* <div className="grid">
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col items-start">
-                    <FormLabel className="text-left">Description</FormLabel>
-                    <FormControl className="w-full">
-                      <Textarea
-                        id="description"
-                        placeholder="A brief description of the meal, including ingredients or any special notes."
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div> */}
-
-            {/* <div className="grid">
-              <FormField
-                control={form.control}
-                name="side"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                    <div className="space-y-0.5">
-                      <FormLabel className="text-base">
-                        Meal with Add-ons
+                  <>
+                    <FormItem>
+                      <FormLabel className="flex gap-2 p-1">
+                        Delivery Date <span>*</span>
                       </FormLabel>
-                      <FormDescription>
-                        This meal can be added as portion to other meals.
-                      </FormDescription>
-                    </div>
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div> */}
-
-            {/* <div className="grid">
-              <FormField
-                control={form.control}
-                name="image"
-                render={({ field }) => (
-                  <div className="space-y-6">
-                    <FormItem className="w-full">
-                      <FormLabel>Image *</FormLabel>
                       <FormControl>
-                        <FileUploader
-                          value={field.value}
-                          onValueChange={field.onChange}
-                          maxFileCount={1}
-                          maxSize={4 * 1024 * 1024}
-                          progresses={progresses}
-                          onUpload={onUpload}
-                          disabled={isUploading}
-                        />
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant={'outline'}
+                              className={cn(
+                                'w-[280px] justify-start text-left font-normal',
+                                !date && 'text-muted-foreground'
+                              )}
+                            >
+                              <CalendarIcon className="mr-4" />
+                              {field.value ? (
+                                format(new Date(field.value), 'PPP')
+                              ) : (
+                                <span>Pick a delivery date</span>
+                              )}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0">
+                            <Calendar
+                              mode="single"
+                              selected={
+                                field.value ? new Date(field.value) : undefined
+                              }
+                              onSelect={(date: Date) =>
+                                form.setValue('deliveryDate', date)
+                              }
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
-                    {uploadedFiles.length > 0 ? (
-                      <UploadedFilesCard uploadedFiles={uploadedFiles} />
-                    ) : null}
-                  </div>
+                  </>
                 )}
               />
-            </div> */}
+
+              <Button className="w-20 mt-4" onClick={addSelectedRangeMeals}>
+                Add
+              </Button>
+            </div>
 
             <div className="flex justify-center">
               <Button className="w-72" type="submit">

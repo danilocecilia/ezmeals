@@ -5,9 +5,10 @@ export const mealPlannerSchema = z.object({
   dateTo: z.string(),
   meals: z.array(
     z.object({
-      mealId: z.string(),
-      quantity: z.number()
+      name: z.string(),
+      _id: z.string()
     })
   ),
+  quantity: z.number(),
   deliveryDate: z.string()
 });
