@@ -1,3 +1,4 @@
+import type { Session } from '@auth/core/types';
 import Navbar from '@components/Navbar';
 import SessionWrapper from '@components/SessionWrapper';
 import { auth } from '@root/auth';
@@ -24,11 +25,18 @@ export const metadata: Metadata = {
   description: 'EZ Meal is a meal order system'
 };
 
+// type ExtendedSessionType = Session & {
+//   user?: {
+//     privilege: 'admin' | 'user';
+//   };
+// };
+
 export default async function RootLayout({
   children
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // const session = (await auth()) as ExtendedSessionType | null;
   const session = await auth();
 
   return (
@@ -38,8 +46,16 @@ export default async function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <div className="mx-auto relative flex min-h-screen flex-col">
-            <Navbar />
-            <main className="container mx-auto flex-1">{children}</main>
+            {/* <Navbar /> */}
+            {/* {session?.user?.privilege !== 'admin' && <Navbar />} */}
+            {/* <main className="container mx-auto flex-1">
+              
+              {session?.user?.privilege === 'admin' ?
+                children}
+            
+            
+            </main> */}
+            <main className="flex-1">{children}</main>
             <Toaster />
           </div>
         </body>

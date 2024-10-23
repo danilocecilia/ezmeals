@@ -1,4 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
+import { ChevronsUpDown } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 
@@ -14,6 +15,7 @@ import {
   DropdownMenuGroup,
   DropdownMenuShortcut
 } from './ui/dropdown-menu';
+import { SidebarMenuButton } from './ui/sidebar';
 
 const HeaderAuth: React.FC = ({ session, status }) => {
   return (
@@ -22,18 +24,23 @@ const HeaderAuth: React.FC = ({ session, status }) => {
       {status !== 'unauthenticated' && session ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-              <Avatar className="h-8 w-8">
+            {/* <SidebarMenuButton
+              size="lg"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+            >
+              <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage
-                  src="https://github.com/shadcn.png"
+                  src={'https://github.com/shadcn.png'}
                   alt={`@${session?.user?.name}`}
                 />
-                <AvatarFallback>
-                  {session.user?.name?.slice(0, 2) ||
-                    session.user?.email?.slice(0, 2)}
-                </AvatarFallback>
+                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
               </Avatar>
-            </Button>
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-semibold">{`${session?.user?.name}`}</span>
+                <span className="truncate text-xs">{`${session?.user?.email}`}</span>
+              </div>
+              <ChevronsUpDown className="ml-auto size-4" />
+            </SidebarMenuButton> */}
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56" align="end" forceMount>
             <DropdownMenuLabel className="font-normal">
