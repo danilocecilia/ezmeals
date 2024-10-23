@@ -1,12 +1,5 @@
 import { AppSidebar } from '@components/app-sidebar';
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator
-} from '@components/ui/breadcrumb';
+import { Breadcrumb, BreadcrumbList } from '@components/ui/breadcrumb';
 import { Separator } from '@components/ui/separator';
 import {
   SidebarInset,
@@ -19,38 +12,19 @@ import { redirect } from 'next/navigation';
 import { BreadcrumbBuilder } from './breadcrumb';
 
 export default async function RootLayout({
-  children,
-  params
+  children
 }: Readonly<{
   children: React.ReactNode;
-  params: { slug?: string[] };
 }>) {
-  console.log('🚀 ~ params:', params);
-  const pathSegments = params.slug || []; // Array of path segments
-  console.log('🚀 ~ pathSegments:', pathSegments);
-
   const session = await auth();
 
   if (!session) {
     redirect('/login');
   }
 
-  const buildBreadcrumb = () => {
-    return pathSegments.map((segment, index) => {
-      const href = `/${pathSegments.slice(0, index + 1).join('/')}`;
-      console.log('href', href);
-      return (
-        <a key={href} href={href} className="breadcrumb-link">
-          {segment}
-        </a>
-      );
-    });
-  };
-
   return (
     <SidebarProvider>
       <AppSidebar />
-      {buildBreadcrumb()}
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 border-b">
           <div className="flex items-center gap-2 px-3">

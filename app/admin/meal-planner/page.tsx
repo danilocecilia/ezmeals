@@ -1,6 +1,6 @@
 import { Separator } from '@components/ui/separator';
 
-import MealFormPlanner from './form';
+import MealPlannerForm from './form';
 
 const MealPlannerPage = () => {
   return (
@@ -14,7 +14,7 @@ const MealPlannerPage = () => {
         </div>
       </div>
       <Separator />
-      <MealFormPlanner />
+      <MealPlannerForm />
     </div>
   );
 };

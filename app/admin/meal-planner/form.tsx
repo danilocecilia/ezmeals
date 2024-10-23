@@ -31,8 +31,8 @@ import { z } from 'zod';
 import { mealPlannerSchema } from '@/schemas/mealPlanner';
 
 type Meal = {
-  _id: string;
-  name: string;
+  value: string;
+  label: string;
 };
 
 interface MealPlanner {
@@ -42,10 +42,9 @@ interface MealPlanner {
   deliveryDate: string;
 }
 
-const MealFormPlanner: React.FC = () => {
+const MealPlannerForm: React.FC = () => {
   const [meals, setMeals] = React.useState<Meal[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
-  const router = useRouter();
 
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: undefined,
@@ -55,42 +54,41 @@ const MealFormPlanner: React.FC = () => {
   const form = useForm<z.infer<typeof mealPlannerSchema>>({
     resolver: zodResolver(mealPlannerSchema),
     defaultValues: {
-      dateFrom: '',
-      dateTo: '',
+      dateFrom: undefined,
+      dateTo: undefined,
+      quantity: 0,
       selectedMeals: [],
-      deliveryDate: ''
+      deliveryDate: undefined
     }
   });
+  // console.log('🚀 ~ form:', form);
 
   async function onSubmit(values: z.infer<typeof mealPlannerSchema>) {
-    try {
-      const response = await fetch('/api/admin/addMeal', {
-        method: 'POST',
-        body: JSON.stringify({ ...values, image: uploadedFiles })
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        form.setError('root', {
-          type: 'manual',
-          message: 'Server error, please try again later.'
-        });
-
-        toast.error('Error', {
-          description: 'Failed to add meal, please try again'
-        });
-        return;
-      }
-
-      toast.success('Meal created successfully');
-      router.push(`/meals/${data.mealId}`);
-    } catch (error) {
-      console.error('Error:', error);
-      toast.error('Error', {
-        description: 'Failed to add meal, please try again'
-      });
-    }
+    console.log('errors', form.formState.errors);
+    // try {
+    //   const response = await fetch('/api/admin/addMeal', {
+    //     method: 'POST',
+    //     body: JSON.stringify({ ...values, image: uploadedFiles })
+    //   });
+    //   const data = await response.json();
+    //   if (!response.ok) {
+    //     form.setError('root', {
+    //       type: 'manual',
+    //       message: 'Server error, please try again later.'
+    //     });
+    //     toast.error('Error', {
+    //       description: 'Failed to add meal, please try again'
+    //     });
+    //     return;
+    //   }
+    //   toast.success('Meal created successfully');
+    //   router.push(`/meals/${data.mealId}`);
+    // } catch (error) {
+    //   console.error('Error:', error);
+    //   toast.error('Error', {
+    //     description: 'Failed to add meal, please try again'
+    //   });
+    // }
   }
 
   React.useEffect(() => {
@@ -109,7 +107,7 @@ const MealFormPlanner: React.FC = () => {
       if (data?.meals?.length > 0) {
         const transformedMeals = data.meals.map(
           (meal: { _id: string; name: string }) => {
-            return { _id: meal._id, name: meal.name };
+            return { value: meal._id, label: meal.name };
           }
         );
 
@@ -123,15 +121,13 @@ const MealFormPlanner: React.FC = () => {
 
   const addSelectedRangeMeals = () => {
     const { dateFrom, dateTo, selectedMeals, deliveryDate } = form.getValues();
-
+    debugger;
     const range = {
       dateFrom,
       dateTo,
       selectedMeals,
       deliveryDate
     };
-
-    console.log('range', range);
   };
 
   return (
@@ -182,8 +178,11 @@ const MealFormPlanner: React.FC = () => {
                             selected={date}
                             onSelect={(date) => {
                               setDate(date);
-                              form.setValue('dateFrom', date?.from);
-                              form.setValue('dateTo', date?.to);
+                              form.setValue(
+                                'dateFrom',
+                                date?.from || new Date()
+                              );
+                              form.setValue('dateTo', date?.to || new Date());
                             }}
                             numberOfMonths={2}
                           />
@@ -205,25 +204,10 @@ const MealFormPlanner: React.FC = () => {
                     <FormLabel className="flex gap-2 p-1">Meals *</FormLabel>
                     <FormControl>
                       <MultiSelect
-                        options={meals.map((meal) => ({
-                          label: meal.name,
-                          value: meal._id
-                        }))}
-                        defaultValue={field.value}
+                        options={meals}
+                        defaultValue={field.value.map((meal) => meal.value)}
                         onValueChange={(values) => {
                           form.setValue('selectedMeals', values);
-                          field.onChange(values);
-
-                          // debugger;
-                          // const selectedMeals = values.map((id) =>
-                          //   meals.find((meal) => meal._id === id)
-                          // );
-                          // form.setValue(
-                          //   'meals',
-                          //   selectedMeals.filter(
-                          //     (meal): meal is Meal => meal !== undefined
-                          //   )
-                          // );
                           // field.onChange(values);
                         }}
                         placeholder="Select Meals"
@@ -255,6 +239,7 @@ const MealFormPlanner: React.FC = () => {
                         inputMode="numeric"
                         placeholder="0"
                         {...field}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
                       />
                     </FormControl>
                     <FormMessage />
@@ -295,9 +280,12 @@ const MealFormPlanner: React.FC = () => {
                               selected={
                                 field.value ? new Date(field.value) : undefined
                               }
-                              onSelect={(date: Date) =>
-                                form.setValue('deliveryDate', date)
-                              }
+                              onSelect={(date) => {
+                                form.setValue(
+                                  'deliveryDate',
+                                  date || new Date()
+                                );
+                              }}
                               initialFocus
                             />
                           </PopoverContent>
@@ -326,4 +314,4 @@ const MealFormPlanner: React.FC = () => {
   );
 };
 
-export default MealFormPlanner;
+export default MealPlannerForm;
