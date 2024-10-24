@@ -4,7 +4,7 @@ import MealPlannerForm from './form';
 
 const MealPlannerPage = () => {
   return (
-    <div className="py- max-w-[700px] container hidden h-full flex-1 flex-col space-y-6 p-8 md:flex ">
+    <div className="w-full container hidden h-full flex-1 flex-col space-y-6 p-8 md:flex ">
       <div className="flex items-center justify-between space-y-2">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Schedule Meals</h2>

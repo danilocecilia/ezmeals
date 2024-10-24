@@ -1,5 +1,6 @@
 'use client';
 
+import { Button } from '@components/ui/button';
 import {
   Table,
   TableBody,
@@ -38,7 +39,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="">
+    <div>
       <Table className="bg-white">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -81,6 +82,28 @@ export function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
+
+      <div className="flex items-center justify-end space-x-2 py-4">
+        <div className="flex-1 text-sm text-muted-foreground">
+          {/* {console.log(
+            'selected rows:',
+            table.getFilteredSelectedRowModel().rows
+          )} */}
+          {table.getFilteredSelectedRowModel().rows.length} of{' '}
+          {table.getFilteredRowModel().rows.length} row(s) selected.
+        </div>
+        {table.getFilteredSelectedRowModel().rows.length > 0 && (
+          <div>
+            <Button
+              onClick={() => {
+                table.toggleAllPageRowsSelected();
+              }}
+            >
+              Delete Selection
+            </Button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

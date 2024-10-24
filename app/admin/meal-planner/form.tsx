@@ -17,14 +17,6 @@ import {
   PopoverTrigger
 } from '@components/ui/popover';
 import { Separator } from '@components/ui/separator';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from '@components/ui/table';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { cn } from '@lib/utils';
 import { Checkbox } from '@radix-ui/react-checkbox';
@@ -194,37 +186,10 @@ const MealPlannerForm: React.FC = () => {
     setSelectedMeals(currentSelectedMeal);
   };
 
-  function TableSelecedMeals() {
-    return (
-      <Table className="bg-white">
-        <TableHeader>
-          <TableRow>
-            <TableHead>Date From</TableHead>
-            <TableHead>Date To</TableHead>
-            <TableHead>Meal Name</TableHead>
-            <TableHead className="text-right">Delivery Date</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {testData.map((meal) => (
-            <TableRow key={meal.value}>
-              <TableCell className="font-medium">{meal.dateFrom}</TableCell>
-              <TableCell>{meal.dateTo}</TableCell>
-              <TableCell>{meal.label}</TableCell>
-              <TableCell className="text-right w-[150px]">
-                {meal.deliveryDate}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    );
-  }
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="flex items-center justify-center">
+        <div className="flex items-center">
           <div className="grid gap-6">
             <div className="grid gap-2">
               <FormField
@@ -398,14 +363,11 @@ const MealPlannerForm: React.FC = () => {
           </div>
         </div>
       </form>
-      <div>
+      <div className="flex flex-col max-w-[900px]">
         <h3 className="text-lg py-5 font-semibold">Selected Meals</h3>
         <Separator />
-        {/* <TableSelecedMeals /> */}
-        {/* <Separator /> */}
-        <div className="w-full flex">
-          <DataTable columns={columns} data={testData} />
-        </div>
+
+        <DataTable columns={columns} data={testData} />
       </div>
     </Form>
   );
