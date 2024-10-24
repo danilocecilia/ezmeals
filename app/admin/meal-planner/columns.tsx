@@ -1,13 +1,5 @@
 'use client';
 import { Button } from '@components/ui/button';
-// import {
-//   DropdownMenu,
-//   DropdownMenuContent,
-//   DropdownMenuItem,
-//   DropdownMenuLabel,
-//   DropdownMenuSeparator,
-//   DropdownMenuTrigger
-// } from '@components/ui/dropdown-menu';
 import { ColumnDef, HeaderContext } from '@tanstack/react-table';
 import { ArrowUpDown, Ellipsis } from 'lucide-react';
 // import Link from 'next/link';
@@ -40,54 +32,50 @@ const handleSorting = (
     </Button>
   );
 };
-
-const sanitizePortionSize = (portionSize: string) => {
-  switch (portionSize) {
-    case 'S':
-      return 'Small (300g)';
-    case 'M':
-      return 'Medium (500g)';
-    case 'L':
-      return 'Large (800g)';
-  }
-};
-
 export const columns: ColumnDef<Meal>[] = [
   {
-    accessorKey: 'name',
-    header: ({ column }) => handleSorting(column, 'Name')
+    accessorKey: 'dateFrom',
+    header: ({ column }) => (
+      <div className="text-center">{handleSorting(column, 'Date From')}</div>
+    ),
+    cell: ({ getValue }) => (
+      <div className="text-center">{getValue<string>()}</div>
+    )
   },
   {
-    accessorKey: 'category',
-    header: ({ column }) => handleSorting(column, 'Category')
+    accessorKey: 'dateTo',
+    header: ({ column }) => (
+      <div className="text-center">{handleSorting(column, 'Date To')}</div>
+    ),
+    cell: ({ getValue }) => (
+      <div className="text-center">{getValue<string>()}</div>
+    )
   },
   {
-    accessorKey: 'price',
-    header: ({ column }) => handleSorting(column, 'Price')
+    accessorKey: 'label',
+    header: ({ column }) => (
+      <div className="text-center ">{handleSorting(column, 'Meal')}</div>
+    ),
+    cell: ({ getValue }) => (
+      <div className="text-center whitespace-nowrap overflow-hidden text-ellipsis">
+        {getValue<string>()}
+      </div>
+    )
   },
   {
-    accessorKey: 'portionSize',
-    header: ({ column }) => handleSorting(column, 'Portion Size'),
-    accessorFn: (row) => sanitizePortionSize(row.portionSize)
+    accessorKey: 'quantity',
+    header: ({ column }) => (
+      <div className="text-center">{handleSorting(column, 'Quantity')}</div>
+    ),
+    cell: ({ getValue }) => (
+      <div className="text-center">{getValue<number>()}</div>
+    )
   },
   {
-    accessorKey: 'preparationTime',
-    header: ({ column }) => handleSorting(column, 'Preparation Time')
-  },
-  {
-    accessorKey: 'createdAt',
-    header: ({ column }) => handleSorting(column, 'Created At')
-  },
-  {
-    accessorKey: 'allergens',
-    header: ({ column }) => handleSorting(column, 'Allergens')
-  },
-  {
-    accessorKey: 'notes',
-    header: ({ column }) => handleSorting(column, 'Notes')
-  },
-  {
-    accessorKey: 'description',
-    header: ({ column }) => handleSorting(column, 'Description')
+    accessorKey: 'deliveryDate',
+    header: () => <div className="text-center w-[100px]">Delivery Date</div>,
+    cell: ({ getValue }) => (
+      <div className="text-center">{getValue<string>()}</div>
+    )
   }
 ];

@@ -16,8 +16,18 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@components/ui/popover';
+import { Separator } from '@components/ui/separator';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@components/ui/table';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { cn } from '@lib/utils';
+import { Checkbox } from '@radix-ui/react-checkbox';
 import { MultiSelect } from '@root/components/ui/multi-select';
 import { format } from 'date-fns';
 import { Calendar as CalendarIcon } from 'lucide-react';
@@ -27,6 +37,9 @@ import { DateRange } from 'react-day-picker';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
+
+import { columns } from './columns';
+import { DataTable } from './data-table';
 
 import { mealPlannerSchema } from '@/schemas/mealPlanner';
 
@@ -38,13 +51,24 @@ type Meal = {
 interface MealPlanner {
   dateFrom: string;
   dateTo: string;
-  meals: Meal[];
+  meals: Array<[string, string]>;
   deliveryDate: string;
+}
+
+interface SelectedMeal {
+  value: string;
+  label: string;
+  quantity: number;
+  deliveryDate: string;
+  dateFrom: string;
+  dateTo: string;
 }
 
 const MealPlannerForm: React.FC = () => {
   const [meals, setMeals] = React.useState<Meal[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
+  const [selectedMeals, setSelectedMeals] = React.useState<SelectedMeal[]>([]);
+  console.log('🚀 ~ selectedMeals:', selectedMeals);
 
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: undefined,
@@ -61,7 +85,33 @@ const MealPlannerForm: React.FC = () => {
       deliveryDate: undefined
     }
   });
-  // console.log('🚀 ~ form:', form);
+
+  const testData = [
+    {
+      value: '6712c09352b276ef20860458',
+      label: 'Chicken Grilled Salad',
+      quantity: 12,
+      deliveryDate: '25/10/2024',
+      dateFrom: '23/10/2024',
+      dateTo: '24/10/2024'
+    },
+    {
+      value: '6712c70252b276ef20860459',
+      label: 'Bobo de Camarao',
+      quantity: 12,
+      deliveryDate: '25/10/2024',
+      dateFrom: '23/10/2024',
+      dateTo: '24/10/2024'
+    },
+    {
+      value: '67147561a1475231c9ee8ea2',
+      label: 'Lasagna',
+      quantity: 12,
+      deliveryDate: '25/10/2024',
+      dateFrom: '23/10/2024',
+      dateTo: '24/10/2024'
+    }
+  ];
 
   async function onSubmit(values: z.infer<typeof mealPlannerSchema>) {
     console.log('errors', form.formState.errors);
@@ -120,15 +170,56 @@ const MealPlannerForm: React.FC = () => {
   }, []);
 
   const addSelectedRangeMeals = () => {
-    const { dateFrom, dateTo, selectedMeals, deliveryDate } = form.getValues();
-    debugger;
-    const range = {
-      dateFrom,
-      dateTo,
-      selectedMeals,
-      deliveryDate
-    };
+    const { dateFrom, dateTo, selectedMeals, deliveryDate, quantity } =
+      form.getValues();
+
+    const currentSelectedMeal = meals.reduce<SelectedMeal[]>((acc, meal) => {
+      const formatDate = (date: Date) => format(date, 'dd/MM/yyyy');
+
+      if (selectedMeals.includes(meal.value)) {
+        const currentSelectedMealPlanner = {
+          value: meal.value,
+          label: meal.label,
+          quantity,
+          deliveryDate: formatDate(deliveryDate),
+          dateFrom: formatDate(dateFrom),
+          dateTo: formatDate(dateTo)
+        };
+
+        acc.push(currentSelectedMealPlanner);
+      }
+      return acc;
+    }, []);
+
+    setSelectedMeals(currentSelectedMeal);
   };
+
+  function TableSelecedMeals() {
+    return (
+      <Table className="bg-white">
+        <TableHeader>
+          <TableRow>
+            <TableHead>Date From</TableHead>
+            <TableHead>Date To</TableHead>
+            <TableHead>Meal Name</TableHead>
+            <TableHead className="text-right">Delivery Date</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {testData.map((meal) => (
+            <TableRow key={meal.value}>
+              <TableCell className="font-medium">{meal.dateFrom}</TableCell>
+              <TableCell>{meal.dateTo}</TableCell>
+              <TableCell>{meal.label}</TableCell>
+              <TableCell className="text-right w-[150px]">
+                {meal.deliveryDate}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    );
+  }
 
   return (
     <Form {...form}>
@@ -205,11 +296,8 @@ const MealPlannerForm: React.FC = () => {
                     <FormControl>
                       <MultiSelect
                         options={meals}
-                        defaultValue={field.value.map((meal) => meal.value)}
-                        onValueChange={(values) => {
-                          form.setValue('selectedMeals', values);
-                          // field.onChange(values);
-                        }}
+                        defaultValue={field.value.map((meal) => meal)}
+                        onValueChange={(values) => field.onChange(values)}
                         placeholder="Select Meals"
                         variant="inverted"
                         // animation={1}
@@ -310,6 +398,15 @@ const MealPlannerForm: React.FC = () => {
           </div>
         </div>
       </form>
+      <div>
+        <h3 className="text-lg py-5 font-semibold">Selected Meals</h3>
+        <Separator />
+        {/* <TableSelecedMeals /> */}
+        {/* <Separator /> */}
+        <div className="w-full flex">
+          <DataTable columns={columns} data={testData} />
+        </div>
+      </div>
     </Form>
   );
 };
