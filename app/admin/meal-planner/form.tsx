@@ -62,21 +62,21 @@ const MealPlannerForm: React.FC = () => {
   const [selectedMeals, setSelectedMeals] = React.useState<SelectedMeal[]>([]);
   console.log('🚀 ~ selectedMeals:', selectedMeals);
 
-  const [date, setDate] = React.useState<DateRange | undefined>({
-    from: undefined,
-    to: undefined
-  });
-
   const form = useForm<z.infer<typeof mealPlannerSchema>>({
     resolver: zodResolver(mealPlannerSchema),
     defaultValues: {
-      dateFrom: undefined,
-      dateTo: undefined,
+      dateRange: {
+        from: new Date(), // Initialize with today's date or any default date
+        to: new Date() // Same here
+      },
       quantity: 0,
       selectedMeals: [],
       deliveryDate: undefined
     }
   });
+  React.useEffect(() => {
+    console.log('Form Errors:', form.formState.errors);
+  }, [form.formState.errors]);
 
   const testData = [
     {
@@ -162,8 +162,18 @@ const MealPlannerForm: React.FC = () => {
   }, []);
 
   const addSelectedRangeMeals = () => {
-    const { dateFrom, dateTo, selectedMeals, deliveryDate, quantity } =
-      form.getValues();
+    if (
+      form.formState.errors &&
+      Object.keys(form.formState.errors).length === 0
+    )
+      return;
+
+    const {
+      selectedMeals,
+      deliveryDate,
+      quantity,
+      dateRange: { from: dateFrom, to: dateTo }
+    } = form.getValues();
 
     const currentSelectedMeal = meals.reduce<SelectedMeal[]>((acc, meal) => {
       const formatDate = (date: Date) => format(date, 'dd/MM/yyyy');
@@ -194,7 +204,7 @@ const MealPlannerForm: React.FC = () => {
             <div className="grid gap-2">
               <FormField
                 control={form.control}
-                name="quantity"
+                name="dateRange"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="flex gap-2 p-1">
@@ -212,14 +222,14 @@ const MealPlannerForm: React.FC = () => {
                             )}
                           >
                             <CalendarIcon className="mr-4" />
-                            {date?.from ? (
-                              date.to ? (
+                            {field.value?.from ? (
+                              field.value.to ? (
                                 <>
-                                  {format(date.from, 'LLL dd, y')} -{' '}
-                                  {format(date.to, 'LLL dd, y')}
+                                  {format(field.value.from, 'LLL dd, y')} -{' '}
+                                  {format(field.value.to, 'LLL dd, y')}
                                 </>
                               ) : (
-                                format(date.from, 'LLL dd, y')
+                                format(field.value.from, 'LLL dd, y')
                               )
                             ) : (
                               <span>Pick a date range From / To</span>
@@ -230,16 +240,12 @@ const MealPlannerForm: React.FC = () => {
                           <Calendar
                             initialFocus
                             mode="range"
-                            defaultMonth={date?.from}
-                            selected={date}
-                            onSelect={(date) => {
-                              setDate(date);
-                              form.setValue(
-                                'dateFrom',
-                                date?.from || new Date()
-                              );
-                              form.setValue('dateTo', date?.to || new Date());
+                            defaultMonth={field?.value?.from}
+                            selected={{
+                              from: field.value.from!,
+                              to: field.value.to
                             }}
+                            onSelect={field.onChange}
                             numberOfMonths={2}
                           />
                         </PopoverContent>
@@ -316,7 +322,7 @@ const MealPlannerForm: React.FC = () => {
                               variant={'outline'}
                               className={cn(
                                 'w-[280px] justify-start text-left font-normal',
-                                !date && 'text-muted-foreground'
+                                !field && 'text-muted-foreground'
                               )}
                             >
                               <CalendarIcon className="mr-4" />
@@ -334,6 +340,7 @@ const MealPlannerForm: React.FC = () => {
                                 field.value ? new Date(field.value) : undefined
                               }
                               onSelect={(date) => {
+                                debugger;
                                 form.setValue(
                                   'deliveryDate',
                                   date || new Date()
