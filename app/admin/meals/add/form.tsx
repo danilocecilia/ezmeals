@@ -74,6 +74,7 @@ const CustomForm: React.FC = () => {
       price: undefined,
       notes: '',
       description: '',
+      side: false,
       image: undefined
     }
   });
@@ -100,7 +101,7 @@ const CustomForm: React.FC = () => {
       }
 
       toast.success('Meal created successfully');
-      router.push(`/meals/${data.mealId}`);
+      router.push(`/admin/meals/${data.mealId}`);
     } catch (error) {
       console.error('Error:', error);
       toast.error('Error', {

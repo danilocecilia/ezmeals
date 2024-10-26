@@ -57,6 +57,7 @@ interface SelectedMeal {
 }
 
 const MealPlannerForm: React.FC = () => {
+  const router = useRouter();
   const [meals, setMeals] = React.useState<Meal[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [selectedMeals, setSelectedMeals] = React.useState<SelectedMeal[]>([]);
@@ -78,59 +79,37 @@ const MealPlannerForm: React.FC = () => {
     console.log('Form Errors:', form.formState.errors);
   }, [form.formState.errors]);
 
-  const testData = [
-    {
-      value: '6712c09352b276ef20860458',
-      label: 'Chicken Grilled Salad',
-      quantity: 12,
-      deliveryDate: '25/10/2024',
-      dateFrom: '23/10/2024',
-      dateTo: '24/10/2024'
-    },
-    {
-      value: '6712c70252b276ef20860459',
-      label: 'Bobo de Camarao',
-      quantity: 12,
-      deliveryDate: '25/10/2024',
-      dateFrom: '23/10/2024',
-      dateTo: '24/10/2024'
-    },
-    {
-      value: '67147561a1475231c9ee8ea2',
-      label: 'Lasagna',
-      quantity: 12,
-      deliveryDate: '25/10/2024',
-      dateFrom: '23/10/2024',
-      dateTo: '24/10/2024'
-    }
-  ];
+  async function onSubmit() {}
 
-  async function onSubmit(values: z.infer<typeof mealPlannerSchema>) {
-    console.log('errors', form.formState.errors);
-    // try {
-    //   const response = await fetch('/api/admin/addMeal', {
-    //     method: 'POST',
-    //     body: JSON.stringify({ ...values, image: uploadedFiles })
-    //   });
-    //   const data = await response.json();
-    //   if (!response.ok) {
-    //     form.setError('root', {
-    //       type: 'manual',
-    //       message: 'Server error, please try again later.'
-    //     });
-    //     toast.error('Error', {
-    //       description: 'Failed to add meal, please try again'
-    //     });
-    //     return;
-    //   }
-    //   toast.success('Meal created successfully');
-    //   router.push(`/meals/${data.mealId}`);
-    // } catch (error) {
-    //   console.error('Error:', error);
-    //   toast.error('Error', {
-    //     description: 'Failed to add meal, please try again'
-    //   });
-    // }
+  async function Save() {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/admin/addPlanner`,
+        {
+          method: 'POST',
+          body: JSON.stringify(selectedMeals)
+        }
+      );
+
+      const data = await response.json();
+      if (!response.ok) {
+        form.setError('root', {
+          type: 'manual',
+          message: 'Server error, please try again later.'
+        });
+        toast.error('Error', {
+          description: 'Failed to add planner, please try again'
+        });
+        return;
+      }
+      toast.success('Meal scheduled successfully');
+      router.push(`/planner`);
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error('Error', {
+        description: 'Failed to add meal planner, please try again'
+      });
+    }
   }
 
   React.useEffect(() => {
@@ -162,10 +141,7 @@ const MealPlannerForm: React.FC = () => {
   }, []);
 
   const addSelectedRangeMeals = () => {
-    if (
-      form.formState.errors &&
-      Object.keys(form.formState.errors).length === 0
-    )
+    if (form.formState.errors && Object.keys(form.formState.errors).length > 0)
       return;
 
     const {
@@ -340,7 +316,6 @@ const MealPlannerForm: React.FC = () => {
                                 field.value ? new Date(field.value) : undefined
                               }
                               onSelect={(date) => {
-                                debugger;
                                 form.setValue(
                                   'deliveryDate',
                                   date || new Date()
@@ -361,12 +336,6 @@ const MealPlannerForm: React.FC = () => {
                 Add
               </Button>
             </div>
-
-            <div className="flex justify-center">
-              <Button className="w-72" type="submit">
-                Save
-              </Button>
-            </div>
           </div>
         </div>
       </form>
@@ -374,7 +343,16 @@ const MealPlannerForm: React.FC = () => {
         <h3 className="text-lg py-5 font-semibold">Selected Meals</h3>
         <Separator />
 
-        <DataTable columns={columns} data={testData} />
+        <DataTable
+          columns={columns}
+          data={selectedMeals}
+          setSelectedMeals={setSelectedMeals}
+        />
+      </div>
+      <div className="flex flex-col max-w-[900px]">
+        <Button className="w-72" type="button" onClick={() => Save()}>
+          Save
+        </Button>
       </div>
     </Form>
   );

@@ -3,24 +3,20 @@ import { Button } from '@components/ui/button';
 import { Checkbox } from '@components/ui/checkbox';
 import { ColumnDef, HeaderContext } from '@tanstack/react-table';
 import { ArrowUpDown, Ellipsis } from 'lucide-react';
+
 // import Link from 'next/link';
 
-export type Meal = {
-  _id: string;
-  name: string;
-  description: string;
-  category: string;
-  image: Array<{ path: string; preview: string }>;
-  price: number;
-  portionSize: string;
-  preparationTime: string;
-  notes: string;
-  allergens: Array<{ value: string; label: string }>;
-  createdAt: string;
-};
+interface SelectedMeal {
+  value: string;
+  label: string;
+  quantity: number;
+  deliveryDate: string;
+  dateFrom: string;
+  dateTo: string;
+}
 
 const handleSorting = (
-  column: HeaderContext<Meal, unknown>['column'],
+  column: HeaderContext<SelectedMeal, unknown>['column'],
   content: string
 ) => {
   return (
@@ -33,7 +29,7 @@ const handleSorting = (
     </Button>
   );
 };
-export const columns: ColumnDef<Meal>[] = [
+export const columns: ColumnDef<SelectedMeal>[] = [
   {
     id: 'select',
     header: ({ table }) => (

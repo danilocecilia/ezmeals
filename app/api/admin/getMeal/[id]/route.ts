@@ -21,7 +21,7 @@ export async function GET(
     if (!resultData) {
       return NextResponse.json({ message: 'Meal not found' }, { status: 404 });
     }
-    revalidatePath('/meals');
+    revalidatePath('/admin/meals');
     return NextResponse.json(resultData, { status: 200 });
   } catch {
     return NextResponse.json(

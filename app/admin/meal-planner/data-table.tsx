@@ -19,23 +19,49 @@ import {
 } from '@tanstack/react-table';
 import { useState } from 'react';
 
+interface SelectedMeal {
+  value: string;
+  label: string;
+  quantity: number;
+  deliveryDate: string;
+  dateFrom: string;
+  dateTo: string;
+}
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  setSelectedMeals: (selectedMeals: SelectedMeal[]) => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
-  data
+  data,
+  setSelectedMeals
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [editedRows, setEditedRows] = useState({});
+  const [validRows, setValidRows] = useState({});
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
-    state: { sorting }
+    state: { sorting },
+    meta: {
+      editedRows,
+      setEditedRows,
+      validRows,
+      setValidRows,
+      removeSelectedRows: (selectedRows: number[]) => {
+        const filteredRows = data
+          .filter((_, index) => !selectedRows.includes(index))
+          .map((row) => row as unknown as SelectedMeal);
+
+        setSelectedMeals(filteredRows);
+      }
+    }
   });
 
   return (
@@ -85,25 +111,34 @@ export function DataTable<TData, TValue>({
 
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {/* {console.log(
-            'selected rows:',
-            table.getFilteredSelectedRowModel().rows
-          )} */}
           {table.getFilteredSelectedRowModel().rows.length} of{' '}
           {table.getFilteredRowModel().rows.length} row(s) selected.
         </div>
-        {table.getFilteredSelectedRowModel().rows.length > 0 && (
-          <div>
-            <Button
-              onClick={() => {
-                table.toggleAllPageRowsSelected();
-              }}
-            >
-              Delete Selection
-            </Button>
-          </div>
-        )}
+
+        <FooterCell table={table} />
       </div>
     </div>
   );
 }
+
+export const FooterCell = ({ table }) => {
+  if (table.length === 0) return null;
+
+  const meta = table?.options?.meta;
+  const selectedRows = table.getSelectedRowModel().rows;
+
+  const removeRows = () => {
+    meta.removeSelectedRows(
+      table.getSelectedRowModel().rows.map((row) => row.index)
+    );
+    table.resetRowSelection();
+  };
+
+  return (
+    <div className="footer-buttons">
+      {selectedRows.length > 0 ? (
+        <Button onClick={() => removeRows()}>Remove Selected Row</Button>
+      ) : null}
+    </div>
+  );
+};

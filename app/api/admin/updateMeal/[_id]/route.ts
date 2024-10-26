@@ -53,7 +53,7 @@ export async function PUT(req: Request) {
     if (!updatedMeal || !updatedMeal._id) {
       return NextResponse.json({ message: 'Meal not found' }, { status: 404 });
     }
-    revalidatePath('/meals');
+    revalidatePath('/admin/meals');
     return NextResponse.json({
       message: 'Meal updated successfully',
       meal: updatedMeal.value

@@ -107,7 +107,7 @@ export const columns: ColumnDef<Meal>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <Link href={`/meals/${meal._id}`} className="block">
+            <Link href={`/admin/meals/${meal._id}`} className="block">
               <DropdownMenuItem>Update Meal</DropdownMenuItem>
             </Link>
 
