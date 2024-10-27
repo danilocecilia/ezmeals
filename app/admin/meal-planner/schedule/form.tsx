@@ -59,7 +59,6 @@ interface SelectedMeal {
 const MealPlannerForm: React.FC = () => {
   const router = useRouter();
   const [meals, setMeals] = React.useState<Meal[]>([]);
-  const [loading, setLoading] = React.useState<boolean>(true);
   const [selectedMeals, setSelectedMeals] = React.useState<SelectedMeal[]>([]);
   console.log('🚀 ~ selectedMeals:', selectedMeals);
 
@@ -103,7 +102,7 @@ const MealPlannerForm: React.FC = () => {
         return;
       }
       toast.success('Meal scheduled successfully');
-      router.push(`/planner`);
+      router.push(`/meal-planner/schedules`);
     } catch (error) {
       console.error('Error:', error);
       toast.error('Error', {
@@ -134,8 +133,6 @@ const MealPlannerForm: React.FC = () => {
 
         setMeals(transformedMeals);
       }
-
-      setLoading(false);
     }
     fetchData();
   }, []);
