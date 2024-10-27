@@ -18,6 +18,7 @@ import {
   SortingState
 } from '@tanstack/react-table';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 import { columns } from './columns';
 
@@ -48,6 +49,27 @@ export function DataTable() {
     listMealPlanner();
   }, []);
 
+  const handleDelete = async (rowsToDelete: string[]) => {
+    try {
+      const response = await fetch('/api/admin/deleteMealPlanner', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: rowsToDelete })
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        toast.success(result.message);
+      } else {
+        toast.error(result.error);
+      }
+    } catch (error) {
+      console.error('Error deleting items:', error);
+      toast.error('Failed to delete items');
+    }
+  };
+
   const table = useReactTable({
     data: selectedMeals,
     columns,
@@ -60,7 +82,12 @@ export function DataTable() {
       setEditedRows,
       validRows,
       setValidRows,
-      removeSelectedRows: (selectedRows: number[]) => {
+      removeSelectedRows: async (selectedRows: number[]) => {
+        const rowsToDelete = selectedRows.map(
+          (index) => selectedMeals[index].value
+        );
+        await handleDelete(rowsToDelete);
+
         const filteredRows = selectedMeals
           .filter((_, index) => !selectedRows.includes(index))
           .map((row) => row as unknown as SelectedMeal);
