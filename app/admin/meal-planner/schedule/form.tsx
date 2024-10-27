@@ -81,6 +81,14 @@ const MealPlannerForm: React.FC = () => {
   async function onSubmit() {}
 
   async function Save() {
+    if (selectedMeals.length === 0) {
+      toast.error('Error', {
+        description: 'Please select meals to schedule.'
+      });
+
+      return;
+    }
+
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/admin/addPlanner`,
