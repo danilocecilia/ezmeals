@@ -73,7 +73,7 @@ const Navbar = () => {
           </DropdownMenu>
 
           <Link
-            href="/admin/planner"
+            href="/admin/meal-planner/schedules"
             className="text-muted-foreground transition-colors hover:text-foreground min-w-max"
           >
             Meal Planner

@@ -65,7 +65,17 @@ const data = {
     {
       title: 'Meal Planner',
       url: '/admin/meal-planner',
-      icon: CalendarRange
+      icon: CalendarRange,
+      items: [
+        {
+          title: 'Schedule Meal',
+          url: '/admin/meal-planner/schedule'
+        },
+        {
+          title: 'List Schedules',
+          url: '/admin/meal-planner/schedules'
+        }
+      ]
     }
   ]
 };
