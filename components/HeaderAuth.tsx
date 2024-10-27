@@ -75,9 +75,14 @@ const HeaderAuth: React.FC = ({ session, status }) => {
           </DropdownMenuContent>
         </DropdownMenu>
       ) : (
-        <Button asChild>
-          <Link href={`/login`}>Sign in</Link>
-        </Button>
+        <>
+          <Button asChild>
+            <Link href={`/login`}>Sign in</Link>
+          </Button>
+          <Button asChild>
+            <Link href={`/register`}>Sign Up</Link>
+          </Button>
+        </>
       )}
     </div>
   );

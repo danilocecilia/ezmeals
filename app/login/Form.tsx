@@ -152,7 +152,7 @@ const LoginForm = () => {
               src="/logo.jpg"
               alt="Image"
               layout="intrinsic"
-              className="opacity-80"
+              // className="opacity-80"
               width={500} // Required, but sets the aspect ratio
               height={500} // Will adjust automatically based on width
             />

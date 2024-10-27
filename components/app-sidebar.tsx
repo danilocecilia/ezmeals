@@ -97,13 +97,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   src="/logo_nav.png"
                   width={50}
                   height={50}
-                  alt="Easy Meal Logo"
+                  alt="Eazy Meal Logo"
                   style={{ objectFit: 'cover', maxWidth: 'unset' }}
                 />
                 <span className="sr-only">Acme Inc</span>
 
                 <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-semibold">Easy Meal</span>
+                  <span className="font-semibold">Eazy Meal</span>
                   {/* <span className="">v1.0.0</span> */}
                 </div>
               </Link>

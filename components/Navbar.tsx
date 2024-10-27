@@ -24,7 +24,7 @@ const Navbar = () => {
   const { session, status } = useCurrentSession();
 
   return (
-    <header className="sticky top-0 flex h-16 items-center gap-6 px-4 md:px-6 border-b">
+    <header className="sticky top-0 flex h-26 items-center gap-6 px-4 md:px-6 border-b">
       <nav className="container mx-auto hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6 w-full justify-between">
         <div className="flex gap-8 items-center">
           <Link
@@ -32,15 +32,15 @@ const Navbar = () => {
             className="hidden flex md:flex items-center gap-2 text-lg font-semibold md:text-base"
           >
             <Image
-              src="/logo_nav.png"
-              width={50}
-              height={50}
-              alt="Easy Meal Logo"
-              style={{ objectFit: 'cover', maxWidth: 'unset' }}
+              src="/logo.jpg"
+              width={60}
+              height={60}
+              alt="Eazy Meal Logo"
+              style={{ objectFit: 'cover', maxWidth: 'unset', zIndex: -1 }}
             />
-            <span className="sr-only">Acme Inc</span>
+            {/* <span className="">Eazy Meal</span> */}
           </Link>
-          <Link
+          {/* <Link
             href="/dashboard"
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
@@ -77,7 +77,7 @@ const Navbar = () => {
             className="text-muted-foreground transition-colors hover:text-foreground min-w-max"
           >
             Meal Planner
-          </Link>
+          </Link> */}
         </div>
         <div>
           <DynamicHeaderAuth session={session} status={status} />

@@ -4,8 +4,13 @@ import Link from 'next/link';
 
 export const Home = async () => {
   return (
-    <main className="max-w-7xl container mx-auto my-12 space-y-10">
-      <aside className="space-y-2">
+    <main className="flex max-w-7xl justify-center container mx-auto my-12 space-y-10">
+      <div className="flex flex-col justify-center">
+        {/* <h1 className="text-8xl">Eazy Meal</h1> */}
+        {/* <img src="/logo.jpg" alt="food" /> */}
+      </div>
+
+      {/* <aside className="space-y-2">
         <span className="block text-4xl font-bold bg-gradient-to-r from-foreground/80 via-foreground/70 to-foreground/90 text-transparent bg-clip-text">
           Welcome to this{' '}
           <span className="bg-gradient-to-r from-sky-400 to-violet-500 text-transparent bg-clip-text">
@@ -25,7 +30,7 @@ export const Home = async () => {
           <GraduationCap />
           Learn more about this project
         </Link>
-      </Button>
+      </Button> */}
     </main>
   );
 };
