@@ -15,6 +15,7 @@ import React from 'react';
 
 import { Button } from './ui/button';
 import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
+import { UserNav } from './user-nav';
 
 const DynamicHeaderAuth = dynamic(() => import('./HeaderAuth'), {
   ssr: false
@@ -38,46 +39,7 @@ const Navbar = () => {
               alt="Eazy Meal Logo"
               style={{ objectFit: 'cover', maxWidth: 'unset', zIndex: -1 }}
             />
-            {/* <span className="">Eazy Meal</span> */}
           </Link>
-          {/* <Link
-            href="/dashboard"
-            className="text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Dashboard
-          </Link>
-          <Link
-            href="/orders"
-            className="text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Orders
-          </Link>
-          <DropdownMenu>
-            <DropdownMenuTrigger className="text-muted-foreground transition-colors hover:text-foreground">
-              Meals
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <Link
-                href="/admin/meals/add"
-                className="transition-colors hover:text-foreground"
-              >
-                <DropdownMenuItem>Add Meal</DropdownMenuItem>
-              </Link>
-              <Link
-                href="/admin/meals"
-                className="transition-colors hover:text-foreground"
-              >
-                <DropdownMenuItem>List All</DropdownMenuItem>
-              </Link>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <Link
-            href="/admin/meal-planner/schedules"
-            className="text-muted-foreground transition-colors hover:text-foreground min-w-max"
-          >
-            Meal Planner
-          </Link> */}
         </div>
         <div>
           <DynamicHeaderAuth session={session} status={status} />

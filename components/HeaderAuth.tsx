@@ -18,16 +18,14 @@ import {
 import { SidebarMenuButton } from './ui/sidebar';
 
 const HeaderAuth: React.FC = ({ session, status }) => {
+  console.log('entrou!!');
   return (
     <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
       <form className="ml-auto flex-1 sm:flex-initial"></form>
       {status !== 'unauthenticated' && session ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            {/* <SidebarMenuButton
-              size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-            >
+            <>
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage
                   src={'https://github.com/shadcn.png'}
@@ -39,8 +37,7 @@ const HeaderAuth: React.FC = ({ session, status }) => {
                 <span className="truncate font-semibold">{`${session?.user?.name}`}</span>
                 <span className="truncate text-xs">{`${session?.user?.email}`}</span>
               </div>
-              <ChevronsUpDown className="ml-auto size-4" />
-            </SidebarMenuButton> */}
+            </>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56" align="end" forceMount>
             <DropdownMenuLabel className="font-normal">
