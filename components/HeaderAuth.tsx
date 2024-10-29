@@ -25,19 +25,15 @@ const HeaderAuth: React.FC = ({ session, status }) => {
       {status !== 'unauthenticated' && session ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <>
-              <Avatar className="h-8 w-8 rounded-lg">
+            <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+              <Avatar>
                 <AvatarImage
-                  src={'https://github.com/shadcn.png'}
-                  alt={`@${session?.user?.name}`}
+                  src={session?.user?.image || '/avatars/01.png'}
+                  alt={`${session?.user?.name}`}
                 />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                <AvatarFallback className="rounded-lg">{`${session?.user?.name?.substring(0, 1)}`}</AvatarFallback>
               </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{`${session?.user?.name}`}</span>
-                <span className="truncate text-xs">{`${session?.user?.email}`}</span>
-              </div>
-            </>
+            </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56" align="end" forceMount>
             <DropdownMenuLabel className="font-normal">
@@ -58,10 +54,6 @@ const HeaderAuth: React.FC = ({ session, status }) => {
                   <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                 </DropdownMenuItem>
               </Link>
-              <DropdownMenuItem>
-                Billing
-                <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-              </DropdownMenuItem>
               <DropdownMenuItem>
                 Settings
                 <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>

@@ -52,6 +52,10 @@ const sanitizePortionSize = (portionSize: string) => {
   }
 };
 
+const truncateText = (text: string, limit: number) => {
+  return text.length > limit ? `${text.slice(0, limit)}...` : text;
+};
+
 export const columns: ColumnDef<Meal>[] = [
   {
     accessorKey: 'name',
@@ -88,7 +92,8 @@ export const columns: ColumnDef<Meal>[] = [
   },
   {
     accessorKey: 'description',
-    header: ({ column }) => handleSorting(column, 'Description')
+    header: ({ column }) => handleSorting(column, 'Description'),
+    accessorFn: (row) => truncateText(row.description, 50)
   },
   {
     id: 'actions',
