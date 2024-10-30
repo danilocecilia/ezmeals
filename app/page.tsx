@@ -8,14 +8,14 @@ export const Home = async () => {
   const session = await auth();
   console.log(session);
   return (
-    <main className="flex max-w-7xl justify-center container mx-auto my-12 space-y-10">
-      <div className="flex flex-col justify-center">
+    <main className="">
+      <div className="">
         {/* <h1 className="text-8xl">Eazy Meal</h1> */}
         {/* <img src="/logo.jpg" alt="food" /> */}
       </div>
-      <div>
-        <CarouselDemo />
-      </div>
+      {/* <div> */}
+      <CarouselDemo />
+      {/* </div> */}
       {/* <aside className="space-y-2">
         <span className="block text-4xl font-bold bg-gradient-to-r from-foreground/80 via-foreground/70 to-foreground/90 text-transparent bg-clip-text">
           Welcome to this{' '}

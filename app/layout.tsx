@@ -1,10 +1,10 @@
-import type { Session } from '@auth/core/types';
 import Navbar from '@components/Navbar';
 import SessionWrapper from '@components/SessionWrapper';
 import { cn } from '@lib/utils';
 import { auth } from '@root/auth';
 import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
+import { Session } from 'next-auth';
 import React from 'react';
 import { Toaster } from 'sonner';
 
@@ -17,13 +17,29 @@ const poppinsFont = Poppins({
   weight: ['400', '500', '600', '700']
 });
 
+interface ExtendedSessionType extends Session {
+  user: ExtendedUserType;
+}
+
+interface ExtendedUserType {
+  id?: string;
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
+  address?: string;
+  city?: string;
+  phone?: string;
+  postal_code?: string;
+  province?: string;
+  privilege: 'admin' | 'user';
+}
+
 export default async function RootLayout({
   children
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // const session = (await auth()) as ExtendedSessionType | null;
-  const session = await auth();
+  const session = (await auth()) as ExtendedSessionType | null;
 
   return (
     <SessionWrapper session={session}>
@@ -35,15 +51,7 @@ export default async function RootLayout({
           )}
         >
           <div className="mx-auto relative flex min-h-screen flex-col">
-            <Navbar />
-            {/* {session?.user?.privilege !== 'admin' && <Navbar />} */}
-            {/* <main className="container mx-auto flex-1">
-              
-              {session?.user?.privilege === 'admin' ?
-                children}
-            
-            
-            </main> */}
+            {session?.user?.privilege !== 'admin' && <Navbar />}
             <main className="flex-1">{children}</main>
             <Toaster />
           </div>
