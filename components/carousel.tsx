@@ -25,9 +25,9 @@ export function CarouselDemo() {
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <div className="flex  flex-col justify-center p-10">
+    <div className="flex flex-col justify-center p-10">
       <h1 className="flex justify-center text-4xl font-bold">
-        Weekly Meal Planner
+        Weekly Meal Menu
       </h1>
       <Carousel
         className="max-w-[900px] flex justify-center m-auto"

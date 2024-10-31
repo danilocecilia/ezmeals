@@ -1,5 +1,6 @@
 'use client';
 // import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
+import { Icons } from '@components/icons';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,20 +26,17 @@ const Navbar = () => {
   const { session, status } = useCurrentSession();
 
   return (
-    <header className="sticky top-0 flex h-26 items-center gap-6 px-4 md:px-6 border-b">
-      <nav className="container mx-auto hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6 w-full justify-between">
+    <header className="sticky top-0 z-50 w-full bg-[white] border-b-[1px]">
+      <nav className="container mx-auto hidden h-20 flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6 w-full justify-between">
         <div className="flex gap-8 items-center">
           <Link
             href="/"
-            className="hidden flex md:flex items-center gap-2 text-lg font-semibold md:text-base"
+            className="hidden flex md:flex items-center gap-4 text-lg font-semibold md:text-base"
           >
-            <Image
-              src="/logo.jpg"
-              width={60}
-              height={60}
-              alt="Eazy Meal Logo"
-              style={{ objectFit: 'cover', maxWidth: 'unset', zIndex: -1 }}
-            />
+            <Icons.logo className="h-[60px] w-[60px]" />
+            <span className="hidden text-2xl font-bold lg:inline-block">
+              EZMeal
+            </span>
           </Link>
         </div>
         <div>

@@ -1,4 +1,5 @@
 import { CarouselDemo } from '@components/carousel';
+import MealCard from '@components/meal-card';
 import { Button } from '@components/ui/button';
 import { auth } from '@root/auth';
 import { GraduationCap } from 'lucide-react';
@@ -8,13 +9,20 @@ export const Home = async () => {
   const session = await auth();
   console.log(session);
   return (
-    <main className="">
+    <main className="container mx-auto">
       <div className="">
         {/* <h1 className="text-8xl">Eazy Meal</h1> */}
         {/* <img src="/logo.jpg" alt="food" /> */}
       </div>
       {/* <div> */}
       <CarouselDemo />
+
+      <div className="flex justify-center space-x-8">
+        <MealCard />
+        <MealCard />
+        <MealCard />
+        <MealCard />
+      </div>
       {/* </div> */}
       {/* <aside className="space-y-2">
         <span className="block text-4xl font-bold bg-gradient-to-r from-foreground/80 via-foreground/70 to-foreground/90 text-transparent bg-clip-text">
