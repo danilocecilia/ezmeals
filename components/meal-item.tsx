@@ -9,9 +9,20 @@ import {
 } from '@components/ui/card';
 import { Separator } from '@components/ui/separator';
 import { cn } from '@lib/utils';
+import { useCart } from '@root/context/cart-context';
 import Image from 'next/image';
+import React from 'react';
 
-const MealCard = ({ meal }) => {
+interface MealItemProps {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+}
+
+const MealItem: React.FC<MealItemProps> = ({ meal }) => {
+  const cart = useCart();
+
   return (
     <Card className="max-w-[300px]">
       <CardHeader>
@@ -42,13 +53,18 @@ const MealCard = ({ meal }) => {
           <p className="text-xs">only 3 left</p>
         </div>
         <Button
-        // onClick={() => ()}
+          onClick={() => {
+            cart.dispatch({
+              type: 'ADD_ITEM',
+              item: { meal.id, meal.name, meal.price, quantity: 1 }
+            });
+          }}
         >
-          Add to cart
+          Add to Cart
         </Button>
       </CardFooter>
     </Card>
   );
 };
 
-export default MealCard;
+export default MealItem;

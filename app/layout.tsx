@@ -2,6 +2,7 @@ import Navbar from '@components/Navbar';
 import SessionWrapper from '@components/SessionWrapper';
 import { cn } from '@lib/utils';
 import { auth } from '@root/auth';
+import { CartProvider } from '@root/context/cart-context';
 import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
 import { Session } from 'next-auth';
@@ -51,9 +52,11 @@ export default async function RootLayout({
           )}
         >
           <div className="relative flex min-h-screen flex-col bg-background">
-            <Navbar />
-            {children}
-            <Toaster />
+            <CartProvider>
+              <Navbar />
+              {children}
+              <Toaster />
+            </CartProvider>
           </div>
 
           {/* <div className="mx-auto relative flex min-h-screen flex-col"> */}

@@ -1,6 +1,7 @@
 'use client';
 // import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
 import { Icons } from '@components/icons';
+import Checkout from '@components/ui/checkout';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,7 +9,7 @@ import {
   DropdownMenuTrigger
 } from '@components/ui/dropdown-menu';
 import { useCurrentSession } from '@hooks/useCurrentSession';
-import { Menu, Package2 } from 'lucide-react';
+import { Menu, Package2, ShoppingCartIcon } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -27,7 +28,7 @@ const Navbar = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-[white] border-b-[1px]">
-      <nav className="container mx-auto hidden h-20 flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6 w-full justify-between">
+      <nav className="container mx-auto hidden h-16 flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6 w-full justify-between">
         <div className="flex gap-8 items-center">
           <Link
             href="/"
@@ -39,8 +40,11 @@ const Navbar = () => {
             </span>
           </Link>
         </div>
-        <div>
+        <div className="flex gap-8">
           <DynamicHeaderAuth session={session} status={status} />
+          <span className="self-center">
+            <Checkout />
+          </span>
         </div>
       </nav>
       <Sheet>

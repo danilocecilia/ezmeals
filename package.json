@@ -38,6 +38,7 @@
     "embla-carousel": "^8.3.1",
     "embla-carousel-autoplay": "^8.3.1",
     "embla-carousel-react": "^8.3.1",
+    "framer-motion": "^11.11.11",
     "lucide-react": "^0.446.0",
     "mongodb": "^6.9.0",
     "mongodb-client-encryption": "^6.1.0",
