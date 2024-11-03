@@ -32,7 +32,7 @@ const MealItem: React.FC<MealItemProps> = ({ meal }) => {
 
   return (
     <Card className="max-w-[350px] pt-6">
-      <CardContent className="pb-0">
+      <CardContent className="pb-0 cursor-pointer">
         <div className="overflow-hidden rounded-md">
           <Image
             src={meal.image[0].url}
@@ -47,7 +47,9 @@ const MealItem: React.FC<MealItemProps> = ({ meal }) => {
         </div>
       </CardContent>
       <CardHeader>
-        <CardTitle className="h-14">{meal.name}</CardTitle>
+        <CardTitle className="h-14 cursor-pointer hover:text-primary">
+          {meal.name}
+        </CardTitle>
         <Separator />
         <CardDescription>
           {meal.description.substring(0, 100)}...
@@ -56,7 +58,10 @@ const MealItem: React.FC<MealItemProps> = ({ meal }) => {
 
       <CardFooter className="flex justify-between">
         <div>
-          <p className="text-2xl">${meal.price}</p>
+          <p className="text-2xl">
+            <span className="text-sm relative top-[-5.75px]">$</span>
+            {meal.price}
+          </p>
           <p className="text-xs">only 3 left</p>
         </div>
         <Button

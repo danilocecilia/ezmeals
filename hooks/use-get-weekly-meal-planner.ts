@@ -1,14 +1,11 @@
 import useSWR from 'swr';
 
 type WeeklyMealPlanner = {
-  id: string;
-  value: string;
-  label: string;
-  quantity: number;
-  image: string;
-  deliveryDate: string;
-  dateFrom: string;
-  dateTo: string;
+  _id: string;
+  name: string;
+  price: number;
+  image: { url: string }[];
+  description: string;
 };
 
 type FetcherResponse = WeeklyMealPlanner[];
