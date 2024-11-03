@@ -127,6 +127,7 @@ const CustomForm: React.FC = () => {
                     <FormControl>
                       <Input
                         id="name"
+                        maxLength={47}
                         placeholder="Grilled Chicken Salad"
                         {...field}
                       />

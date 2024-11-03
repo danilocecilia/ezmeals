@@ -1,5 +1,5 @@
 import clientPromise from '@lib/mongodb';
-import { format, nextSaturday, nextSunday } from 'date-fns';
+import { format, nextSaturday, nextSunday, addDays } from 'date-fns';
 import { ObjectId } from 'mongodb';
 import { NextResponse } from 'next/server';
 
@@ -7,10 +7,24 @@ export async function GET() {
   try {
     const client = await clientPromise;
     const db = client.db();
-    // Calculate the start and end dates for the upcoming weekend
-    const saturday = nextSaturday(new Date());
-    const sunday = nextSunday(new Date());
+    const today = new Date();
+    // Determine the start and end dates for the upcoming weekend
+    let saturday, sunday;
 
+    // If today is Saturday, set the start date to today and end date to tomorrow (Sunday).
+    if (today.getDay() === 6) {
+      saturday = today;
+      sunday = addDays(today, 1);
+    }
+    // If today is Sunday, set the start date to next Saturday (6 days from now) and end date to next Sunday.
+    else if (today.getDay() === 0) {
+      saturday = addDays(today, 6);
+      sunday = addDays(today, 7);
+    } else {
+      // If today is a weekday, calculate the next Saturday and Sunday.
+      saturday = addDays(today, 6 - today.getDay());
+      sunday = addDays(today, 7 - today.getDay());
+    }
     const startDate = format(saturday, 'dd-MM-yyyy');
     console.log('🚀 ~ GET ~ startDate:', startDate);
     const endDate = format(sunday, 'dd-MM-yyyy');

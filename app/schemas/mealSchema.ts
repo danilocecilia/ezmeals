@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const mealSchema = z.object({
-  name: z.string(),
+  name: z.string().max(47, 'Name must be at most 47 characters long'),
   description: z.string().optional(),
   category: z.string().optional(),
   price: z

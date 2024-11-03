@@ -1,13 +1,19 @@
+'use client';
+
 import { CarouselDemo } from '@components/carousel';
-import MealCard from '@components/meal-card';
+import MealItem from '@components/meal-item';
 import { Button } from '@components/ui/button';
-import { auth } from '@root/auth';
+// import { auth } from '@root/auth';
+import useGetWeeklyMealPlanner from '@root/hooks/use-get-weekly-meal-planner';
 import { GraduationCap } from 'lucide-react';
 import Link from 'next/link';
 
-export const Home = async () => {
-  const session = await auth();
-  console.log(session);
+export const Home = () => {
+  const { weeklyMealPlanner, isLoading, isError } = useGetWeeklyMealPlanner();
+  // const session = await auth();
+  // console.log(session);
+
+  if (isLoading) return <div>Loading...</div>;
   return (
     <main className="container mx-auto">
       <div className="">
@@ -15,13 +21,12 @@ export const Home = async () => {
         {/* <img src="/logo.jpg" alt="food" /> */}
       </div>
       {/* <div> */}
-      <CarouselDemo />
+      <CarouselDemo weeklyMeals={weeklyMealPlanner} />
 
-      <div className="flex justify-center space-x-8">
-        <MealCard />
-        <MealCard />
-        <MealCard />
-        <MealCard />
+      <div className="grid grid-cols-4 justify-center">
+        {weeklyMealPlanner?.map((meal) => (
+          <MealItem key={meal.id} meal={meal} />
+        ))}
       </div>
       {/* </div> */}
       {/* <aside className="space-y-2">

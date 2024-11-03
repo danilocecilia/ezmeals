@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@components/ui/button';
 import {
   Card,
@@ -24,19 +26,11 @@ const MealItem: React.FC<MealItemProps> = ({ meal }) => {
   const cart = useCart();
 
   return (
-    <Card className="max-w-[300px]">
-      <CardHeader>
-        <CardTitle>Feijoada</CardTitle>
-        <Separator />
-        <CardDescription>
-          Brazilian black bean stew with pork, sausage, and spices. Served with
-          rice, greens, and orange slices.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+    <Card className="max-w-[350px] pt-6">
+      <CardContent className="pb-0">
         <div className="overflow-hidden rounded-md">
           <Image
-            src="http://localhost:3000/_next/image?url=https%3A%2F%2Futfs.io%2Ff%2FEjEgUSOL8SjxJXdJKO18ma7oGnheb4AsuEkNjCiUOcv9QyTY&w=640&q=75"
+            src={meal.image[0].url}
             alt="Image"
             layout="intrinsic"
             width={500} // Required, but sets the aspect ratio
@@ -47,18 +41,26 @@ const MealItem: React.FC<MealItemProps> = ({ meal }) => {
           ></Image>
         </div>
       </CardContent>
+      <CardHeader>
+        <CardTitle className="h-14">{meal.name}</CardTitle>
+        <Separator />
+        <CardDescription>
+          {meal.description.substring(0, 100)}...
+        </CardDescription>
+      </CardHeader>
+
       <CardFooter className="flex justify-between">
         <div>
-          <p className="text-2xl">$21.95</p>
+          <p className="text-2xl">${meal.price}</p>
           <p className="text-xs">only 3 left</p>
         </div>
         <Button
-          onClick={() => {
-            cart.dispatch({
-              type: 'ADD_ITEM',
-              item: { meal.id, meal.name, meal.price, quantity: 1 }
-            });
-          }}
+        // onClick={() => {
+        //   cart.dispatch({
+        //     type: 'ADD_ITEM',
+        //     item: { meal.id, meal.name, meal.price, quantity: 1 }
+        //   });
+        // }}
         >
           Add to Cart
         </Button>
