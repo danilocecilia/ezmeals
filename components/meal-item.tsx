@@ -15,11 +15,16 @@ import { useCart } from '@root/context/cart-context';
 import Image from 'next/image';
 import React from 'react';
 
-interface MealItemProps {
-  id: string;
+interface Meal {
+  _id: string;
   name: string;
   description: string;
   price: number;
+  image: { url: string }[];
+}
+
+interface MealItemProps {
+  meal: Meal;
 }
 
 const MealItem: React.FC<MealItemProps> = ({ meal }) => {
@@ -55,12 +60,19 @@ const MealItem: React.FC<MealItemProps> = ({ meal }) => {
           <p className="text-xs">only 3 left</p>
         </div>
         <Button
-        // onClick={() => {
-        //   cart.dispatch({
-        //     type: 'ADD_ITEM',
-        //     item: { meal.id, meal.name, meal.price, quantity: 1 }
-        //   });
-        // }}
+          className="cursor-pointer"
+          type="button"
+          onClick={() => {
+            cart.dispatch({
+              type: 'ADD_ITEM',
+              item: {
+                id: meal._id,
+                name: meal.name,
+                price: meal.price,
+                quantity: 1
+              }
+            });
+          }}
         >
           Add to Cart
         </Button>

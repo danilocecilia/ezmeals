@@ -1,23 +1,23 @@
 'use client';
 
+import { useCart } from '@root/context/cart-context';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingCart } from 'lucide-react';
 import React, { useState } from 'react';
 
 const Checkout = () => {
-  const variants = {
-    initial: {
-      height: 10,
-      opacity: 0
-    },
-    animate: {
-      height: 55,
-      opacity: 1
-    },
-    exit: {
-      height: 10,
-      opacity: 0
+  const { state } = useCart();
+
+  React.useEffect(() => {
+    if (state.items.length > 0) {
+      setFocus(true);
+      const timer = setTimeout(() => setFocus(false), 2000); // Remove focus after 2 seconds
+      return () => clearTimeout(timer);
     }
+  }, [state.items]);
+
+  const getTotalQuantity = () => {
+    return state.items.reduce((acc, item) => acc + item.quantity, 0);
   };
 
   const [focus, setFocus] = useState(false);
@@ -41,7 +41,7 @@ const Checkout = () => {
               }}
               className="text-xs h-4 w-4 rounded-full bg-primary text-primary-foreground -top-1.5 -right-1.5 absolute"
             >
-              3
+              {state.items.length > 0 ? getTotalQuantity() : ''}
             </motion.span>
           </span>
           <span className="text-md font-semibold">Cart</span>
