@@ -12,22 +12,15 @@ import {
 import { Separator } from '@components/ui/separator';
 import { cn } from '@lib/utils';
 import { useCart } from '@root/context/cart-context';
+import { Meal } from '@types';
 import Image from 'next/image';
 import React from 'react';
 
-interface Meal {
-  _id: string;
-  name: string;
-  description: string;
-  price: number;
-  image: { url: string }[];
-}
-
-interface MealItemProps {
+interface MealCardProps {
   meal: Meal;
 }
 
-const MealItem: React.FC<MealItemProps> = ({ meal }) => {
+const MealCard: React.FC<MealCardProps> = ({ meal }) => {
   const cart = useCart();
 
   return (
@@ -38,8 +31,8 @@ const MealItem: React.FC<MealItemProps> = ({ meal }) => {
             src={meal.image[0].url}
             alt="Image"
             layout="intrinsic"
-            width={500} // Required, but sets the aspect ratio
-            height={500} // Will adjust automatically based on width
+            width={500}
+            height={500}
             className={cn(
               'h-auto w-auto object-cover transition-all hover:scale-105 aspect-[3/4]'
             )}
@@ -86,4 +79,4 @@ const MealItem: React.FC<MealItemProps> = ({ meal }) => {
   );
 };
 
-export default MealItem;
+export default MealCard;

@@ -1,14 +1,7 @@
+import { Meal } from '@types';
 import useSWR from 'swr';
 
-type WeeklyMealPlanner = {
-  _id: string;
-  name: string;
-  price: number;
-  image: { url: string }[];
-  description: string;
-};
-
-type FetcherResponse = WeeklyMealPlanner[];
+type FetcherResponse = Meal[];
 
 const useGetWeeklyMealPlanner = () => {
   const fetcher = (url: string): Promise<FetcherResponse> =>

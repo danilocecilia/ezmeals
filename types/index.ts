@@ -1,5 +1,8 @@
 import { type ClientUploadedFileData } from 'uploadthing/types';
 
+import { CartItem } from './cart';
+import { Meal } from './meal';
+
 export interface UploadedFile<T = unknown> extends ClientUploadedFileData<T> {
   customProperty?: string;
 }
@@ -10,6 +13,6 @@ declare global {
     username: string;
     email: string;
   }
-
-  // Other globally used types or interfaces
 }
+
+export type { CartItem, Meal };

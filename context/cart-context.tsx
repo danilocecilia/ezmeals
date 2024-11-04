@@ -3,6 +3,7 @@ import {
   saveToSessionStorage,
   loadFromSessionStorage
 } from '@root/utils/sessionStorage';
+import { CartItem } from '@types';
 import React, {
   createContext,
   useReducer,
@@ -12,27 +13,19 @@ import React, {
   useEffect
 } from 'react';
 
-interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-}
-
-interface CartState {
-  items: CartItem[];
-  totalAmount: number;
-}
-
-type CartAction =
-  | { type: 'ADD_ITEM'; item: CartItem }
-  | { type: 'REMOVE_ITEM'; id: string }
-  | { type: 'CLEAR_CART' };
-
 const initialCartState: CartState = {
   items: [],
   totalAmount: 0
 };
+export interface CartState {
+  items: CartItem[];
+  totalAmount: number;
+}
+
+export type CartAction =
+  | { type: 'ADD_ITEM'; item: CartItem }
+  | { type: 'REMOVE_ITEM'; id: string }
+  | { type: 'CLEAR_CART' };
 
 const cartReducer = (state: CartState, action: CartAction): CartState => {
   switch (action.type) {

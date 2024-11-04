@@ -27,7 +27,7 @@
       "@utils/*": ["utils/*"],
       "@lib/*": ["lib/*"],
       "@api/*": ["app/api/*"],
-      "@types": ["types"]
+      "@types": ["./types"]
     },
     "types": ["types"]
   },

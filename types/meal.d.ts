@@ -1,13 +1,32 @@
 export interface Meal {
-  id: string;
+  _id: string;
   name: string;
   description: string;
-  ingredients: string[];
-  calories: number;
-  vegetarian: boolean;
-  vegan: boolean;
-  glutenFree: boolean;
-  preparationTime: number; // in minutes
-  cookingTime: number; // in minutes
-  servings: number;
+  category: string;
+  price: number;
+  image: {
+    name: string;
+    size: number;
+    key: string;
+    lastModified: number;
+    serverData: {
+      uploadedBy: string;
+    };
+    url: string;
+    appUrl: string;
+    customId: null;
+    type: string;
+    fileHash: string;
+  }[];
+  portionSize: string;
+  preparationTime: null;
+  allergens: string[];
+  notes: string;
+  createdAt: {
+    $date: string;
+  };
+  updatedAt: {
+    $date: string;
+  };
+  side: boolean;
 }

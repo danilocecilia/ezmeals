@@ -7,25 +7,15 @@ import {
   CarouselNext,
   CarouselPrevious
 } from '@components/ui/carousel';
+import { Meal } from '@types';
 import Autoplay from 'embla-carousel-autoplay';
 import Image from 'next/image';
 import * as React from 'react';
 
-export function CarouselDemo({ weeklyMeals }) {
-  // const mealImages = weeklyMealPlanner?.map((meal) => meal.image[0].url);
-  // console.log('🚀 ~ CarouselDemo ~ mealImages:', mealImages);
-
-  // console.log('🚀 ~ CarouselDemo ~ isError:', isError);
-  // console.log('🚀 ~ CarouselDemo ~ isLoading:', isLoading);
-  // console.log('🚀 ~ CarouselDemo ~ weeklyMealPlanner:', weeklyMealPlanner);
-
-  // if (isLoading) return <div>Loading...</div>;
-
+export function CarouselMeal({ weeklyMeals }: { weeklyMeals: Array<Meal> }) {
   return (
     <div className="flex flex-col justify-center p-10">
-      <h1 className="flex justify-center text-4xl font-bold">
-        Weekly Meal Menu
-      </h1>
+      <h1 className="flex justify-center text-4xl font-bold">Weekly Meal</h1>
       <Carousel
         className="max-w-[900px] flex justify-center m-auto"
         plugins={[
@@ -35,11 +25,11 @@ export function CarouselDemo({ weeklyMeals }) {
         ]}
       >
         <CarouselContent>
-          {weeklyMeals.map((meal, index: string) => (
+          {weeklyMeals.map((meal, index: number) => (
             <CarouselItem key={index} style={{ flex: '0 0 70%' }}>
               <div className="p-6">
                 <Card>
-                  <CardContent className="relative flex aspect-square items-center justify-center p-6">
+                  <CardContent className="relative flex aspect-square items-center justify-center p-6 cursor-pointer">
                     <div className="absolute flex justify-center items-center w-full h-[67px] mt-[26px] bg-[white] top-6 opacity-85 text-xl font-bold">
                       <h2>{meal.name}</h2>
                     </div>
@@ -47,8 +37,8 @@ export function CarouselDemo({ weeklyMeals }) {
                       src={weeklyMeals[index].image[0].url}
                       alt="Image"
                       layout="intrinsic"
-                      width={500} // Required, but sets the aspect ratio
-                      height={500} // Will adjust automatically based on width
+                      width={500}
+                      height={500}
                     ></Image>
                   </CardContent>
                 </Card>

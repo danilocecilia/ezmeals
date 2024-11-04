@@ -1,23 +1,15 @@
 'use client';
-// import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
+
 import { Icons } from '@components/icons';
 import Checkout from '@components/ui/checkout';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from '@components/ui/dropdown-menu';
 import { useCurrentSession } from '@hooks/useCurrentSession';
-import { Menu, Package2, ShoppingCartIcon } from 'lucide-react';
+import { Menu, Package2 } from 'lucide-react';
 import dynamic from 'next/dynamic';
-import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
 import { Button } from './ui/button';
 import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
-import { UserNav } from './user-nav';
 
 const DynamicHeaderAuth = dynamic(() => import('./HeaderAuth'), {
   ssr: false
@@ -32,7 +24,7 @@ const Navbar = () => {
         <div className="flex gap-8 items-center">
           <Link
             href="/"
-            className="hidden flex md:flex items-center gap-4 text-lg font-semibold md:text-base"
+            className="hidden md:flex items-center gap-4 text-lg font-semibold md:text-base"
           >
             <Icons.logo className="h-[60px] w-[60px]" />
             <span className="hidden text-2xl font-bold lg:inline-block">

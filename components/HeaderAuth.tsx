@@ -15,7 +15,6 @@ import {
   DropdownMenuGroup,
   DropdownMenuShortcut
 } from './ui/dropdown-menu';
-import { SidebarMenuButton } from './ui/sidebar';
 
 const HeaderAuth: React.FC = ({ session, status }) => {
   console.log('entrou!!');
@@ -28,7 +27,7 @@ const HeaderAuth: React.FC = ({ session, status }) => {
             <Button variant="ghost" className="relative h-8 w-8 rounded-full">
               <Avatar>
                 <AvatarImage
-                  src={session?.user?.image || '/avatars/01.png'}
+                  src={session?.user?.image || './avatar.png'}
                   alt={`${session?.user?.name}`}
                 />
                 <AvatarFallback className="rounded-lg">{`${session?.user?.name?.substring(0, 1)}`}</AvatarFallback>
@@ -69,7 +68,7 @@ const HeaderAuth: React.FC = ({ session, status }) => {
             <Link href={`/login`}>Sign in</Link>
           </Button>
           <Button asChild>
-            <Link href={`/register`}>Sign Up</Link>
+            <Link href={`/register`}>Sign up</Link>
           </Button>
         </>
       )}

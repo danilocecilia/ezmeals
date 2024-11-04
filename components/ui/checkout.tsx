@@ -1,7 +1,7 @@
 'use client';
 
 import { useCart } from '@root/context/cart-context';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ShoppingCart } from 'lucide-react';
 import React, { useState } from 'react';
 
@@ -31,18 +31,20 @@ const Checkout = () => {
         >
           <span className="relative">
             <ShoppingCart className="h-5 w-5 ml-2" />
-            <motion.span
-              animate={{
-                y: focus ? 0 : '100%',
-                opacity: focus ? 1 : 0
-              }}
-              transition={{
-                duration: 0.2
-              }}
-              className="text-xs h-4 w-4 rounded-full bg-primary text-primary-foreground -top-1.5 -right-1.5 absolute"
-            >
-              {state.items.length > 0 ? getTotalQuantity() : ''}
-            </motion.span>
+            {state.items.length > 0 && (
+              <motion.span
+                animate={{
+                  y: focus ? 0 : '100%',
+                  opacity: focus ? 1 : 0
+                }}
+                transition={{
+                  duration: 0.2
+                }}
+                className="text-xs h-4 w-4 rounded-full bg-primary text-primary-foreground -top-1.5 -right-1.5 absolute"
+              >
+                {state.items.length > 0 ? getTotalQuantity() : ''}
+              </motion.span>
+            )}
           </span>
           <span className="text-md font-semibold">Cart</span>
         </motion.button>
