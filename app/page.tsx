@@ -7,6 +7,7 @@ import MealCard from '@root/components/MealCard';
 import useGetWeeklyMealPlanner from '@root/hooks/use-get-weekly-meal-planner';
 // import { GraduationCap } from 'lucide-react';
 // import Link from 'next/link';
+// import { useCart }
 
 export const Home = () => {
   const { weeklyMealPlanner, isLoading, isError } = useGetWeeklyMealPlanner();

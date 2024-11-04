@@ -9,14 +9,9 @@ import React, {
   useReducer,
   ReactNode,
   useContext,
-  useState,
   useEffect
 } from 'react';
 
-const initialCartState: CartState = {
-  items: [],
-  totalAmount: 0
-};
 export interface CartState {
   items: CartItem[];
   totalAmount: number;
@@ -29,17 +24,13 @@ export type CartAction =
 
 const cartReducer = (state: CartState, action: CartAction): CartState => {
   switch (action.type) {
-    case 'ADD_ITEM':
-      // eslint-disable-next-line no-case-declarations
+    case 'ADD_ITEM': {
       const updatedTotalAmount =
         state.totalAmount + action.item.price * action.item.quantity;
-      // eslint-disable-next-line no-case-declarations
       const existingCartItemIndex = state.items.findIndex(
         (item) => item.id === action.item.id
       );
-      // eslint-disable-next-line no-case-declarations
       const existingCartItem = state.items[existingCartItemIndex];
-      // eslint-disable-next-line no-case-declarations
       let updatedItems;
 
       if (existingCartItem) {
@@ -52,20 +43,16 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
       } else {
         updatedItems = state.items.concat(action.item);
       }
-
       return {
         items: updatedItems,
         totalAmount: updatedTotalAmount
       };
+    }
 
-    case 'REMOVE_ITEM':
-      // eslint-disable-next-line no-case-declarations
+    case 'REMOVE_ITEM': {
       const itemIndex = state.items.findIndex((item) => item.id === action.id);
-      // eslint-disable-next-line no-case-declarations
       const itemToRemove = state.items[itemIndex];
-      // eslint-disable-next-line no-case-declarations
       const updatedAmount = state.totalAmount - itemToRemove.price;
-      // eslint-disable-next-line no-case-declarations
       let updatedCartItems;
 
       if (itemToRemove.quantity === 1) {
@@ -83,6 +70,7 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
         items: updatedCartItems,
         totalAmount: updatedAmount
       };
+    }
 
     case 'CLEAR_CART':
       return initialCartState;
@@ -90,6 +78,11 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
     default:
       return state;
   }
+};
+
+const initialCartState: CartState = {
+  items: [],
+  totalAmount: 0
 };
 
 const CartContext = createContext<{
@@ -101,21 +94,25 @@ const CartContext = createContext<{
 });
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const [state, dispatch] = useReducer(cartReducer, initialCartState, () => {
+    const storedCart: CartItem[] =
+      (loadFromSessionStorage('cart') as CartItem[]) || [];
 
-  // Load cart from session storage on initial render
+    return storedCart
+      ? {
+          items: storedCart,
+          totalAmount: storedCart.reduce(
+            (acc, item: CartItem) => acc + item.price * item.quantity,
+            0
+          )
+        }
+      : initialCartState;
+  });
+
+  // Save cart items to session storage whenever they change
   useEffect(() => {
-    const storedCart = loadFromSessionStorage('cart');
-    if (storedCart && Array.isArray(storedCart))
-      setCart(storedCart as CartItem[]);
-  }, []);
-
-  // Save cart to session storage whenever it changes
-  useEffect(() => {
-    saveToSessionStorage('cart', cart);
-  }, [cart]);
-
-  const [state, dispatch] = useReducer(cartReducer, initialCartState);
+    saveToSessionStorage('cart', state.items);
+  }, [state.items]);
 
   return (
     <CartContext.Provider value={{ state, dispatch }}>

@@ -14,7 +14,10 @@ import { cn } from '@lib/utils';
 import { useCart } from '@root/context/cart-context';
 import { Meal } from '@types';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import React from 'react';
+
+import { createSlug } from '@/utils/generateUrlSlug';
 
 interface MealCardProps {
   meal: Meal;
@@ -22,10 +25,15 @@ interface MealCardProps {
 
 const MealCard: React.FC<MealCardProps> = ({ meal }) => {
   const cart = useCart();
+  const router = useRouter();
+
+  const handleCardClick = () => {
+    router.push(`/meal/${meal._id}/${createSlug(meal.name)}`);
+  };
 
   return (
     <Card className="max-w-[350px] pt-6">
-      <CardContent className="pb-0 cursor-pointer">
+      <CardContent className="pb-0 cursor-pointer" onClick={handleCardClick}>
         <div className="overflow-hidden rounded-md">
           <Image
             src={meal.image[0].url}
@@ -40,7 +48,10 @@ const MealCard: React.FC<MealCardProps> = ({ meal }) => {
         </div>
       </CardContent>
       <CardHeader>
-        <CardTitle className="h-14 cursor-pointer hover:text-primary">
+        <CardTitle
+          className="h-14 cursor-pointer hover:text-primary"
+          onClick={() => handleCardClick()}
+        >
           {meal.name}
         </CardTitle>
         <Separator />
@@ -60,6 +71,7 @@ const MealCard: React.FC<MealCardProps> = ({ meal }) => {
         <Button
           className="cursor-pointer"
           type="button"
+          title="Add to Shopping Cart"
           onClick={() => {
             cart.dispatch({
               type: 'ADD_ITEM',
@@ -70,6 +82,8 @@ const MealCard: React.FC<MealCardProps> = ({ meal }) => {
                 quantity: 1
               }
             });
+
+            handleCardClick();
           }}
         >
           Add to Cart

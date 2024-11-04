@@ -60,7 +60,6 @@ const MealPlannerForm: React.FC = () => {
   const router = useRouter();
   const [meals, setMeals] = React.useState<Meal[]>([]);
   const [selectedMeals, setSelectedMeals] = React.useState<SelectedMeal[]>([]);
-  console.log('🚀 ~ selectedMeals:', selectedMeals);
 
   const form = useForm<z.infer<typeof mealPlannerSchema>>({
     resolver: zodResolver(mealPlannerSchema),
