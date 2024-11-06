@@ -1,34 +1,28 @@
 'use client';
+import CardCarousel from '@components/CardCarousel';
+import MealItem from '@components/MealItem';
+import { MealItemModal } from '@components/MealItemModal';
+import { ModalProvider, useModal } from '@root/context/ModalContext';
+import React from 'react';
 
-import { CarouselMeal } from '@components/carousel';
-import MealCard from '@root/components/MealCard';
-// import { Button } from '@components/ui/button';
-// import { auth } from '@root/auth';
-import useGetWeeklyMealPlanner from '@root/hooks/use-get-weekly-meal-planner';
-// import { GraduationCap } from 'lucide-react';
-// import Link from 'next/link';
-// import { useCart }
-
-export const Home = () => {
-  const { weeklyMealPlanner, isLoading, isError } = useGetWeeklyMealPlanner();
-
-  // const session = await auth();
-  // console.log(session);
-
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error</div>;
+const HomeContent: React.FC = () => {
+  const { isModalOpen, selectedMeal, closeModal } = useModal();
 
   return (
-    <main className="container mx-auto">
-      <CarouselMeal weeklyMeals={weeklyMealPlanner} />
+    <main className="container mx-auto p-4">
+      <CardCarousel />
 
-      <div className="grid grid-cols-4 justify-center">
-        {weeklyMealPlanner?.map((meal) => (
-          <MealCard key={meal._id} meal={meal} />
-        ))}
-      </div>
+      <MealItemModal isOpen={isModalOpen} onClose={closeModal}>
+        {selectedMeal && <MealItem meal={selectedMeal} />}
+      </MealItemModal>
     </main>
   );
 };
+
+const Home: React.FC = () => (
+  <ModalProvider>
+    <HomeContent />
+  </ModalProvider>
+);
 
 export default Home;

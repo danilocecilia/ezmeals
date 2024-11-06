@@ -2,7 +2,7 @@ import Navbar from '@components/Navbar';
 import SessionWrapper from '@components/SessionWrapper';
 import { cn } from '@lib/utils';
 import { auth } from '@root/auth';
-import { CartProvider } from '@root/context/cart-context';
+import { CartProvider } from '@root/context/CartContext';
 import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
 import { Session } from 'next-auth';

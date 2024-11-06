@@ -12,7 +12,15 @@ import Autoplay from 'embla-carousel-autoplay';
 import Image from 'next/image';
 import * as React from 'react';
 
-export function CarouselMeal({ weeklyMeals }: { weeklyMeals: Array<Meal> }) {
+export function CarouselMeal({
+  weeklyMeals,
+  setSelectedMeal,
+  setIsModalOpen
+}: {
+  weeklyMeals: Array<Meal>;
+  setSelectedMeal: (meal: Meal) => void;
+  setIsModalOpen: (isOpen: boolean) => void;
+}) {
   return (
     <div className="flex flex-col justify-center p-10">
       <h1 className="flex justify-center text-4xl font-bold">Weekly Meal</h1>
@@ -20,13 +28,20 @@ export function CarouselMeal({ weeklyMeals }: { weeklyMeals: Array<Meal> }) {
         className="max-w-[900px] flex justify-center m-auto"
         plugins={[
           Autoplay({
-            delay: 5000
+            delay: 6000
           })
         ]}
       >
         <CarouselContent>
           {weeklyMeals.map((meal, index: number) => (
-            <CarouselItem key={index} style={{ flex: '0 0 70%' }}>
+            <CarouselItem
+              key={index}
+              style={{ flex: '0 0 70%' }}
+              onClick={() => {
+                setIsModalOpen(true);
+                setSelectedMeal(meal);
+              }}
+            >
               <div className="p-6">
                 <Card>
                   <CardContent className="relative flex aspect-square items-center justify-center p-6 cursor-pointer">

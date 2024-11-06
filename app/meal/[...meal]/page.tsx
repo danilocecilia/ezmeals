@@ -1,11 +1,14 @@
 import MealItem from '@components/MealItem';
+import { MealItemModal } from '@components/MealItemModal';
 import React from 'react';
 
 const MealPage = () => {
   return (
-    <div>
-      <MealItem meal={null} />
-    </div>
+    <>
+      <MealItemModal>
+        <MealItem />
+      </MealItemModal>
+    </>
   );
 };
 
