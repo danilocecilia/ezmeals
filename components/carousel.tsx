@@ -26,11 +26,11 @@ export function CarouselMeal({
       <h1 className="flex justify-center text-4xl font-bold">Weekly Meal</h1>
       <Carousel
         className="max-w-[900px] flex justify-center m-auto"
-        plugins={[
-          Autoplay({
-            delay: 6000
-          })
-        ]}
+        // plugins={[
+        //   Autoplay({
+        //     delay: 6000
+        //   })
+        // ]}
       >
         <CarouselContent>
           {weeklyMeals.map((meal, index: number) => (

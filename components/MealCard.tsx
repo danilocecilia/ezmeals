@@ -63,7 +63,7 @@ const MealCard: React.FC<MealCardProps> = ({ meal, onCardClick }) => {
             {meal.name}
           </CardTitle>
           <Separator />
-          <CardDescription>
+          <CardDescription className="min-h-16">
             {meal.description.substring(0, 100)}...
           </CardDescription>
         </CardHeader>

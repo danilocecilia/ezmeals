@@ -1,11 +1,13 @@
 import { CarouselMeal } from '@components/carousel';
-import MealCard from '@root/components/MealCard';
 import { useModal } from '@root/context/ModalContext';
 import useGetWeeklyMealPlanner from '@root/hooks/useGetWeeklyMealPlanner';
 import React from 'react';
 
+import MealItemsCarousel from './MealItemsCarousel';
+
 const CardCarousel: React.FC = () => {
   const { weeklyMealPlanner, isLoading, isError } = useGetWeeklyMealPlanner();
+
   const { openModal } = useModal();
 
   if (isLoading) return <div>Loading...</div>;
@@ -21,15 +23,12 @@ const CardCarousel: React.FC = () => {
         />
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
-        {weeklyMealPlanner?.map((meal) => (
-          <MealCard
-            key={meal._id}
-            meal={meal}
-            onCardClick={() => openModal(meal)}
-          />
-        ))}
-      </div>
+      {weeklyMealPlanner && (
+        <MealItemsCarousel
+          openModal={openModal}
+          weeklyMeals={weeklyMealPlanner}
+        />
+      )}
     </>
   );
 };
