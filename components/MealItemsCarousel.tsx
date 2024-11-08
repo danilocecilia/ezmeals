@@ -25,7 +25,7 @@ const MealItemsCarousel: React.FC<MealItemsCarouselProps> = ({
       {weeklyMeals.map((meal, index: number) => (
         <CarouselItem
           key={index}
-          className="flex-none w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4"
+          className="flex-none"
           onClick={() => openModal(meal)}
         >
           <div className="grid grid-flow-col auto-cols-max mt-4">
