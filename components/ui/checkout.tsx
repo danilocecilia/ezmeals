@@ -6,6 +6,8 @@ import { motion } from 'framer-motion';
 import { ShoppingCart } from 'lucide-react';
 import React, { useState } from 'react';
 
+import { DrawerDemo } from '../test';
+
 const Checkout = () => {
   const { state } = useCart();
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
@@ -30,7 +32,10 @@ const Checkout = () => {
 
   return (
     <>
-      <DrawerMealCheckout isOpen={isDrawerOpen} onClose={setIsDrawerOpen} />
+      <DrawerMealCheckout
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+      />
       <div className="h-full w-full center">
         <div className="relative z-0 ">
           <motion.button
