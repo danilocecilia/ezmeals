@@ -1,3 +1,4 @@
+'use client';
 import { Meal } from '@types';
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
@@ -22,6 +23,7 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const closeModal = () => {
+    debugger;
     setIsModalOpen(false);
     setSelectedMeal(null);
   };

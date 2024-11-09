@@ -3,6 +3,7 @@ import SessionWrapper from '@components/SessionWrapper';
 import { cn } from '@lib/utils';
 import { auth } from '@root/auth';
 import { CartProvider } from '@root/context/CartContext';
+import { ModalProvider } from '@root/context/ModalContext';
 import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
 import { Session } from 'next-auth';
@@ -52,11 +53,13 @@ export default async function RootLayout({
           )}
         >
           <div className="relative flex min-h-screen flex-col bg-background">
-            <CartProvider>
-              <Navbar />
-              {children}
-              <Toaster />
-            </CartProvider>
+            <ModalProvider>
+              <CartProvider>
+                <Navbar />
+                {children}
+                <Toaster />
+              </CartProvider>
+            </ModalProvider>
           </div>
 
           {/* <div className="mx-auto relative flex min-h-screen flex-col"> */}

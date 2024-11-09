@@ -1,4 +1,4 @@
-import { CartAction } from '@root/context/CartContext';
+import { CartAction } from '@types';
 import { Meal } from '@types';
 
 export const addItemToCart = (
@@ -14,5 +14,17 @@ export const addItemToCart = (
       quantity: 1,
       image: meal.image[0]?.url
     }
+  });
+};
+
+export const updateItemQuantity = (
+  dispatch: React.Dispatch<CartAction>,
+  itemId: string,
+  quantity: number
+) => {
+  dispatch({
+    type: 'UPDATE_ITEM_QUANTITY',
+    itemId,
+    quantity
   });
 };

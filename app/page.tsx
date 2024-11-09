@@ -2,7 +2,7 @@
 import CardCarousel from '@components/CardCarousel';
 import MealItem from '@components/MealItem';
 import { MealItemModal } from '@components/MealItemModal';
-import { ModalProvider, useModal } from '@root/context/ModalContext';
+import { useModal } from '@root/context/ModalContext';
 import React from 'react';
 
 const HomeContent: React.FC = () => {
@@ -19,10 +19,6 @@ const HomeContent: React.FC = () => {
   );
 };
 
-const Home: React.FC = () => (
-  <ModalProvider>
-    <HomeContent />
-  </ModalProvider>
-);
+const Home: React.FC = () => <HomeContent />;
 
 export default Home;

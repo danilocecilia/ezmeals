@@ -18,6 +18,9 @@ import {
 } from '@components/ui/select';
 import { Separator } from '@components/ui/separator';
 import { useCart } from '@root/context/CartContext';
+import { useModal } from '@root/context/ModalContext';
+import { updateItemQuantity } from '@utils/cartUtils';
+import useGetMealById from 'hooks/useGetMealById';
 import { X } from 'lucide-react';
 import Image from 'next/image';
 import * as React from 'react';
@@ -30,13 +33,25 @@ export function DrawerMealCheckout({
   onClose: () => void;
 }) {
   const { state, dispatch } = useCart();
-  const handleQuantityChange = (itemId: string, quantity: number) => {
-    dispatch({
-      type: 'UPDATE_ITEM_QUANTITY',
-      itemId,
-      quantity
-    });
+  const { openModal } = useModal();
+  const [selectedMealId, setSelectedMealId] = React.useState<string | null>(
+    null
+  );
+  const {
+    data: meal,
+    isLoading,
+    isError
+  } = useGetMealById(selectedMealId ?? '');
+  const handleMealClick = async (mealId: string) => {
+    setSelectedMealId(mealId);
   };
+
+  React.useEffect(() => {
+    if (meal && !isLoading && !isError) {
+      openModal(meal);
+      setSelectedMealId(null);
+    }
+  }, [meal, isLoading, isError, openModal]);
 
   return (
     <Drawer
@@ -63,7 +78,10 @@ export function DrawerMealCheckout({
           <div>
             {state.items.map((item) => (
               <div key={item.id} className="py-4">
-                <div className="flex justify-between items-center">
+                <div
+                  className="flex justify-between items-center cursor-pointer"
+                  onClick={() => handleMealClick(item.id)}
+                >
                   <div>{item.name}</div>
                   <div>
                     <Image
@@ -81,7 +99,7 @@ export function DrawerMealCheckout({
                     <Select
                       value={item.quantity.toString()}
                       onValueChange={(value) =>
-                        handleQuantityChange(item.id, parseInt(value))
+                        updateItemQuantity(dispatch, item.id, parseInt(value))
                       }
                     >
                       <SelectTrigger className="gap-2">
