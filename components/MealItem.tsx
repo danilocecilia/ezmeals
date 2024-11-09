@@ -4,6 +4,7 @@ import { Separator } from '@components/ui/separator';
 import { cn } from '@lib/utils';
 import { useCart } from '@root/context/CartContext';
 import { Meal } from '@types';
+import { addItemToCart } from '@utils/cartUtils';
 import useGetMealById from 'hooks/useGetMealById';
 import Image from 'next/image';
 import React from 'react';
@@ -16,7 +17,6 @@ interface MealItemProps {
 
 const MealItem: React.FC<MealItemProps> = ({ meal }) => {
   const cart = useCart();
-
   const { data, isLoading, error } = useGetMealById(meal?._id);
 
   if (error) {
@@ -26,7 +26,7 @@ const MealItem: React.FC<MealItemProps> = ({ meal }) => {
   if (isLoading) {
     return <LoadingComponent className="justify-center" />;
   }
-  console.log('🚀 ~ meal:', data);
+
   return (
     <div
       className="grid grid-cols-[auto,1fr] justify-center items-start gap-10 p-5"
@@ -53,22 +53,12 @@ const MealItem: React.FC<MealItemProps> = ({ meal }) => {
           {data?.price}
         </p>
         <p>Category: {data?.category}</p>
-        <div className="flex h-full">
+        <div className="flex h-full w-full items-end">
           <Button
-            className="cursor-pointer mt-5"
+            className="cursor-pointer mt-5 w-full"
             type="button"
             title="Add to Shopping Cart"
-            onClick={() => {
-              cart.dispatch({
-                type: 'ADD_ITEM',
-                item: {
-                  id: data?._id,
-                  name: data?.name,
-                  price: data?.price,
-                  quantity: 1
-                }
-              });
-            }}
+            onClick={() => data && addItemToCart(cart.dispatch, data)}
           >
             Add to Cart
           </Button>

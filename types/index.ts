@@ -1,6 +1,6 @@
 import { type ClientUploadedFileData } from 'uploadthing/types';
 
-import { CartItem } from './cart';
+import { CartItem, CartAction, CartState } from './cart';
 import { Meal } from './meal';
 
 export interface UploadedFile<T = unknown> extends ClientUploadedFileData<T> {
@@ -28,4 +28,4 @@ declare global {
   }
 }
 
-export type { CartItem, Meal };
+export type { CartItem, Meal, CartAction, CartState };

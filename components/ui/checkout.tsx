@@ -6,8 +6,6 @@ import { motion } from 'framer-motion';
 import { ShoppingCart } from 'lucide-react';
 import React, { useState } from 'react';
 
-import { DrawerDemo } from '../test';
-
 const Checkout = () => {
   const { state } = useCart();
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
@@ -19,10 +17,6 @@ const Checkout = () => {
       return () => clearTimeout(timer);
     }
   }, [state.items]);
-
-  const getTotalQuantity = () => {
-    return state.items.reduce((acc, item) => acc + item.quantity, 0);
-  };
 
   const [focus, setFocus] = useState(false);
 
@@ -57,7 +51,7 @@ const Checkout = () => {
                   }}
                   className="text-xs h-4 w-4 rounded-full bg-primary text-primary-foreground -top-1 -right-1.5 absolute"
                 >
-                  {state.items.length > 0 ? getTotalQuantity() : ''}
+                  {state.totalItemsQuantity}
                 </motion.span>
               )}
             </span>

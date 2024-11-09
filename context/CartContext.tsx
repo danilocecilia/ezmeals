@@ -3,7 +3,7 @@ import {
   saveToSessionStorage,
   loadFromSessionStorage
 } from '@root/utils/sessionStorage';
-import { CartItem } from '@types';
+import { CartAction, CartItem, CartState } from '@types';
 import React, {
   createContext,
   useReducer,
@@ -12,23 +12,13 @@ import React, {
   useEffect
 } from 'react';
 
-export interface CartState {
-  items: CartItem[];
-  totalAmount: number;
-}
-
-export type CartAction =
-  | { type: 'ADD_ITEM'; item: CartItem }
-  | { type: 'REMOVE_ITEM'; id: string }
-  | { type: 'CLEAR_CART' };
-
 const cartReducer = (state: CartState, action: CartAction): CartState => {
   switch (action.type) {
     case 'ADD_ITEM': {
       const updatedTotalAmount =
         state.totalAmount + action.item.price * action.item.quantity;
       const existingCartItemIndex = state.items.findIndex(
-        (item) => item.id === action.item.id
+        (item: CartItem) => item.id === action.item.id
       );
       const existingCartItem = state.items[existingCartItemIndex];
       let updatedItems;
@@ -45,7 +35,8 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
       }
       return {
         items: updatedItems,
-        totalAmount: updatedTotalAmount
+        totalAmount: parseFloat(updatedTotalAmount.toFixed(2)),
+        totalItemsQuantity: state.totalItemsQuantity + action.item.quantity
       };
     }
 
@@ -68,7 +59,36 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
 
       return {
         items: updatedCartItems,
-        totalAmount: updatedAmount
+        totalAmount: parseFloat(updatedAmount.toFixed(2)),
+        totalItemsQuantity: state.totalItemsQuantity - 1
+      };
+    }
+
+    case 'UPDATE_ITEM_QUANTITY': {
+      const itemIndex = state.items.findIndex(
+        (item: CartItem) => item.id === action.itemId
+      );
+      const itemToUpdate = state.items[itemIndex];
+      const updatedItems = [...state.items];
+      const updatedItem = {
+        ...itemToUpdate,
+        quantity: action.quantity
+      };
+      updatedItems[itemIndex] = updatedItem;
+
+      const updatedTotalAmount = updatedItems.reduce(
+        (total, item) => total + item.price * item.quantity,
+        0
+      );
+      const updatedTotalItemsQuantity = updatedItems.reduce(
+        (total, item) => total + item.quantity,
+        0
+      );
+
+      return {
+        items: updatedItems,
+        totalAmount: parseFloat(updatedTotalAmount.toFixed(2)),
+        totalItemsQuantity: updatedTotalItemsQuantity
       };
     }
 
@@ -82,7 +102,8 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
 
 const initialCartState: CartState = {
   items: [],
-  totalAmount: 0
+  totalAmount: 0,
+  totalItemsQuantity: 0
 };
 
 const CartContext = createContext<{
@@ -90,7 +111,7 @@ const CartContext = createContext<{
   dispatch: React.Dispatch<CartAction>;
 }>({
   state: initialCartState,
-  dispatch: () => undefined
+  dispatch: () => null
 });
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
@@ -103,6 +124,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
           items: storedCart,
           totalAmount: storedCart.reduce(
             (acc, item: CartItem) => acc + item.price * item.quantity,
+            0
+          ),
+          totalItemsQuantity: storedCart.reduce(
+            (acc, item: CartItem) => acc + item.quantity,
             0
           )
         }
@@ -121,6 +146,4 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useCart = () => {
-  return useContext(CartContext);
-};
+export const useCart = () => useContext(CartContext);

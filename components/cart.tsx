@@ -19,7 +19,7 @@ const Cart: React.FC<CartProps> = ({ items }) => {
 
   return (
     <div>
-      <h2>Shopping Cart</h2>
+      {/* <h2>Shopping Cart</h2>
       <ul>
         {items.map((item) => (
           <li key={item.id}>
@@ -27,7 +27,7 @@ const Cart: React.FC<CartProps> = ({ items }) => {
           </li>
         ))}
       </ul>
-      <h3>Total: ${totalAmount.toFixed(2)}</h3>
+      <h3>Total: ${totalAmount.toFixed(2)}</h3> */}
     </div>
   );
 };

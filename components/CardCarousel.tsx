@@ -1,4 +1,4 @@
-import { CarouselMeal } from '@components/carousel';
+import { MealFeaturesCarousel } from '@root/components/MealFeaturesCarousel';
 import { useModal } from '@root/context/ModalContext';
 import useGetWeeklyMealPlanner from '@root/hooks/useGetWeeklyMealPlanner';
 import React from 'react';
@@ -16,7 +16,7 @@ const CardCarousel: React.FC = () => {
   return (
     <>
       {weeklyMealPlanner && (
-        <CarouselMeal
+        <MealFeaturesCarousel
           setSelectedMeal={openModal}
           setIsModalOpen={() => {}}
           weeklyMeals={weeklyMealPlanner}
