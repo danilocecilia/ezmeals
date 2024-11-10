@@ -16,6 +16,10 @@ export function saveToSessionStorage(key: string, value: unknown): void {
  * @returns The data stored under the given key, or null if the key does not exist
  */
 export function loadFromSessionStorage(key: string): unknown {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
   const serializedValue = sessionStorage.getItem(key);
   if (serializedValue === null) {
     return null;

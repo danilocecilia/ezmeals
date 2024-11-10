@@ -61,7 +61,6 @@ export function DrawerMealCheckout({
   }, [meal, isLoading, isError, openModal]);
 
   const handleQuantityChange = (itemId: string, quantity: number) => {
-    debugger;
     if (quantity === -1 && state.items.length === 1) {
       clearCart(dispatch);
     } else {
@@ -199,13 +198,17 @@ export function DrawerMealCheckout({
 
               <div className="flex justify-between pt-4">
                 <div>Subtotal</div>
-                <div>{state.totalAmount}</div>
+                <div>${state.totalAmount}</div>
               </div>
             </div>
 
             <DrawerFooter className="p-4">
               <Button className="w-full h-12">Checkout</Button>
-              <Button className="w-full h-12" variant="secondary">
+              <Button
+                className="w-full h-12"
+                variant="secondary"
+                onClick={() => onClose()}
+              >
                 Add more items
               </Button>
             </DrawerFooter>
