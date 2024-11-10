@@ -51,7 +51,18 @@ export async function GET() {
       .find({ _id: { $in: mealObjectIds } })
       .toArray();
 
-    return NextResponse.json(meals, { status: 200 });
+    // Map the maxQuantity from the planner collection to the meals collection
+    const mealsWithQuantity = meals.map((meal) => {
+      const plannerItem = planner.find(
+        (item) => item.value === meal._id.toString()
+      );
+      return {
+        ...meal,
+        maxQuantity: plannerItem ? plannerItem.quantity : 0
+      };
+    });
+
+    return NextResponse.json(mealsWithQuantity, { status: 200 });
   } catch (error) {
     console.error(error);
 
