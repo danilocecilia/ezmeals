@@ -39,6 +39,7 @@ export function DrawerMealCheckout({
   onClose: () => void;
 }) {
   const { state, dispatch } = useCart();
+  console.log('🚀 ~ state:', state);
 
   const { openModal } = useModal();
   const [selectedMealId, setSelectedMealId] = React.useState<string | null>(
@@ -137,7 +138,7 @@ export function DrawerMealCheckout({
                 <div>{state.totalItemsQuantity} items</div>
                 <div className="flex gap-2">
                   <div className="text-[#4b4b4b]">Subtotal:</div>
-                  <div>${state.totalAmount}</div>
+                  <div>${state.totalAmount.toFixed(2)}</div>
                 </div>
               </div>
               <Separator className="bg-[#F3F3F3]" />
@@ -174,7 +175,7 @@ export function DrawerMealCheckout({
                           <SelectContent>
                             <SelectGroup>
                               <SelectItem value="-1">Remove</SelectItem>
-                              {[...Array(10).keys()].map((i) => (
+                              {[...Array(item.maxQuantity).keys()].map((i) => (
                                 <SelectItem
                                   key={i + 1}
                                   value={(i + 1).toString()}
@@ -182,13 +183,12 @@ export function DrawerMealCheckout({
                                   {i + 1}
                                 </SelectItem>
                               ))}
-                              <SelectItem value="+1">Add</SelectItem>
                             </SelectGroup>
                           </SelectContent>
                         </Select>
                       </div>
                       <div className="text-sm text-[#4b4b4b] self-center">
-                        ${item.price}
+                      ${item.price.toFixed(2)}
                       </div>
                     </div>
                     <Separator className="bg-[#F3F3F3]" />
@@ -198,7 +198,7 @@ export function DrawerMealCheckout({
 
               <div className="flex justify-between pt-4">
                 <div>Subtotal</div>
-                <div>${state.totalAmount}</div>
+                <div>${state.totalAmount.toFixed(2)}</div>
               </div>
             </div>
 

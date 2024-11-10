@@ -4,6 +4,7 @@ export interface CartItem {
   price: number;
   quantity: number;
   image: string;
+  maxQuantity: number;
 }
 
 export interface CartState {
@@ -16,4 +17,5 @@ export type CartAction =
   | { type: 'ADD_ITEM'; item: CartItem }
   | { type: 'UPDATE_ITEM_QUANTITY'; itemId: string; quantity: number }
   | { type: 'REMOVE_ITEM'; id: string }
-  | { type: 'CLEAR_CART' };
+  | { type: 'CLEAR_CART' }
+  | { type: 'LOAD_CART'; payload: CartState };

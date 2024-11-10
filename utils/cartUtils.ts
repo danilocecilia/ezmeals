@@ -1,5 +1,12 @@
 import { CartAction } from '@types';
-import { Meal } from '@types';
+
+type Meal = {
+  _id: string;
+  name: string;
+  price: number;
+  maxQuantity: number;
+  image: { url: string }[];
+};
 
 export const addItemToCart = (
   dispatch: React.Dispatch<CartAction>,
@@ -12,7 +19,8 @@ export const addItemToCart = (
       name: meal.name,
       price: meal.price,
       quantity: 1,
-      image: meal.image[0]?.url
+      image: meal.image[0]?.url,
+      maxQuantity: meal.maxQuantity
     }
   });
 };

@@ -30,9 +30,9 @@ const recalculateTotals = (items: CartItem[]) => {
 
 const cartReducer = (state: CartState, action: CartAction): CartState => {
   switch (action.type) {
+    case 'LOAD_CART':
+      return action.payload; // Initialize state with loaded cart
     case 'ADD_ITEM': {
-      const updatedTotalAmount =
-        state.totalAmount + action.item.price * action.item.quantity;
       const existingCartItemIndex = state.items.findIndex(
         (item: CartItem) => item.id === action.item.id
       );
@@ -40,19 +40,33 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
       let updatedItems;
 
       if (existingCartItem) {
-        const updatedItem = {
-          ...existingCartItem,
-          quantity: existingCartItem.quantity + action.item.quantity
-        };
-        updatedItems = [...state.items];
-        updatedItems[existingCartItemIndex] = updatedItem;
+        const newQuantity = existingCartItem.quantity + action.item.quantity;
+        if (newQuantity > action.item.maxQuantity) {
+          // If the new quantity exceeds maxQuantity, set it to maxQuantity
+          const updatedItem = {
+            ...existingCartItem,
+            quantity: action.item.maxQuantity
+          };
+          updatedItems = [...state.items];
+          updatedItems[existingCartItemIndex] = updatedItem;
+        } else {
+          const updatedItem = {
+            ...existingCartItem,
+            quantity: newQuantity
+          };
+          updatedItems = [...state.items];
+          updatedItems[existingCartItemIndex] = updatedItem;
+        }
       } else {
+        if (action.item.quantity > action.item.maxQuantity) {
+          // If the initial quantity exceeds maxQuantity, set it to maxQuantity
+          action.item.quantity = action.item.maxQuantity;
+        }
         updatedItems = state.items.concat(action.item);
       }
       return {
         items: updatedItems,
-        totalAmount: parseFloat(updatedTotalAmount.toFixed(2)),
-        totalItemsQuantity: state.totalItemsQuantity + action.item.quantity
+        ...recalculateTotals(updatedItems)
       };
     }
 
@@ -92,11 +106,16 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
         };
       }
 
-      const updatedItems = state.items.map((item) =>
-        item.id === action.itemId
-          ? { ...item, quantity: action.quantity }
-          : item
-      );
+      const updatedItems = state.items.map((item) => {
+        if (item.id === action.itemId) {
+          const newQuantity =
+            action.quantity > item.maxQuantity
+              ? item.maxQuantity
+              : action.quantity;
+          return { ...item, quantity: newQuantity };
+        }
+        return item;
+      });
 
       return {
         items: updatedItems,
@@ -127,29 +146,45 @@ const CartContext = createContext<{
 });
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
-  const [state, dispatch] = useReducer(cartReducer, initialCartState, () => {
-    const storedCart: CartItem[] =
-      (loadFromSessionStorage('cart') as CartItem[]) || [];
+  const [state, dispatch] = useReducer(cartReducer, initialCartState);
+  const [isMounted, setIsMounted] = React.useState(false);
 
-    return storedCart
-      ? {
+  useEffect(() => {
+    // Set mounted flag to true after the component mounts on the client
+    setIsMounted(true);
+
+    // Only load from session storage on client mount
+    const storedCart = (loadFromSessionStorage('cart') as CartItem[]) || [];
+
+    if (storedCart.length > 0) {
+      dispatch({
+        type: 'LOAD_CART',
+        payload: {
           items: storedCart,
           totalAmount: storedCart.reduce(
-            (acc, item: CartItem) => acc + item.price * item.quantity,
+            (acc, item) => acc + item.price * item.quantity,
             0
           ),
           totalItemsQuantity: storedCart.reduce(
-            (acc, item: CartItem) => acc + item.quantity,
+            (acc, item) => acc + item.quantity,
             0
           )
         }
-      : initialCartState;
-  });
+      });
+    }
+  }, []);
 
-  // Save cart items to session storage whenever they change
+  // Save to session storage when items change, but only on client
   useEffect(() => {
-    saveToSessionStorage('cart', state.items);
-  }, [state.items]);
+    if (isMounted) {
+      saveToSessionStorage('cart', state.items);
+    }
+  }, [state.items, isMounted]);
+
+  if (!isMounted) {
+    // Return null on server render, only load after mounting on client
+    return null;
+  }
 
   return (
     <CartContext.Provider value={{ state, dispatch }}>
