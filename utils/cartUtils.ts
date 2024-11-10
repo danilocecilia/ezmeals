@@ -28,3 +28,7 @@ export const updateItemQuantity = (
     quantity
   });
 };
+
+export const clearCart = (dispatch: React.Dispatch<CartAction>) => {
+  dispatch({ type: 'CLEAR_CART' });
+};

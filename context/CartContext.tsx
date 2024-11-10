@@ -12,6 +12,22 @@ import React, {
   useEffect
 } from 'react';
 
+const recalculateTotals = (items: CartItem[]) => {
+  const totalAmount = items.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+  const totalItemsQuantity = items.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
+
+  return {
+    totalAmount: parseFloat(totalAmount.toFixed(2)),
+    totalItemsQuantity
+  };
+};
+
 const cartReducer = (state: CartState, action: CartAction): CartState => {
   switch (action.type) {
     case 'ADD_ITEM': {
@@ -65,30 +81,26 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
     }
 
     case 'UPDATE_ITEM_QUANTITY': {
-      const itemIndex = state.items.findIndex(
-        (item: CartItem) => item.id === action.itemId
-      );
-      const itemToUpdate = state.items[itemIndex];
-      const updatedItems = [...state.items];
-      const updatedItem = {
-        ...itemToUpdate,
-        quantity: action.quantity
-      };
-      updatedItems[itemIndex] = updatedItem;
+      if (action.quantity === -1) {
+        const updatedItems = state.items.filter(
+          (item) => item.id !== action.itemId
+        );
 
-      const updatedTotalAmount = updatedItems.reduce(
-        (total, item) => total + item.price * item.quantity,
-        0
-      );
-      const updatedTotalItemsQuantity = updatedItems.reduce(
-        (total, item) => total + item.quantity,
-        0
+        return {
+          items: updatedItems,
+          ...recalculateTotals(updatedItems)
+        };
+      }
+
+      const updatedItems = state.items.map((item) =>
+        item.id === action.itemId
+          ? { ...item, quantity: action.quantity }
+          : item
       );
 
       return {
         items: updatedItems,
-        totalAmount: parseFloat(updatedTotalAmount.toFixed(2)),
-        totalItemsQuantity: updatedTotalItemsQuantity
+        ...recalculateTotals(updatedItems)
       };
     }
 

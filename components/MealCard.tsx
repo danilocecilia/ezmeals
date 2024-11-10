@@ -8,9 +8,7 @@ import {
   CardFooter
 } from '@components/ui/card';
 import { Separator } from '@components/ui/separator';
-import { useCart } from '@root/context/CartContext';
 import { Meal } from '@types';
-import { addItemToCart } from '@utils/cartUtils';
 import { Plus } from 'lucide-react';
 import Image from 'next/image';
 import React from 'react';
@@ -21,13 +19,6 @@ interface MealCardProps {
 }
 
 const MealCard: React.FC<MealCardProps> = ({ meal, onCardClick }) => {
-  const cart = useCart();
-
-  const handleAddToCart = () => {
-    addItemToCart(cart.dispatch, meal);
-    onCardClick();
-  };
-
   return (
     <Card className="max-w-[350px] pt-6">
       <CardContent className="pb-0 cursor-pointer" onClick={onCardClick}>
@@ -67,7 +58,7 @@ const MealCard: React.FC<MealCardProps> = ({ meal, onCardClick }) => {
           className="cursor-pointer"
           type="button"
           title="Add to Shopping Cart"
-          onClick={handleAddToCart}
+          onClick={onCardClick}
         >
           <Plus size={24} />
         </Button>

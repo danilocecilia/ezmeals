@@ -23,7 +23,6 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const closeModal = () => {
-    debugger;
     setIsModalOpen(false);
     setSelectedMeal(null);
   };
