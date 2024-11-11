@@ -3,9 +3,12 @@ import { Button } from '@components/ui/button';
 import { Separator } from '@components/ui/separator';
 import { cn } from '@lib/utils';
 import { useCart } from '@root/context/CartContext';
+import { useModal } from '@root/context/ModalContext';
 import { addItemToCart } from '@utils/cartUtils';
 import Image from 'next/image';
 import React from 'react';
+
+import { DrawerMealCheckout } from './DrawerMealCheckout';
 
 export type Meal = {
   _id: string;
@@ -22,6 +25,15 @@ interface MealItemProps {
 
 const MealItem: React.FC<MealItemProps> = ({ meal }) => {
   const cart = useCart();
+  const { closeModal } = useModal();
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+
+  const handleAddToCart = () => {
+    if (meal) {
+      setIsDrawerOpen(true);
+      addItemToCart(cart.dispatch, meal);
+    }
+  };
 
   return (
     <div
@@ -54,12 +66,19 @@ const MealItem: React.FC<MealItemProps> = ({ meal }) => {
             className="cursor-pointer mt-5 w-full"
             type="button"
             title="Add to Shopping Cart"
-            onClick={() => meal && addItemToCart(cart.dispatch, meal)}
+            onClick={() => handleAddToCart()}
           >
             Add to Cart
           </Button>
         </div>
       </div>
+      {console.log('🚀 ~ isDrawerOpen:', isDrawerOpen)}
+      {isDrawerOpen && (
+        <DrawerMealCheckout
+          isOpen={isDrawerOpen}
+          onClose={() => setIsDrawerOpen(false)}
+        />
+      )}
     </div>
   );
 };

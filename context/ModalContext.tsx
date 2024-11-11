@@ -1,6 +1,15 @@
 'use client';
-import { Meal } from '@types';
 import React, { createContext, useContext, useState, ReactNode } from 'react';
+
+export type Meal = {
+  _id: string;
+  name: string;
+  price: number;
+  image: { url: string }[];
+  description?: string;
+  category?: string;
+  maxQuantity?: number;
+};
 
 interface ModalContextProps {
   isModalOpen: boolean;

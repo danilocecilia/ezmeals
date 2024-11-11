@@ -109,7 +109,7 @@ const MealPlannerForm: React.FC = () => {
         return;
       }
       toast.success('Meal scheduled successfully');
-      router.push(`/meal-planner/schedules`);
+      router.push(`/admin/meal-planner/schedules`);
     } catch (error) {
       console.error('Error:', error);
       toast.error('Error', {

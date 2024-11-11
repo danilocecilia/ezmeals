@@ -16,20 +16,51 @@ const CardCarousel: React.FC = () => {
     return <LoadingComponent className="flex justify-center py-28" />;
   if (isError) return <div>Error loading meals</div>;
 
+  const mainMeals = Array.isArray(weeklyMealPlanner)
+    ? weeklyMealPlanner.filter(
+        (meal) => !meal.side && meal.category !== 'dessert'
+      )
+    : [];
+
+  const sideMeals = Array.isArray(weeklyMealPlanner)
+    ? weeklyMealPlanner.filter((meal) => meal.side)
+    : [];
+
+  const dessertMeals = Array.isArray(weeklyMealPlanner)
+    ? weeklyMealPlanner.filter((meal) => meal.category === 'dessert')
+    : [];
+
   return (
     <>
-      {Array.isArray(weeklyMealPlanner) && (
+      {Array.isArray(mainMeals) && (
         <MealFeaturesCarousel
           setSelectedMeal={openModal}
           setIsModalOpen={() => {}}
-          weeklyMeals={weeklyMealPlanner}
+          weeklyMeals={mainMeals}
         />
       )}
 
-      {Array.isArray(weeklyMealPlanner) && (
+      {Array.isArray(mainMeals) && (
         <MealItemsCarousel
           openModal={openModal}
-          weeklyMeals={weeklyMealPlanner}
+          title="Main Meals"
+          weeklyMeals={mainMeals}
+        />
+      )}
+
+      {Array.isArray(sideMeals) && (
+        <MealItemsCarousel
+          openModal={openModal}
+          title="Side Meals"
+          weeklyMeals={sideMeals}
+        />
+      )}
+
+      {Array.isArray(dessertMeals) && (
+        <MealItemsCarousel
+          openModal={openModal}
+          title="Desserts"
+          weeklyMeals={dessertMeals}
         />
       )}
     </>

@@ -39,17 +39,17 @@ export function DrawerMealCheckout({
   onClose: () => void;
 }) {
   const { state, dispatch } = useCart();
-  console.log('🚀 ~ state:', state);
-
   const { openModal } = useModal();
   const [selectedMealId, setSelectedMealId] = React.useState<string | null>(
     null
   );
+
   const {
     data: meal,
     isLoading,
     isError
   } = useGetMealById(selectedMealId ?? '');
+
   const handleMealClick = async (mealId: string) => {
     setSelectedMealId(mealId);
   };
@@ -58,8 +58,9 @@ export function DrawerMealCheckout({
     if (meal && !isLoading && !isError) {
       openModal(meal);
       setSelectedMealId(null);
+      onClose();
     }
-  }, [meal, isLoading, isError, openModal]);
+  }, [meal, isLoading, isError, openModal, onClose]);
 
   const handleQuantityChange = (itemId: string, quantity: number) => {
     if (quantity === -1 && state.items.length === 1) {
@@ -188,7 +189,7 @@ export function DrawerMealCheckout({
                         </Select>
                       </div>
                       <div className="text-sm text-[#4b4b4b] self-center">
-                      ${item.price.toFixed(2)}
+                        ${item.price.toFixed(2)}
                       </div>
                     </div>
                     <Separator className="bg-[#F3F3F3]" />

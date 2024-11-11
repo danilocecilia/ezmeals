@@ -9,6 +9,7 @@ import React, { useState } from 'react';
 const Checkout = () => {
   const { state } = useCart();
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+  const [focus, setFocus] = useState(false);
 
   React.useEffect(() => {
     if (state.items.length > 0) {
@@ -17,8 +18,6 @@ const Checkout = () => {
       return () => clearTimeout(timer);
     }
   }, [state.items]);
-
-  const [focus, setFocus] = useState(false);
 
   const handleCheckout = () => {
     setIsDrawerOpen((prev) => !prev);

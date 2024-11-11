@@ -68,7 +68,7 @@ export const mealCategories = [
     value: 'meat'
   },
   {
-    label: 'Desert',
-    value: 'desert'
+    label: 'Dessert',
+    value: 'dessert'
   }
 ];
