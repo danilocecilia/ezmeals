@@ -136,9 +136,12 @@ export function DrawerMealCheckout({
           <EmptyCart />
         ) : (
           <>
-            <div className="p-4 mt-20 space-y-4">
+            <div className="p-4 mt-8 space-y-4">
               <div className="flex justify-between">
-                <div>{state.totalItemsQuantity} items</div>
+                <div>
+                  {state.totalItemsQuantity}{' '}
+                  {state.totalItemsQuantity > 1 ? 'items' : 'item'}
+                </div>
                 <div className="flex gap-2">
                   <div className="text-[#4b4b4b]">Subtotal:</div>
                   <div>${state.totalAmount.toFixed(2)}</div>

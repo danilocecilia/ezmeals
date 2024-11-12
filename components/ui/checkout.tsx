@@ -48,9 +48,11 @@ const Checkout = () => {
                   transition={{
                     duration: 0.2
                   }}
-                  className="text-xs h-4 w-4 rounded-full bg-primary text-primary-foreground -top-1 -right-1.5 absolute"
+                  className="text-md h-5 w-5 rounded-full bg-primary text-primary-foreground -top-1 -right-1.5 absolute"
                 >
-                  {state.totalItemsQuantity}
+                  {state.totalItemsQuantity > 9
+                    ? '9+'
+                    : state.totalItemsQuantity}
                 </motion.span>
               )}
             </span>
