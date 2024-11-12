@@ -29,6 +29,7 @@ import { updateItemQuantity, clearCart } from '@utils/cartUtils';
 import useGetMealById from 'hooks/useGetMealById';
 import { X, ShoppingCart, Ellipsis, PlusIcon, TrashIcon } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import * as React from 'react';
 
 export function DrawerMealCheckout({
@@ -38,6 +39,7 @@ export function DrawerMealCheckout({
   isOpen: boolean;
   onClose: () => void;
 }) {
+  const router = useRouter();
   const { state, dispatch } = useCart();
   const { openModal } = useModal();
   const [selectedMealId, setSelectedMealId] = React.useState<string | null>(
@@ -204,7 +206,15 @@ export function DrawerMealCheckout({
             </div>
 
             <DrawerFooter className="p-4">
-              <Button className="w-full h-12">Checkout</Button>
+              <Button
+                className="w-full h-12"
+                onClick={() => {
+                  onClose();
+                  router.push('/checkout');
+                }}
+              >
+                Checkout
+              </Button>
               <Button
                 className="w-full h-12"
                 variant="secondary"

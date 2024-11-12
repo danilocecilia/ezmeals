@@ -1,5 +1,12 @@
 'use client';
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger
+} from '@components/ui/accordion';
+import { Button } from '@components/ui/button';
+import {
   Card,
   CardContent,
   CardDescription,
@@ -17,6 +24,14 @@ import {
   SelectValue
 } from '@root/components/ui/select';
 import { Separator } from '@root/components/ui/separator';
+import {
+  MapPinHouseIcon,
+  User,
+  CreditCardIcon,
+  Banknote,
+  ShoppingCart
+} from 'lucide-react';
+import Image from 'next/image';
 import React from 'react';
 
 const CheckoutPage = () => {
@@ -24,10 +39,10 @@ const CheckoutPage = () => {
 
   const DeliveryDetailsPanel = () => {
     return (
-      <Tabs defaultValue="delivery" className="w-[400px]">
+      <Tabs defaultValue="delivery" className="self-center">
         <Card className="w-[716px]">
           <CardHeader className="flex">
-            <CardTitle className="flex justify-between">
+            <CardTitle className="flex justify-between items-center">
               <div>Delivery Details</div>
 
               <TabsList className="grid w-full grid-cols-2 max-w-48">
@@ -48,25 +63,35 @@ const CheckoutPage = () => {
           </CardHeader>
           <CardContent>
             <TabsContent value="delivery">
-              <Card>
-                <CardHeader>
-                  <CardTitle>delivery</CardTitle>
-                  <CardDescription>
-                    Make changes to your delivery here. Click save when you're
-                    done.
-                  </CardDescription>
-                </CardHeader>
+              <Card className="border-0 shadow-none">
                 <CardContent className="space-y-2">
-                  <div className="space-y-1">
-                    {/* <Label htmlFor="name">Name</Label>
-                    <Input id="name" defaultValue="Pedro Duarte" /> */}
+                  <div className="flex space-y-1 items-center py-4 justify-between">
+                    <div className="flex gap-4 items-center">
+                      <MapPinHouseIcon className="w-6 h-6" />
+                      <div>
+                        <div>3221 Viola Cres</div>
+                        <div>Mississauga, ON L5A 3A1</div>
+                      </div>
+                    </div>
+                    <div>
+                      <Button>Edit</Button>
+                    </div>
                   </div>
-                  <div className="space-y-1">
-                    {/* <Label htmlFor="username">Username</Label>
-                    <Input id="username" defaultValue="@peduarte" /> */}
+                  <Separator />
+                  <div className="flex space-y-1 items-center py-4 justify-between">
+                    <div className="flex gap-4 items-center">
+                      <User className="w-6 h-6" />
+                      <div>
+                        <div>Meet at my door</div>
+                        <div>Mississauga, ON L5A 3A1</div>
+                      </div>
+                    </div>
+                    <div>
+                      <Button className="">Edit</Button>
+                    </div>
                   </div>
+                  <Separator />
                 </CardContent>
-                <CardFooter>{/* <Button>Save changes</Button> */}</CardFooter>
               </Card>
             </TabsContent>
             <TabsContent value="pickup">
@@ -91,6 +116,18 @@ const CheckoutPage = () => {
               </Card>
             </TabsContent>
           </CardContent>
+          <CardFooter className="flex flex-col justify-start items-start">
+            <div className="text-2xl font-semibold">Delivery Date/Time</div>
+
+            <CardContent className="space-y-2 pt-10">
+              <div className="flex items-center justify-between">
+                <div className="flex gap-4 items-center">
+                  The estimate delivery date and time is 15th July 2021, 12:00pm
+                  - 1:00pm
+                </div>
+              </div>
+            </CardContent>
+          </CardFooter>
         </Card>
       </Tabs>
     );
@@ -101,18 +138,18 @@ const CheckoutPage = () => {
       <Card className="w-[716px]">
         <CardHeader>
           <CardTitle>
-            <div>Create project</div>
+            <div>Payment</div>
           </CardTitle>
-          <CardDescription>
-            Deploy your new project in one-click.
-          </CardDescription>
         </CardHeader>
-        <CardContent>
-          <h2>Payment Details</h2>
-          <input type="text" placeholder="Card Number" />
-          <input type="text" placeholder="Expiry Date" />
-          <input type="text" placeholder="CVV" />
-          <button>Save</button>
+        <CardContent className="flex justify-between p-6 space-y-2 items-center">
+          <div className="flex gap-2 p-6 pt-0">
+            <Banknote />
+            <div>By Cash at delivery</div>
+          </div>
+
+          <div className="p-6 pt-0">
+            <Button className="">Edit</Button>
+          </div>
         </CardContent>
       </Card>
     );
@@ -120,90 +157,151 @@ const CheckoutPage = () => {
 
   const OrderSummaryPanel = () => {
     return (
-      <div>
-        <h2>Order Summary</h2>
-        <div>
-          <div>Subtotal:</div>
-          <div>$0.00</div>
-        </div>
-        <Separator />
-        <div>
-          <div>Meal 1</div>
-          <div>
-            <Image src="/meal1.jpg" alt="Meal 1" width={48} height={48} />
+      <Accordion type="single" collapsible>
+        <AccordionItem value="item-1">
+          <Card className="w-[420px] flex mt-10 flex-col gap-6">
+            <AccordionTrigger className="pr-5 hover:no-underline">
+              <CardHeader>
+                <CardTitle>
+                  <div className="flex gap-4 items-center">
+                    <ShoppingCart className="w-6 h-6" />
+                    <div className="text-[16px]">Cart Summary (10 items)</div>
+                  </div>
+                </CardTitle>
+              </CardHeader>
+            </AccordionTrigger>
+            <AccordionContent>
+              <CardContent className="space-y-4">
+                <div className="flex space-y-2 items-center gap-2">
+                  <Image
+                    src="/logo.jpg"
+                    alt="Image"
+                    layout="intrinsic"
+                    width={48}
+                    height={48}
+                  />
+
+                  <div className="flex justify-between min-w-[300px]">
+                    <div>Bobo de Camarao</div>
+                    <div>$10.00</div>
+                  </div>
+                </div>
+                <Separator />
+                <div className="flex space-y-2 items-center gap-2">
+                  <Image
+                    src="/logo.jpg"
+                    alt="Image"
+                    layout="intrinsic"
+                    width={48}
+                    height={48}
+                  />
+
+                  <div className="flex justify-between min-w-[300px]">
+                    <div>Bobo de Camarao</div>
+                    <div>$10.00</div>
+                  </div>
+                </div>
+                <Separator />
+                <div className="flex space-y-2 items-center gap-2">
+                  <Image
+                    src="/logo.jpg"
+                    alt="Image"
+                    layout="intrinsic"
+                    width={48}
+                    height={48}
+                  />
+
+                  <div className="flex justify-between min-w-[300px]">
+                    <div>Bobo de Camarao</div>
+                    <div>$10.00</div>
+                  </div>
+                </div>
+                <Separator />
+                <div className="flex space-y-2 items-center gap-2">
+                  <Image
+                    src="/logo.jpg"
+                    alt="Image"
+                    layout="intrinsic"
+                    width={48}
+                    height={48}
+                  />
+
+                  <div className="flex justify-between min-w-[300px]">
+                    <div>Bobo de Camarao</div>
+                    <div>$10.00</div>
+                  </div>
+                </div>
+                <Separator />
+                <div className="flex space-y-2 items-center gap-2">
+                  <Image
+                    src="/logo.jpg"
+                    alt="Image"
+                    layout="intrinsic"
+                    width={48}
+                    height={48}
+                  />
+
+                  <div className="flex justify-between min-w-[300px]">
+                    <div>Bobo de Camarao</div>
+                    <div>$10.00</div>
+                  </div>
+                </div>
+              </CardContent>
+            </AccordionContent>
+          </Card>
+        </AccordionItem>
+      </Accordion>
+    );
+  };
+
+  const OrderTotalPanel = () => {
+    return (
+      <Card className="w-[420px] flex flex-col gap-6">
+        <CardHeader>
+          <CardTitle>
+            <div className="flex gap-4 items-center">
+              <div>Order Total</div>
+            </div>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex justify-between">
+            <div>Subtotal</div>
+            <div>$50.00</div>
           </div>
-          <div>
-            <Select value="1">
-              <SelectTrigger>
-                <SelectValue>1</SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="1">1</SelectItem>
-                  <SelectItem value="2">2</SelectItem>
-                  <SelectItem value="3">3</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+          <Separator />
+          <div className="flex justify-between">
+            <div>Delivery fee</div>
+            <div>$5.00</div>
           </div>
-          <div>$0.00</div>
-        </div>
-        <Separator />
-        <div>
-          <div>Meal 2</div>
-          <div>
-            <Image src="/meal2.jpg" alt="Meal 2" width={48} height={48} />
+          <Separator />
+          <div className="flex justify-between">
+            <div>Discount</div>
+            <div>$0.00</div>
           </div>
-          <div>
-            <Select value="1">
-              <SelectTrigger>
-                <SelectValue>1</SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="1">1</SelectItem>
-                  <SelectItem value="2">2</SelectItem>
-                  <SelectItem value="3">3</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+          <Separator />
+          <div className="flex justify-between">
+            <div className="font-bold">Total</div>
+            <div className="font-bold">$55.00</div>
           </div>
-          <div>$0.00</div>
-        </div>
-        <Separator />
-        <div>
-          <div>Meal 3</div>
-          <div>
-            <Image src="/meal3.jpg" alt="Meal 3" width={48} height={48} />
-          </div>
-          <div>
-            <Select value="1">
-              <SelectTrigger>
-                <SelectValue>1</SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="1">1</SelectItem>
-                  <SelectItem value="2">2</SelectItem>
-                  <SelectItem value="3">3</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-          <div>$0.00</div>
-        </div>
-        <Separator />
-        <div>
-          <div>Total:</div>
-          <div>$0.00</div>
-        </div>
-      </div>
+        </CardContent>
+        <CardFooter>
+          <Button>Place Order</Button>
+        </CardFooter>
+      </Card>
     );
   };
 
   return (
-    <div className="flex justify-center py-10">
-      <DeliveryDetailsPanel />
+    <div className="flex gap-4 justify-center">
+      <div className="flex py-10 flex-col gap-4">
+        <DeliveryDetailsPanel />
+        <PaymentDetailsPanel />
+      </div>
+      <div className="flex flex-col gap-4">
+        <OrderSummaryPanel />
+        <OrderTotalPanel />
+      </div>
     </div>
   );
 };

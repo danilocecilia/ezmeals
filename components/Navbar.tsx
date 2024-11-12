@@ -3,9 +3,11 @@
 import { Icons } from '@components/icons';
 import Checkout from '@components/ui/checkout';
 import { useCurrentSession } from '@hooks/useCurrentSession';
-import { Menu, Package2 } from 'lucide-react';
+import { cn } from '@lib/utils';
+import { Menu, Package2, ArrowLeft } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import React from 'react';
 
 import { Button } from './ui/button';
@@ -16,11 +18,30 @@ const DynamicHeaderAuth = dynamic(() => import('./HeaderAuth'), {
 });
 
 const Navbar = () => {
+  const pathname = usePathname();
   const { session, status } = useCurrentSession();
 
   return (
     <header className="sticky top-0 z-50 w-full bg-[white] border-b-[1px]">
-      <nav className="container mx-auto hidden h-16 flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6 w-full justify-between">
+      <nav
+        className={cn(
+          'container mx-auto hidden h-16 flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6 w-full justify-between',
+          { 'max-w-[1152px]': pathname === '/checkout' }
+        )}
+      >
+        {pathname === '/checkout' && (
+          <div className="flex gap-8 items-center">
+            <Link
+              href="/"
+              className="hidden md:flex items-center gap-4 text-lg font-semibold md:text-base"
+            >
+              <ArrowLeft />
+              <span className="hidden text-sm font-bold lg:inline-block">
+                Back to store
+              </span>
+            </Link>
+          </div>
+        )}
         <div className="flex gap-8 items-center">
           <Link
             href="/"
@@ -33,10 +54,15 @@ const Navbar = () => {
           </Link>
         </div>
         <div className="flex gap-8">
-          <DynamicHeaderAuth session={session} status={status} />
-          <span className="self-center">
-            <Checkout />
-          </span>
+          {pathname !== '/checkout' && (
+            <>
+              <DynamicHeaderAuth session={session} status={status} />
+
+              <span className="self-center">
+                <Checkout />
+              </span>
+            </>
+          )}
         </div>
       </nav>
       <Sheet>
