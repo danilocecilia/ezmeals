@@ -1,4 +1,5 @@
 'use client';
+import { DeliveryAddressModal } from '@components/DeliveryAddressModal';
 import {
   Accordion,
   AccordionContent,
@@ -15,14 +16,6 @@ import {
   CardTitle
 } from '@components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@root/components/ui/select';
 import { Separator } from '@root/components/ui/separator';
 import {
   MapPinHouseIcon,
@@ -32,10 +25,13 @@ import {
   ShoppingCart
 } from 'lucide-react';
 import Image from 'next/image';
-import React from 'react';
+import { useSession } from 'next-auth/react';
+import React, { FC } from 'react';
 
-const CheckoutPage = () => {
+const CheckoutPage: FC = () => {
+  const { data: session } = useSession();
   const [deliveryType, setDeliveryType] = React.useState('delivery');
+  const [locationAdressModal, setLocationAdressModal] = React.useState(false);
 
   const DeliveryDetailsPanel = () => {
     return (
@@ -62,15 +58,25 @@ const CheckoutPage = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <TabsContent value="delivery">
+            <TabsContent value={deliveryType}>
               <Card className="border-0 shadow-none">
                 <CardContent className="space-y-2">
-                  <div className="flex space-y-1 items-center py-4 justify-between">
+                  <div
+                    onClick={() => setLocationAdressModal(true)}
+                    className="flex space-y-1 items-center py-4 justify-between  cursor-pointer"
+                  >
                     <div className="flex gap-4 items-center">
                       <MapPinHouseIcon className="w-6 h-6" />
                       <div>
-                        <div>3221 Viola Cres</div>
-                        <div>Mississauga, ON L5A 3A1</div>
+                        <div>
+                          {session?.user?.address || 'No address provided'}
+                        </div>
+                        <div>
+                          {session?.user.city && `${session.user.city}, `}
+                          {session?.user?.province &&
+                            `${session.user.province} `}
+                          {session?.user?.postal_code?.toUpperCase()}
+                        </div>
                       </div>
                     </div>
                     <div>
@@ -82,8 +88,8 @@ const CheckoutPage = () => {
                     <div className="flex gap-4 items-center">
                       <User className="w-6 h-6" />
                       <div>
-                        <div>Meet at my door</div>
-                        <div>Mississauga, ON L5A 3A1</div>
+                        <div>{session?.user?.dropoffLocation}</div>
+                        <div>Add delivery instructions</div>
                       </div>
                     </div>
                     <div>
@@ -293,16 +299,22 @@ const CheckoutPage = () => {
   };
 
   return (
-    <div className="flex gap-4 justify-center">
-      <div className="flex py-10 flex-col gap-4">
-        <DeliveryDetailsPanel />
-        <PaymentDetailsPanel />
+    <>
+      <DeliveryAddressModal
+        isOpen={locationAdressModal}
+        onClose={() => setLocationAdressModal(false)}
+      />
+      <div className="flex gap-4 justify-center">
+        <div className="flex py-10 flex-col gap-4">
+          <DeliveryDetailsPanel />
+          <PaymentDetailsPanel />
+        </div>
+        <div className="flex flex-col gap-4">
+          <OrderSummaryPanel />
+          <OrderTotalPanel />
+        </div>
       </div>
-      <div className="flex flex-col gap-4">
-        <OrderSummaryPanel />
-        <OrderTotalPanel />
-      </div>
-    </div>
+    </>
   );
 };
 

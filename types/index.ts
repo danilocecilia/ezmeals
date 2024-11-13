@@ -1,3 +1,4 @@
+import { DefaultSession } from 'next-auth';
 import { type ClientUploadedFileData } from 'uploadthing/types';
 
 import { CartItem, CartAction, CartState } from './cart';
@@ -25,6 +26,20 @@ declare global {
     postal_code?: string | undefined;
     phone_number?: string | undefined;
     province?: string | undefined;
+  }
+}
+
+declare module 'next-auth' {
+  interface Session {
+    user: {
+      address?: string;
+      city?: string;
+      phone?: string;
+      postal_code?: string;
+      province?: string;
+      deliveryPreference?: 'pickup' | 'delivery';
+      dropoffLocation?: string;
+    } & DefaultSession['user'];
   }
 }
 

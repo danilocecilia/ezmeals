@@ -12,7 +12,7 @@ interface Props {
 function Providers({ children, session }: Props) {
   // Memoize a unique key based on session changes
   const memoizedSessionKey = useMemo(() => {
-    return session?.user?.id || 'default-session-key'; // Ensure you return a valid key
+    return session?.user?.id || 'default-session-key';
   }, [session]);
 
   return (
