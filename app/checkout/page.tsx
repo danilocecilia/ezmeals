@@ -1,5 +1,6 @@
 'use client';
 import { DeliveryAddressModal } from '@components/DeliveryAddressModal';
+import { DropOffOptionsModal } from '@components/DropoffOptionsModal';
 import {
   Accordion,
   AccordionContent,
@@ -17,6 +18,7 @@ import {
 } from '@components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
 import { Separator } from '@root/components/ui/separator';
+import { useCart } from '@root/context/CartContext';
 import {
   MapPinHouseIcon,
   User,
@@ -30,8 +32,12 @@ import React, { FC } from 'react';
 
 const CheckoutPage: FC = () => {
   const { data: session } = useSession();
+  console.log('🚀 ~ session:', session);
   const [deliveryType, setDeliveryType] = React.useState('delivery');
   const [locationAdressModal, setLocationAdressModal] = React.useState(false);
+  const [dropOffOptionsModal, setDropOffOptionsModal] = React.useState(false);
+  const { state, dispatch } = useCart();
+  console.log('🚀 ~ state:', state);
 
   const DeliveryDetailsPanel = () => {
     return (
@@ -60,44 +66,44 @@ const CheckoutPage: FC = () => {
           <CardContent>
             <TabsContent value={deliveryType}>
               <Card className="border-0 shadow-none">
-                <CardContent className="space-y-2">
-                  <div
-                    onClick={() => setLocationAdressModal(true)}
-                    className="flex space-y-1 items-center py-4 justify-between  cursor-pointer"
-                  >
-                    <div className="flex gap-4 items-center">
-                      <MapPinHouseIcon className="w-6 h-6" />
+                <div
+                  onClick={() => setLocationAdressModal(true)}
+                  className="flex space-y-1 items-center py-4 justify-between  cursor-pointer"
+                >
+                  <div className="flex gap-4 items-center">
+                    <MapPinHouseIcon className="w-6 h-6" />
+                    <div>
                       <div>
-                        <div>
-                          {session?.user?.address || 'No address provided'}
-                        </div>
-                        <div>
-                          {session?.user.city && `${session.user.city}, `}
-                          {session?.user?.province &&
-                            `${session.user.province} `}
-                          {session?.user?.postal_code?.toUpperCase()}
-                        </div>
+                        {session?.user?.address || 'No address provided'}
+                      </div>
+                      <div>
+                        {session?.user.city && `${session.user.city}, `}
+                        {session?.user?.province && `${session.user.province} `}
+                        {session?.user?.postal_code?.toUpperCase()}
                       </div>
                     </div>
+                  </div>
+                  <div>
+                    <Button>Edit</Button>
+                  </div>
+                </div>
+                <Separator />
+                <div
+                  onClick={() => setDropOffOptionsModal(true)}
+                  className="flex space-y-1 items-center py-4 cursor-pointer justify-between"
+                >
+                  <div className="flex gap-4 items-center">
+                    <User className="w-6 h-6" />
                     <div>
-                      <Button>Edit</Button>
+                      <div>{session?.user?.dropoffLocation}</div>
+                      <div>Add delivery instructions</div>
                     </div>
                   </div>
-                  <Separator />
-                  <div className="flex space-y-1 items-center py-4 justify-between">
-                    <div className="flex gap-4 items-center">
-                      <User className="w-6 h-6" />
-                      <div>
-                        <div>{session?.user?.dropoffLocation}</div>
-                        <div>Add delivery instructions</div>
-                      </div>
-                    </div>
-                    <div>
-                      <Button className="">Edit</Button>
-                    </div>
+                  <div>
+                    <Button className="">Edit</Button>
                   </div>
-                  <Separator />
-                </CardContent>
+                </div>
+                <Separator />
               </Card>
             </TabsContent>
             <TabsContent value="pickup">
@@ -108,7 +114,7 @@ const CheckoutPage: FC = () => {
                     Change your pickup here. After saving, you'll be logged out.
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-2">
+                <CardContent className="space-y-2 p-0">
                   <div className="space-y-1">
                     {/* <Label htmlFor="current">Current pickup</Label>
                     <Input id="current" type="pickup" /> */}
@@ -125,7 +131,7 @@ const CheckoutPage: FC = () => {
           <CardFooter className="flex flex-col justify-start items-start">
             <div className="text-2xl font-semibold">Delivery Date/Time</div>
 
-            <CardContent className="space-y-2 pt-10">
+            <CardContent className="space-y-2 p-0 pt-10">
               <div className="flex items-center justify-between">
                 <div className="flex gap-4 items-center">
                   The estimate delivery date and time is 15th July 2021, 12:00pm
@@ -147,7 +153,7 @@ const CheckoutPage: FC = () => {
             <div>Payment</div>
           </CardTitle>
         </CardHeader>
-        <CardContent className="flex justify-between p-6 space-y-2 items-center">
+        <CardContent className="flex justify-between p-0 space-y-2 items-center">
           <div className="flex gap-2 p-6 pt-0">
             <Banknote />
             <div>By Cash at delivery</div>
@@ -171,87 +177,39 @@ const CheckoutPage: FC = () => {
                 <CardTitle>
                   <div className="flex gap-4 items-center">
                     <ShoppingCart className="w-6 h-6" />
-                    <div className="text-[16px]">Cart Summary (10 items)</div>
+                    <div className="text-[16px]">
+                      Cart Summary ({state.totalItemsQuantity}{' '}
+                      {state.totalItemsQuantity > 1 ? 'items' : 'item'})
+                    </div>
                   </div>
                 </CardTitle>
               </CardHeader>
             </AccordionTrigger>
             <AccordionContent>
               <CardContent className="space-y-4">
-                <div className="flex space-y-2 items-center gap-2">
-                  <Image
-                    src="/logo.jpg"
-                    alt="Image"
-                    layout="intrinsic"
-                    width={48}
-                    height={48}
-                  />
+                {state.items.map((item) => (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <Image
+                        src={item.image}
+                        alt="Image"
+                        layout="intrinsic"
+                        width={48}
+                        height={48}
+                      />
 
-                  <div className="flex justify-between min-w-[300px]">
-                    <div>Bobo de Camarao</div>
-                    <div>$10.00</div>
-                  </div>
-                </div>
-                <Separator />
-                <div className="flex space-y-2 items-center gap-2">
-                  <Image
-                    src="/logo.jpg"
-                    alt="Image"
-                    layout="intrinsic"
-                    width={48}
-                    height={48}
-                  />
+                      <div className="flex flex-col justify-between w-full">
+                        <div>{item.name}</div>
+                        <div>${item.price}</div>
+                      </div>
+                      <div className="bg-violet-50 mt-0 w-11 h-11 rounded-lg text-center flex items-center justify-center">
+                        {item.quantity}
+                      </div>
+                    </div>
 
-                  <div className="flex justify-between min-w-[300px]">
-                    <div>Bobo de Camarao</div>
-                    <div>$10.00</div>
-                  </div>
-                </div>
-                <Separator />
-                <div className="flex space-y-2 items-center gap-2">
-                  <Image
-                    src="/logo.jpg"
-                    alt="Image"
-                    layout="intrinsic"
-                    width={48}
-                    height={48}
-                  />
-
-                  <div className="flex justify-between min-w-[300px]">
-                    <div>Bobo de Camarao</div>
-                    <div>$10.00</div>
-                  </div>
-                </div>
-                <Separator />
-                <div className="flex space-y-2 items-center gap-2">
-                  <Image
-                    src="/logo.jpg"
-                    alt="Image"
-                    layout="intrinsic"
-                    width={48}
-                    height={48}
-                  />
-
-                  <div className="flex justify-between min-w-[300px]">
-                    <div>Bobo de Camarao</div>
-                    <div>$10.00</div>
-                  </div>
-                </div>
-                <Separator />
-                <div className="flex space-y-2 items-center gap-2">
-                  <Image
-                    src="/logo.jpg"
-                    alt="Image"
-                    layout="intrinsic"
-                    width={48}
-                    height={48}
-                  />
-
-                  <div className="flex justify-between min-w-[300px]">
-                    <div>Bobo de Camarao</div>
-                    <div>$10.00</div>
-                  </div>
-                </div>
+                    {state.items.length > 1 ? <Separator /> : null}
+                  </>
+                ))}
               </CardContent>
             </AccordionContent>
           </Card>
@@ -300,6 +258,10 @@ const CheckoutPage: FC = () => {
 
   return (
     <>
+      <DropOffOptionsModal
+        isOpen={dropOffOptionsModal}
+        onClose={() => setDropOffOptionsModal(false)}
+      />
       <DeliveryAddressModal
         isOpen={locationAdressModal}
         onClose={() => setLocationAdressModal(false)}
