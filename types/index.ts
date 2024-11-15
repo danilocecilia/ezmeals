@@ -43,4 +43,4 @@ declare module 'next-auth' {
   }
 }
 
-export type { CartItem, Meal, CartAction, CartState };
+export type { CartItem, Meal, CartAction, CartState, UserProps };

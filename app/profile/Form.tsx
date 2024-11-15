@@ -28,6 +28,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { reloadSession } from '@lib/funcs';
 import { cn } from '@lib/utils';
+import { UserProps } from '@types';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { useRouter } from 'next/navigation';
@@ -37,7 +38,6 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-import { UserProps } from '@/interfaces/user-interface';
 import { formSchema } from '@/schemas/profileSchema';
 import { provinces } from '@/utils/provinces';
 

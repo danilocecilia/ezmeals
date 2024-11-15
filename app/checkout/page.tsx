@@ -231,7 +231,7 @@ const CheckoutPage: FC = () => {
         <CardContent className="space-y-4">
           <div className="flex justify-between">
             <div>Subtotal</div>
-            <div>$50.00</div>
+            <div>${state.totalAmount.toFixed(2)}</div>
           </div>
           <Separator />
           <div className="flex justify-between">
@@ -246,11 +246,11 @@ const CheckoutPage: FC = () => {
           <Separator />
           <div className="flex justify-between">
             <div className="font-bold">Total</div>
-            <div className="font-bold">$55.00</div>
+            <div>${state.totalAmount.toFixed(2)}</div>
           </div>
         </CardContent>
         <CardFooter>
-          <Button>Place Order</Button>
+          <Button className="w-full">Place Order</Button>
         </CardFooter>
       </Card>
     );

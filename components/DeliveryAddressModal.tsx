@@ -1,5 +1,5 @@
 'use client';
-import { AutoComplete } from '@components/ui/autocomplete';
+import AutoComplete from '@components/ui/autocomplete';
 import { Button } from '@components/ui/button';
 import {
   Dialog,
@@ -11,45 +11,90 @@ import {
   DialogTitle
 } from '@components/ui/dialog';
 import useGetDeliveryLocation from '@hooks/useGetDeliveryLocation';
+import { reloadSession } from '@lib/funcs';
 import { MapPinCheckInside, PencilIcon } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import React, { useState, useCallback } from 'react';
+import { toast } from 'sonner';
 
 interface MealItemModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const AutoCompleteAddress = React.memo(
-  ({
-    selectedValue,
-    setSelectedValue,
-    searchValue,
-    setSearchValue,
-    data,
-    isLoading
-  }) => {
-    return (
-      <AutoComplete
-        selectedValue={selectedValue}
-        onSelectedValueChange={setSelectedValue}
-        searchValue={searchValue}
-        onSearchValueChange={setSearchValue}
-        items={data || []} // Make sure this is the correct path
-        isLoading={isLoading}
-        emptyMessage="No items found."
-        placeholder="Search items..."
-      />
-    );
-  }
-);
-
 export function DeliveryAddressModal({ isOpen, onClose }: MealItemModalProps) {
   const [searchValue, setSearchValue] = useState<string>('');
-  const [selectedValue, setSelectedValue] = useState<string>('');
-  console.log('🚀 ~ DeliveryAddressModal ~ selectedValue:', selectedValue);
-
+  const { data: session, update } = useSession();
   const { data, isLoading } = useGetDeliveryLocation(searchValue || '');
-  console.log('🚀 ~ DeliveryAddressModal ~ data:', data);
+
+  const sanitizeSelectedValue = (value: string) => {
+    const values = value.split(',');
+    const street = values[0].trim();
+    const city = values[1].trim();
+    const province = values[2].trim();
+    const postalCode = values[3].trim();
+    return {
+      street,
+      city,
+      province,
+      postalCode
+    };
+  };
+
+  const handleUpdateUserProfile = useCallback(
+    async (value: string) => {
+      const { street, city, province, postalCode } =
+        sanitizeSelectedValue(value);
+
+      if (!session?.user) {
+        return;
+      }
+
+      const values = {
+        ...session.user,
+        address: street,
+        city,
+        province,
+        postal_code: postalCode
+      };
+
+      const response = await fetch(`/api/updateProfile`, {
+        method: 'POST',
+        body: JSON.stringify(values)
+      });
+
+      if (!response.ok) {
+        toast.error('Error', {
+          description: 'Failed to update profile, please try again'
+        });
+        return;
+      }
+
+      const responseData = await response.json();
+
+      if (responseData?.error) {
+        toast.error('Error', {
+          description: 'Failed to update profile, please try again'
+        });
+        return;
+      }
+
+      toast.success('Success', {
+        description: 'Address updated successfully.'
+      });
+
+      await update({
+        ...session,
+        user: {
+          ...values
+        }
+      });
+
+      reloadSession();
+      setSearchValue('');
+    },
+    [session, update]
+  );
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -60,13 +105,12 @@ export function DeliveryAddressModal({ isOpen, onClose }: MealItemModalProps) {
           <DialogDescription></DialogDescription>
         </DialogHeader>
         <div>
-          <AutoCompleteAddress
-            selectedValue={selectedValue}
-            setSelectedValue={setSelectedValue}
+          <AutoComplete
             searchValue={searchValue}
             setSearchValue={setSearchValue}
             data={data}
             isLoading={isLoading}
+            updateProfile={handleUpdateUserProfile}
           />
         </div>
         <DialogFooter>
@@ -77,19 +121,13 @@ export function DeliveryAddressModal({ isOpen, onClose }: MealItemModalProps) {
             <div className="border-[1px] rounded-md p-1">
               <Button
                 className="w-full bg-violet-50 justify-between hover:bg-secondary-dark text-color-primary h-15"
-                onClick={() => {
-                  console.log(
-                    '🚀 ~ DeliveryAddressModal ~ selectedValue:',
-                    selectedValue
-                  );
-                  onClose();
-                }}
+                onClick={() => onClose()}
               >
                 <div className="flex justify-start items-center">
                   <MapPinCheckInside size={25} />
                   <div className="justify-items-start px-3">
-                    <p className="ml-2">908 Queyside Dr</p>
-                    <p className="ml-2">New Westminster, BC N8N 0A3</p>
+                    <p className="ml-2">{session?.user.address}</p>
+                    <p className="ml-2">{`${session?.user.city},${session?.user.province} ${session?.user.postal_code}`}</p>
                   </div>
                 </div>
                 <div className="flex items-center justify-center rounded-full w-10 h-10 hover:bg-violet-200 bg-violet-100">

@@ -16,7 +16,8 @@ const useGetDeliveryLocation = (location: string) => {
 
   const parseData = (data: any) => {
     if (!data) return [];
-    if (Array.isArray(data?.data?.streets)) return data?.data?.streets?.street;
+    if (Array.isArray(data?.data?.streets?.street))
+      return data?.data?.streets?.street;
     if (typeof data?.data?.streets?.street === 'string') {
       return [data?.data?.streets?.street];
     }
@@ -24,7 +25,7 @@ const useGetDeliveryLocation = (location: string) => {
 
   return {
     data: parseData(data),
-    isLoading: isLoading || (!error && !data),
+    isLoading: isLoading,
     isError: error
   };
 };

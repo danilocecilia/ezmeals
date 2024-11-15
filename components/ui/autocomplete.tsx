@@ -1,150 +1,70 @@
-'use client';
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
-  CommandList
-} from '@components/ui/command';
-import { Input } from '@components/ui/input';
-import { Popover, PopoverAnchor, PopoverContent } from '@components/ui/popover';
-import { Skeleton } from '@components/ui/skeleton';
-import { cn } from '@lib/utils';
-import { Command as CommandPrimitive } from 'cmdk';
-import { Check } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { Spinner } from '@components/ui/spinner';
+import { MapPinIcon } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
 
-type Props = {
-  selectedValue: string;
-  onSelectedValueChange: (value: string) => void;
+interface AutocompleteProps {
   searchValue: string;
-  onSearchValueChange: (value: string) => void;
-  items: string[];
-  isLoading?: boolean;
-  emptyMessage?: string;
-  placeholder?: string;
-};
+  setSearchValue: (value: string) => void;
+  data: string[];
+  isLoading: boolean;
+  updateProfile: (value: string) => void;
+}
 
-export function AutoComplete({
-  selectedValue,
-  onSelectedValueChange,
+const Autocomplete: React.FC<AutocompleteProps> = ({
   searchValue,
-  onSearchValueChange,
-  items,
+  setSearchValue,
+  data,
   isLoading,
-  emptyMessage = 'No items.',
-  placeholder = 'Search...'
-}: Props) {
-  const [open, setOpen] = useState(false);
+  updateProfile
+}) => {
+  const [suggestions, setSuggestions] = useState<string[]>([]);
 
-  const reset = () => {
-    onSelectedValueChange('');
-    onSearchValueChange('');
-  };
-
-  const onInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    // if (selectedValue !== searchValue) {
-    //   console.log('🚀 ~ onInputBlur ~ searchValue:', searchValue);
-    //   console.log('🚀 ~ onInputBlur ~ selectedValue:', selectedValue);
-    //   reset();
-    // }
-  };
-
-  const onSelectItem = (inputValue: string) => {
-    debugger;
-    if (inputValue === selectedValue) {
-      reset();
+  useEffect(() => {
+    if (data?.length > 0) {
+      const filteredSuggestions = data?.filter((item) =>
+        item.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      setSuggestions(filteredSuggestions);
     } else {
-      debugger;
-      onSelectedValueChange(inputValue);
-      onSearchValueChange(inputValue);
+      setSuggestions([]);
     }
-    setOpen(false);
+  }, [searchValue, data]);
+
+  const handleSelectSuggestion = (suggestion: string) => {
+    setSearchValue(suggestion);
+    setSuggestions([]);
+    updateProfile(suggestion);
   };
 
   return (
-    <div className="flex items-center">
-      <Popover open={open} onOpenChange={setOpen}>
-        <Command shouldFilter={false}>
-          <PopoverAnchor asChild>
-            <CommandPrimitive.Input
-              asChild
-              value={searchValue}
-              onValueChange={(e) => {
-                debugger;
-                onSearchValueChange(e);
-              }}
-              onKeyDown={(e) => setOpen(e.key !== 'Escape')}
-              onMouseDown={() => setOpen((open) => !!searchValue || !open)}
-              onFocus={() => setOpen(true)}
-              onBlur={onInputBlur}
-            >
-              <Input placeholder={placeholder} />
-            </CommandPrimitive.Input>
-          </PopoverAnchor>
-          {!open && <CommandList aria-hidden="true" className="hidden" />}
-          <PopoverContent
-            asChild
-            onOpenAutoFocus={(e) => e.preventDefault()}
-            onInteractOutside={(e) => {
-              if (
-                e.target instanceof Element &&
-                e.target.hasAttribute('cmdk-input')
-              ) {
-                e.preventDefault();
-              }
-            }}
-            className="w-[--radix-popover-trigger-width] p-0"
+    <div>
+      <div className="relative">
+        {isLoading ? (
+          <Spinner className="w-5 h-5 absolute top-[6px] left-[4px]" />
+        ) : (
+          <MapPinIcon className="absolute top-[6px] left-[4px]" size={20} />
+        )}
+        <input
+          type="text"
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          placeholder={isLoading ? 'Loading...' : 'Search for your location'}
+          className="pl-8 px-2 py-1 bg-gray-100 w-full"
+        />
+      </div>
+      <ul className="absolute w-[90%] h-[57%] max-h-60 overflow-y-auto rounded-md">
+        {suggestions.map((suggestion, index) => (
+          <li
+            key={index}
+            onClick={() => handleSelectSuggestion(suggestion)}
+            className="text-sm bg-violet-50 cursor-pointer px-4 py-2 hover:bg-gray-200"
           >
-            <CommandList>
-              {isLoading && (
-                <CommandPrimitive.Loading>
-                  <div className="p-1">
-                    <Skeleton className="h-6 w-full" />
-                  </div>
-                </CommandPrimitive.Loading>
-              )}
-              {items.length > 0 && !isLoading ? (
-                <CommandGroup>
-                  {items.map((option) => (
-                    <>
-                      <Input
-                        key={option}
-                        value={option}
-                        onChange={(e) => {
-                          debugger;
-                        }}
-                      />
-
-                      {/* <CommandItem
-                        key={option}
-                        value={option}
-                        onSelect={(value) => {
-                          debugger;
-                          onSelectItem(option);
-                        }}
-                      >
-                        <Check
-                          className={cn(
-                            'mr-2 h-4 w-4',
-                            selectedValue === option
-                              ? 'opacity-100'
-                              : 'opacity-0'
-                          )}
-                        />
-                        {option}
-                      </CommandItem> */}
-                    </>
-                  ))}
-                </CommandGroup>
-              ) : null}
-              {!isLoading ? (
-                <CommandEmpty>{emptyMessage ?? 'No items.'}</CommandEmpty>
-              ) : null}
-            </CommandList>
-          </PopoverContent>
-        </Command>
-      </Popover>
+            {suggestion}
+          </li>
+        ))}
+      </ul>
     </div>
   );
-}
+};
+
+export default Autocomplete;
