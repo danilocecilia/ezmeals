@@ -29,14 +29,13 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 The project structure is as follows:
 
-```
-.env.local
+[.env.local](http://_vscodecontentref_/5)
 .eslintignore
-.eslintrc.json
+[.eslintrc.json](http://_vscodecontentref_/6)
 .gitignore
 .next/
 .nvmrc
-.prettierrc.js
+[.prettierrc.js](http://_vscodecontentref_/7)
 .vscode/
 app/
 components/
@@ -46,12 +45,11 @@ lib/
 public/
 types/
 utils/
-package.json
-postcss.config.js
-tailwind.config.ts
-tsconfig.json
-README.md
-```
+[package.json](http://_vscodecontentref_/8)
+[postcss.config.js](http://_vscodecontentref_/9)
+[tailwind.config.ts](http://_vscodecontentref_/10)
+[tsconfig.json](http://_vscodecontentref_/11)
+[README.md](http://_vscodecontentref_/12)
 
 ### Key Directories and Files
 
@@ -118,3 +116,7 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
