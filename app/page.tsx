@@ -13,7 +13,14 @@ const HomeContent: React.FC = () => {
       <CardCarousel />
 
       <MealItemModal isOpen={isModalOpen} onClose={closeModal}>
-        {selectedMeal && <MealItem meal={selectedMeal} />}
+        {selectedMeal && (
+          <MealItem
+            meal={{
+              ...selectedMeal,
+              maxQuantity: selectedMeal.maxQuantity ?? 0
+            }}
+          />
+        )}
       </MealItemModal>
     </main>
   );

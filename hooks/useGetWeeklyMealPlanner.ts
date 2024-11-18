@@ -16,7 +16,7 @@ const useGetWeeklyMealPlanner = () => {
   );
 
   return {
-    weeklyMealPlanner: data,
+    weeklyMealPlanner: data || [],
     isLoading: isLoading || (!error && !data),
     isError: error
   };

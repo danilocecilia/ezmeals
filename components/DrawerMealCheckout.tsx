@@ -130,7 +130,7 @@ export function DrawerMealCheckout({
         <DrawerClose className="flex absolute top-0 left-0 m-4 bg-violet-100 rounded-full w-10 h-10 items-center justify-center hover:bg-violet-200">
           <X />
         </DrawerClose>
-        <MoreOptions />
+        {state.totalItemsQuantity !== 0 && <MoreOptions />}
 
         {state.totalItemsQuantity === 0 ? (
           <EmptyCart />
