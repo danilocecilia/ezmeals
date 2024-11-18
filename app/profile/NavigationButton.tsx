@@ -1,4 +1,5 @@
 'use client';
+import { cn } from '@lib/utils';
 
 import IconSwitcher from './IconSwitcher';
 
@@ -15,9 +16,15 @@ const NavigationButton = (props: NavigationButtonProps) => {
   return (
     <div
       onClick={() => props.onClick(props.type)}
-      className={`w-[200px] ${props.isSelected ? 'font-bold border-r-4 border-primary rounded-l-lg' : ''} cursor-pointer`}
+      className={cn('w-[200px] cursor-pointer', {
+        'font-bold border-r-4 border-primary rounded-l-lg bg-violet-50':
+          props.isSelected,
+        'hover:bg-violet-200': props.isSelected,
+        'hover:border-r-4 hover::border-primary hover:bg-violet-50':
+          !props.isSelected
+      })}
     >
-      <div className="flex gap-2">
+      <div className="flex gap-2 p-2">
         <IconSwitcher type={props.type} /> {props.title}
       </div>
     </div>

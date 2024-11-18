@@ -1,5 +1,5 @@
 'use client';
-import AutoComplete from '@components/ui/autocomplete';
+import AddressAutocomplete from '@components/ui/AddressAutocomplete';
 import { Button } from '@components/ui/button';
 import {
   Dialog,
@@ -10,22 +10,33 @@ import {
   DialogHeader,
   DialogTitle
 } from '@components/ui/dialog';
-import useGetDeliveryLocation from '@hooks/useGetDeliveryLocation';
 import { reloadSession } from '@lib/funcs';
+import { useJsApiLoader, Libraries } from '@react-google-maps/api';
 import { MapPinCheckInside, PencilIcon } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import React, { useState, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { toast } from 'sonner';
+import { fillInAddress } from 'utils/mapsHelper';
 
 interface MealItemModalProps {
   isOpen: boolean;
   onClose: () => void;
+  setDropOffOptionsModal: (value: boolean) => void;
 }
 
-export function DeliveryAddressModal({ isOpen, onClose }: MealItemModalProps) {
-  const [searchValue, setSearchValue] = useState<string>('');
+const libraries: Libraries = ['places'];
+
+export function DeliveryAddressModal({
+  isOpen,
+  onClose,
+  setDropOffOptionsModal
+}: MealItemModalProps) {
   const { data: session, update } = useSession();
-  const { data, isLoading } = useGetDeliveryLocation(searchValue || '');
+  const { isLoaded, loadError } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '',
+    libraries
+  });
 
   const sanitizeSelectedValue = (value: string) => {
     const values = value.split(',');
@@ -42,7 +53,7 @@ export function DeliveryAddressModal({ isOpen, onClose }: MealItemModalProps) {
   };
 
   const handleUpdateUserProfile = useCallback(
-    async (value: string) => {
+    async (value: string, coordinates: { lat: number; lng: number }) => {
       const { street, city, province, postalCode } =
         sanitizeSelectedValue(value);
 
@@ -55,7 +66,8 @@ export function DeliveryAddressModal({ isOpen, onClose }: MealItemModalProps) {
         address: street,
         city,
         province,
-        postal_code: postalCode
+        postal_code: postalCode,
+        coordinates
       };
 
       const response = await fetch(`/api/updateProfile`, {
@@ -89,12 +101,26 @@ export function DeliveryAddressModal({ isOpen, onClose }: MealItemModalProps) {
           ...values
         }
       });
-
+      setDropOffOptionsModal(true);
       reloadSession();
-      setSearchValue('');
+      onClose();
     },
-    [session, update]
+    [onClose, session, setDropOffOptionsModal, update]
   );
+
+  const handlePlaceChanged = async (
+    address: google.maps.places.Autocomplete
+  ) => {
+    if (!isLoaded) return;
+    const place = address.getPlace();
+
+    const { address: full_address, coordinates } = fillInAddress(place);
+
+    if (!place || !place.geometry) {
+      return;
+    }
+    handleUpdateUserProfile(full_address, coordinates);
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -105,12 +131,10 @@ export function DeliveryAddressModal({ isOpen, onClose }: MealItemModalProps) {
           <DialogDescription></DialogDescription>
         </DialogHeader>
         <div>
-          <AutoComplete
-            searchValue={searchValue}
-            setSearchValue={setSearchValue}
-            data={data}
-            isLoading={isLoading}
-            updateProfile={handleUpdateUserProfile}
+          <AddressAutocomplete
+            isLoaded={isLoaded}
+            loadError={loadError}
+            handlePlaceChanged={handlePlaceChanged}
           />
         </div>
         <DialogFooter>
@@ -130,7 +154,10 @@ export function DeliveryAddressModal({ isOpen, onClose }: MealItemModalProps) {
                     <p className="ml-2">{`${session?.user.city},${session?.user.province} ${session?.user.postal_code}`}</p>
                   </div>
                 </div>
-                <div className="flex items-center justify-center rounded-full w-10 h-10 hover:bg-violet-200 bg-violet-100">
+                <div
+                  onClick={() => setDropOffOptionsModal(true)}
+                  className="flex items-center justify-center rounded-full w-10 h-10 hover:bg-violet-200 bg-violet-100"
+                >
                   <PencilIcon size={20} />
                 </div>
               </Button>

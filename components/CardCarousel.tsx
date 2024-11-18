@@ -8,8 +8,6 @@ import MealItemsCarousel from './MealItemsCarousel';
 
 const CardCarousel: React.FC = () => {
   const { weeklyMealPlanner, isLoading, isError } = useGetWeeklyMealPlanner();
-  console.log('🚀 ~ weeklyMealPlanner:', weeklyMealPlanner);
-
   const { openModal } = useModal();
 
   if (isLoading)

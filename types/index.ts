@@ -39,6 +39,9 @@ declare module 'next-auth' {
       province?: string;
       deliveryPreference?: 'pickup' | 'delivery';
       dropoffLocation?: string;
+      coordinates?: { lat: number; lng: number };
+      apt_suite?: string;
+      deliveryNotes?: string;
     } & DefaultSession['user'];
   }
 }

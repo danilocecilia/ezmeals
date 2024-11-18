@@ -20,7 +20,7 @@ export async function GET(
 
   const apiKey = process.env.GEOCODER_API_KEY;
   const response = await fetch(
-    `https://geocoder.ca/?autocomplete=1&locate=${location}&geoit=xml&auth=${apiKey}&json=1`
+    `${process.env.GEOCODER_URL}/?autocomplete=1&utm=1&locate=${location}&geoit=xml&auth=${apiKey}&json=1`
   );
 
   const data = await response.json();

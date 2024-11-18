@@ -11,20 +11,20 @@ import { Button } from '@components/ui/button';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle
 } from '@components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
+import { GoogleMapsEmbed } from '@next/third-parties/google';
 import { Separator } from '@root/components/ui/separator';
 import { useCart } from '@root/context/CartContext';
 import {
   MapPinHouseIcon,
   User,
-  CreditCardIcon,
   Banknote,
-  ShoppingCart
+  ShoppingCart,
+  StoreIcon
 } from 'lucide-react';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
@@ -32,39 +32,36 @@ import React, { FC } from 'react';
 
 const CheckoutPage: FC = () => {
   const { data: session } = useSession();
-  console.log('🚀 ~ session:', session);
   const [deliveryType, setDeliveryType] = React.useState('delivery');
   const [locationAdressModal, setLocationAdressModal] = React.useState(false);
   const [dropOffOptionsModal, setDropOffOptionsModal] = React.useState(false);
-  const { state, dispatch } = useCart();
-  console.log('🚀 ~ state:', state);
+  const { state } = useCart();
 
   const DeliveryDetailsPanel = () => {
     return (
-      <Tabs defaultValue="delivery" className="self-center">
+      <Tabs
+        activationMode="manual"
+        onValueChange={(e) => {
+          setDeliveryType(e);
+        }}
+        value={deliveryType}
+        className="self-center"
+      >
         <Card className="w-[716px]">
           <CardHeader className="flex">
             <CardTitle className="flex justify-between items-center">
-              <div>Delivery Details</div>
+              <div>
+                {deliveryType === 'delivery' ? 'Delivery' : 'Pickup'} Details
+              </div>
 
               <TabsList className="grid w-full grid-cols-2 max-w-48">
-                <TabsTrigger
-                  onChange={() => setDeliveryType('delivery')}
-                  value="delivery"
-                >
-                  Delivery
-                </TabsTrigger>
-                <TabsTrigger
-                  onChange={() => setDeliveryType('pickup')}
-                  value="pickup"
-                >
-                  Pickup
-                </TabsTrigger>
+                <TabsTrigger value="delivery">Delivery</TabsTrigger>
+                <TabsTrigger value="pickup">Pickup</TabsTrigger>
               </TabsList>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <TabsContent value={deliveryType}>
+            <TabsContent value="delivery">
               <Card className="border-0 shadow-none">
                 <div
                   onClick={() => setLocationAdressModal(true)}
@@ -95,8 +92,14 @@ const CheckoutPage: FC = () => {
                   <div className="flex gap-4 items-center">
                     <User className="w-6 h-6" />
                     <div>
-                      <div>{session?.user?.dropoffLocation}</div>
-                      <div>Add delivery instructions</div>
+                      <div>
+                        {session?.user?.dropoffLocation === 'hand_to_customer'
+                          ? 'Hand it to customer'
+                          : 'Leave it at my door'}
+                      </div>
+                      <div className="text-sm text-violet-300">
+                        Add delivery instructions
+                      </div>
                     </div>
                   </div>
                   <div>
@@ -109,37 +112,49 @@ const CheckoutPage: FC = () => {
             <TabsContent value="pickup">
               <Card>
                 <CardHeader>
-                  <CardTitle>pickup</CardTitle>
-                  <CardDescription>
-                    Change your pickup here. After saving, you'll be logged out.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-2 p-0">
-                  <div className="space-y-1">
-                    {/* <Label htmlFor="current">Current pickup</Label>
-                    <Input id="current" type="pickup" /> */}
+                  <CardTitle>
+                    <div className="p-0">10318 Shenandoah Cresent</div>
+                  </CardTitle>
+                  <div
+                    className="mt-12"
+                    style={{ height: '150px', width: '100%' }}
+                  >
+                    <GoogleMapsEmbed
+                      apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}
+                      height={154}
+                      width="100%"
+                      mode="place"
+                      q={'10318 Shenandoah Cresent'}
+                    />
                   </div>
-                  <div className="space-y-1">
-                    {/* <Label htmlFor="new">New pickup</Label>
-                    <Input id="new" type="pickup" /> */}
+                </CardHeader>
+
+                <CardContent className="space-y-2 px-6 py-2">
+                  <div className="flex gap-4 items-center">
+                    <StoreIcon className="w-6 h-6" />
+                    <div>
+                      <div>{'10318 Shenandoah Cresent'}</div>
+                      <div>{'Windsor, ON N8R1B5'}</div>
+                    </div>
                   </div>
                 </CardContent>
-                <CardFooter>{/* <Button>Save pickup</Button> */}</CardFooter>
               </Card>
             </TabsContent>
           </CardContent>
-          <CardFooter className="flex flex-col justify-start items-start">
-            <div className="text-2xl font-semibold">Delivery Date/Time</div>
+          {deliveryType === 'delivery' && (
+            <CardFooter className="flex flex-col justify-start items-start">
+              <div className="text-2xl font-semibold">Delivery Date/Time</div>
 
-            <CardContent className="space-y-2 p-0 pt-10">
-              <div className="flex items-center justify-between">
-                <div className="flex gap-4 items-center">
-                  The estimate delivery date and time is 15th July 2021, 12:00pm
-                  - 1:00pm
+              <CardContent className="space-y-2 p-0 pt-10">
+                <div className="flex items-center justify-between">
+                  <div className="flex gap-4 items-center">
+                    The estimate delivery date and time is 15th July 2021,
+                    12:00pm - 1:00pm
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </CardFooter>
+              </CardContent>
+            </CardFooter>
+          )}
         </Card>
       </Tabs>
     );
@@ -187,8 +202,8 @@ const CheckoutPage: FC = () => {
             </AccordionTrigger>
             <AccordionContent>
               <CardContent className="space-y-4">
-                {state.items.map((item) => (
-                  <>
+                {state.items.map((item, key) => (
+                  <React.Fragment key={key}>
                     <div className="flex items-center gap-2">
                       <Image
                         src={item.image}
@@ -208,7 +223,7 @@ const CheckoutPage: FC = () => {
                     </div>
 
                     {state.items.length > 1 ? <Separator /> : null}
-                  </>
+                  </React.Fragment>
                 ))}
               </CardContent>
             </AccordionContent>
@@ -264,6 +279,7 @@ const CheckoutPage: FC = () => {
       />
       <DeliveryAddressModal
         isOpen={locationAdressModal}
+        setDropOffOptionsModal={setDropOffOptionsModal}
         onClose={() => setLocationAdressModal(false)}
       />
       <div className="flex gap-4 justify-center">

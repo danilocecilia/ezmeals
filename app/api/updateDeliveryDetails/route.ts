@@ -3,19 +3,8 @@ import { auth } from '@root/auth';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
-  const {
-    email,
-    full_name,
-    address,
-    city,
-    postal_code,
-    province,
-    phone_number,
-    coordinates,
-    dropoffLocation,
-    apt_suite,
-    deliveryNotes
-  } = await request.json();
+  const { dropoffOption, additionalNotes, apartmentNumber } =
+    await request.json();
 
   try {
     const session = await auth();
@@ -42,17 +31,9 @@ export async function POST(request: Request) {
       { email: session?.user?.email },
       {
         $set: {
-          email,
-          name: full_name,
-          address,
-          city,
-          postal_code,
-          province,
-          phone: phone_number,
-          coordinates: coordinates,
-          apt_suite,
-          deliveryNotes,
-          dropoffLocation
+          apt_suite: apartmentNumber,
+          deliveryNotes: additionalNotes,
+          dropoffLocation: dropoffOption
         }
       }
     );
