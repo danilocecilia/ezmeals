@@ -1,3 +1,9 @@
+import autoCert from 'anchor-pki/auto-cert/integrations/next';
+
+const withAutoCert = autoCert({
+  enabledEnv: 'development'
+});
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -26,4 +32,4 @@ const nextConfig = {
   }
 };
 
-export default nextConfig;
+export default withAutoCert(nextConfig);

@@ -1,6 +1,8 @@
 'use client';
+import CheckoutForm from '@components/CheckoutForm';
 import { DeliveryAddressModal } from '@components/DeliveryAddressModal';
 import { DropOffOptionsModal } from '@components/DropoffOptionsModal';
+import StripeProvider from '@components/StripeProvider';
 import {
   Accordion,
   AccordionContent,
@@ -35,6 +37,7 @@ const CheckoutPage: FC = () => {
   const [deliveryType, setDeliveryType] = React.useState('delivery');
   const [locationAdressModal, setLocationAdressModal] = React.useState(false);
   const [dropOffOptionsModal, setDropOffOptionsModal] = React.useState(false);
+  const [checkoutFormModal, setCheckoutFormModal] = React.useState(false);
   const { state } = useCart();
 
   const DeliveryDetailsPanel = () => {
@@ -265,7 +268,9 @@ const CheckoutPage: FC = () => {
           </div>
         </CardContent>
         <CardFooter>
-          <Button className="w-full">Place Order</Button>
+          <Button onClick={() => setCheckoutFormModal(true)} className="w-full">
+            Place your order
+          </Button>
         </CardFooter>
       </Card>
     );
@@ -285,11 +290,19 @@ const CheckoutPage: FC = () => {
       <div className="flex gap-4 justify-center">
         <div className="flex py-10 flex-col gap-4">
           <DeliveryDetailsPanel />
-          <PaymentDetailsPanel />
+          {/* <PaymentDetailsPanel /> */}
         </div>
         <div className="flex flex-col gap-4">
           <OrderSummaryPanel />
-          <OrderTotalPanel />
+          <StripeProvider>
+            <OrderTotalPanel />
+
+            <CheckoutForm
+              isOpen={checkoutFormModal}
+              onClose={() => setCheckoutFormModal(false)}
+              totalAmount={state.totalAmount.toFixed(2)}
+            />
+          </StripeProvider>
         </div>
       </div>
     </>

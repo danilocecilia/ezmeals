@@ -62,7 +62,7 @@ export function DropOffOptionsModal({
       }
 
       toast.success('Success', {
-        description: 'Address updated successfully.'
+        description: 'Delivery Structions updated successfully'
       });
 
       await update({
