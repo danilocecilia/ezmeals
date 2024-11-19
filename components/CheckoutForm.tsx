@@ -2,12 +2,13 @@
 
 import { Button } from '@components/ui/button';
 import { Dialog, DialogClose, DialogContent } from '@components/ui/dialog';
-import LoadingComponent from '@root/components/loading';
+import { useCart } from '@root/context/CartContext';
 import {
   PaymentElement,
   useElements,
   useStripe
 } from '@stripe/react-stripe-js';
+import { clearCart } from '@utils/cartUtils';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -23,13 +24,12 @@ const CheckoutForm = ({
   onClose,
   totalAmount
 }: CheckoutFormModalProps) => {
+  const { dispatch } = useCart();
   const rounter = useRouter();
   const stripe = useStripe();
   const elements = useElements();
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
-  // const [clientSecret, setClientSecret] = useState('');
-  const [errorMessage, setErrorMessage] = useState<string>();
   const [isPaymentSuccessful, setIsPaymentSuccessful] = useState(false);
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -53,6 +53,7 @@ const CheckoutForm = ({
       if (error) {
         setMessage(`Payment failed: ${error.message}`);
       } else if (paymentIntent?.status === 'succeeded') {
+        clearCart(dispatch);
         setIsPaymentSuccessful(true);
       } else {
         setMessage('Payment processing. Please wait.');
@@ -123,7 +124,6 @@ const CheckoutForm = ({
             <h1 className="text-xl text-center font-bold mb-4">{`Place your Order`}</h1>
             <h3 className="text-center">Total: ${totalAmount}</h3>
             <PaymentElement />
-            {errorMessage && <div>{errorMessage}</div>}
             <Button
               type="submit"
               className="w-full py-2"
