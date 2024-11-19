@@ -2,12 +2,14 @@
 
 import { Button } from '@components/ui/button';
 import { Dialog, DialogClose, DialogContent } from '@components/ui/dialog';
+import LoadingComponent from '@root/components/loading';
 import {
-  CardElement,
   PaymentElement,
   useElements,
   useStripe
 } from '@stripe/react-stripe-js';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
 interface CheckoutFormModalProps {
@@ -21,61 +23,48 @@ const CheckoutForm = ({
   onClose,
   totalAmount
 }: CheckoutFormModalProps) => {
+  const rounter = useRouter();
   const stripe = useStripe();
   const elements = useElements();
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [clientSecret, setClientSecret] = useState('');
+  // const [clientSecret, setClientSecret] = useState('');
   const [errorMessage, setErrorMessage] = useState<string>();
-  React.useEffect(() => {
-    fetch('/api/stripe/payment-intent', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ amount: totalAmount })
-    })
-      .then((res) => res.json())
-      .then((data) => setClientSecret(data.clientSecret));
-  }, [totalAmount]);
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const [isPaymentSuccessful, setIsPaymentSuccessful] = useState(false);
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    setLoading(true);
 
     if (!stripe || !elements) {
+      setMessage('Stripe has not loaded yet.');
       return;
     }
 
-    const { error: submitError } = await elements.submit();
+    setIsLoading(true);
 
-    if (submitError) {
-      setErrorMessage(submitError.message);
-      setLoading(false);
-      return;
-    }
+    try {
+      const { error, paymentIntent } = await stripe.confirmPayment({
+        elements, // Automatically grabs clientSecret and PaymentElement
+        confirmParams: {
+          return_url: window.location.origin + '/payment-success' // Optional: redirect on success
+        },
+        redirect: 'if_required' // Prevent full-page redirect
+      });
 
-    const { error } = await stripe.confirmPayment({
-      elements,
-      clientSecret,
-      confirmParams: {
-        return_url: `http://www.localhost:3000/payment-success?amount=${totalAmount}`
+      if (error) {
+        setMessage(`Payment failed: ${error.message}`);
+      } else if (paymentIntent?.status === 'succeeded') {
+        setIsPaymentSuccessful(true);
+      } else {
+        setMessage('Payment processing. Please wait.');
       }
-    });
-
-    if (error) {
-      // This point is only reached if there's an immediate error when
-      // confirming the payment. Show the error to your customer (for example, payment details incomplete)
-      setErrorMessage(error.message);
-    } else {
-      // The payment UI automatically closes with a success animation.
-      // Your customer is redirected to your `return_url`.
+    } catch (err) {
+      setMessage('An unexpected error occurred.');
+    } finally {
+      setIsLoading(false);
     }
-
-    setLoading(false);
   };
 
-  if (!clientSecret || !stripe || !elements) {
+  if (!stripe || !elements) {
     return (
       <div className="flex items-center justify-center">
         <div
@@ -90,28 +79,62 @@ const CheckoutForm = ({
     );
   }
 
-  return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[700px] sm:h-auto">
-        <DialogClose className="flex w-10 h-10 justify-center items-center" />
-        <form
-          onSubmit={handleSubmit}
-          className="max-w-md mx-auto p-4 space-y-4"
-        >
-          <h1 className="text-xl text-center font-bold mb-4">{`Place your Order`}</h1>
-          <h3 className="text-center">Total: ${totalAmount}</h3>
-          {clientSecret && <PaymentElement />}
-          {errorMessage && <div>{errorMessage}</div>}
-          <Button
-            type="submit"
-            className="w-full py-2"
-            disabled={!stripe || loading}
-          >
-            {loading ? 'Processing...' : `Pay ${totalAmount}`}
+  const SuccessPayment = () => {
+    return (
+      <div className="max-w-md mx-auto p-4 space-y-8 justify-items-center">
+        <Image
+          src="/images/success.png"
+          width={80}
+          height={80}
+          alt="Picture of the author"
+        />
+        <h1 className="text-2xl text-center font-bold mb-4">
+          Payment Successful
+        </h1>
+        <div className="text-center space-y-10">
+          <p>Thank you for your purchase!</p>
+          <Button onClick={() => rounter.push('/')} className="w-full py-2">
+            Return to Home
           </Button>
+        </div>
+      </div>
+    );
+  };
 
-          {message && <p className="mt-4 text-red-500">{message}</p>}
-        </form>
+  return (
+    <Dialog
+      open={isOpen}
+      onOpenChange={() => !isPaymentSuccessful && onClose()}
+    >
+      <DialogContent
+        onClick={(e) => e.stopPropagation()}
+        className="sm:max-w-[700px] sm:h-auto"
+      >
+        {!isPaymentSuccessful && (
+          <DialogClose className="flex w-10 h-10 justify-center items-center" />
+        )}
+        {isPaymentSuccessful ? (
+          <SuccessPayment />
+        ) : (
+          <form
+            onSubmit={handleSubmit}
+            className="max-w-md mx-auto p-4 space-y-4"
+          >
+            <h1 className="text-xl text-center font-bold mb-4">{`Place your Order`}</h1>
+            <h3 className="text-center">Total: ${totalAmount}</h3>
+            <PaymentElement />
+            {errorMessage && <div>{errorMessage}</div>}
+            <Button
+              type="submit"
+              className="w-full py-2"
+              disabled={!stripe || isLoading}
+            >
+              {isLoading ? 'Processing your payment...' : `Pay ${totalAmount}`}
+            </Button>
+
+            {message && <p className="mt-4 text-red-500">{message}</p>}
+          </form>
+        )}
       </DialogContent>
     </Dialog>
   );

@@ -3,10 +3,16 @@ import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
+    const { totalAmount } = await request.json();
+
+    if (!totalAmount) {
+      return NextResponse.json({ error: 'Invalid amount' }, { status: 400 });
+    }
+
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: 2000, // $20.00
+      amount: totalAmount * 100,
       currency: 'cad',
       automatic_payment_methods: { enabled: true }
     });

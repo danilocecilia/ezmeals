@@ -290,13 +290,11 @@ const CheckoutPage: FC = () => {
       <div className="flex gap-4 justify-center">
         <div className="flex py-10 flex-col gap-4">
           <DeliveryDetailsPanel />
-          {/* <PaymentDetailsPanel /> */}
         </div>
         <div className="flex flex-col gap-4">
           <OrderSummaryPanel />
-          <StripeProvider>
+          <StripeProvider amount={state.totalAmount.toFixed(2)}>
             <OrderTotalPanel />
-
             <CheckoutForm
               isOpen={checkoutFormModal}
               onClose={() => setCheckoutFormModal(false)}
