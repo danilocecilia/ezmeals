@@ -2,7 +2,7 @@ import { DefaultSession } from 'next-auth';
 import { type ClientUploadedFileData } from 'uploadthing/types';
 
 import { CartItem, CartAction, CartState } from './cart';
-import { Meal } from './meal';
+import { Meal, MealFeature } from './meal';
 
 export interface UploadedFile<T = unknown> extends ClientUploadedFileData<T> {
   customProperty?: string;
@@ -46,4 +46,4 @@ declare module 'next-auth' {
   }
 }
 
-export type { CartItem, Meal, CartAction, CartState, UserProps };
+export type { CartItem, Meal, CartAction, CartState, UserProps, MealFeature };

@@ -8,7 +8,7 @@ import {
   CarouselPrevious
 } from '@components/ui/carousel';
 import { Separator } from '@components/ui/separator';
-import { Meal } from '@types';
+import { MealFeature } from '@types';
 import Autoplay from 'embla-carousel-autoplay';
 import Image from 'next/image';
 import * as React from 'react';
@@ -18,8 +18,8 @@ export function MealFeaturesCarousel({
   setSelectedMeal,
   setIsModalOpen
 }: {
-  weeklyMeals: Array<Meal>;
-  setSelectedMeal: (meal: Meal) => void;
+  weeklyMeals: Array<MealFeature>;
+  setSelectedMeal: (meal: MealFeature) => void;
   setIsModalOpen: (isOpen: boolean) => void;
 }) {
   return (
@@ -50,6 +50,16 @@ export function MealFeaturesCarousel({
                     <div className="absolute flex justify-center items-center w-full h-[67px] max-w-[86%] mt-[26px] bg-[white] top-3 opacity-85 text-md md:text-xl font-bold px-2">
                       <h2>{meal.name}</h2>
                     </div>
+                    {meal?.maxQuantity === 0 && (
+                      <Image
+                        src={'/images/out_of_stock.png'}
+                        alt="Image"
+                        width={150}
+                        height={150}
+                        priority={true}
+                        className="absolute opacity-60 bottom-12"
+                      ></Image>
+                    )}
                     <Image
                       src={weeklyMeals[index].image[0].url}
                       alt="Image"

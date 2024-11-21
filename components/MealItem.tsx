@@ -33,7 +33,7 @@ const MealItem: React.FC<MealItemProps> = ({ meal }) => {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
 
   const handleAddToCart = () => {
-    if (meal) {
+    if (meal && meal.maxQuantity > 0) {
       setIsDrawerOpen(true);
       addItemToCart(cart.dispatch, meal);
     }
@@ -44,7 +44,17 @@ const MealItem: React.FC<MealItemProps> = ({ meal }) => {
       className="grid grid-cols-[auto,1fr] justify-center items-start gap-10 p-5"
       key={meal?._id}
     >
-      <div className="flex justify-center overflow-hidden rounded-md max-h-[492px] max-w-[492px]">
+      <div className="relative flex justify-center overflow-hidden rounded-md max-h-[492px] max-w-[492px]">
+        {meal?.maxQuantity === 0 && (
+          <Image
+            src={'/images/out_of_stock.png'}
+            alt="Image"
+            width={350}
+            height={350}
+            priority={true}
+            className="absolute opacity-60 bottom-12"
+          ></Image>
+        )}
         <Image
           src={meal?.image[0]?.url || '/placeholder-image.jpg'}
           alt={meal?.name || 'Meal image'}
@@ -67,7 +77,11 @@ const MealItem: React.FC<MealItemProps> = ({ meal }) => {
         <p>Category: {meal?.category}</p>
         <div className="flex h-full w-full items-end">
           <Button
-            className="cursor-pointer mt-5 w-full"
+            className={cn(
+              'cursor-pointer mt-5 w-full',
+              meal?.maxQuantity === 0 &&
+                'cursor-not-allowed bg-gray-300 hover:bg-gray-200'
+            )}
             type="button"
             title="Add to Shopping Cart"
             onClick={() => handleAddToCart()}

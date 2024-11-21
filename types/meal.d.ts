@@ -30,3 +30,7 @@ export interface Meal {
   };
   side: boolean;
 }
+
+export type MealFeature = Meal & {
+  maxQuantity: number;
+};

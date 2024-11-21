@@ -8,13 +8,14 @@ import {
   CardFooter
 } from '@components/ui/card';
 import { Separator } from '@components/ui/separator';
+import { cn } from '@lib/utils';
 import { Meal } from '@types';
 import { Plus } from 'lucide-react';
 import Image from 'next/image';
 import React from 'react';
 
 interface MealCardProps {
-  meal: Meal;
+  meal: Meal & { maxQuantity: number };
   onCardClick: () => void;
 }
 
@@ -22,7 +23,17 @@ const MealCard: React.FC<MealCardProps> = ({ meal, onCardClick }) => {
   return (
     <Card className="max-w-[350px] pt-6">
       <CardContent className="pb-0 cursor-pointer" onClick={onCardClick}>
-        <div className="overflow-hidden rounded-md">
+        <div className="relative overflow-hidden rounded-md">
+          {meal?.maxQuantity === 0 && (
+            <Image
+              src={'/images/out_of_stock.png'}
+              alt="Image"
+              width={350}
+              height={350}
+              priority={true}
+              className="absolute opacity-60 bottom-12"
+            ></Image>
+          )}
           <Image
             src={meal.image[0].url}
             alt={meal.name}
@@ -55,7 +66,11 @@ const MealCard: React.FC<MealCardProps> = ({ meal, onCardClick }) => {
           </p>
         </div>
         <Button
-          className="cursor-pointer"
+          className={cn(
+            'cursor-pointer',
+            meal?.maxQuantity === 0 &&
+              'cursor-not-allowed bg-gray-300 hover:bg-gray-200'
+          )}
           type="button"
           title="Add to Shopping Cart"
           onClick={onCardClick}
