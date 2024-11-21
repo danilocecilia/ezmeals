@@ -19,8 +19,12 @@ export type Meal = {
   category?: string;
   maxQuantity: number;
 };
+
+interface MealPlanner {
+  plannerId: string;
+}
 interface MealItemProps {
-  meal: Meal;
+  meal: Meal & MealPlanner;
 }
 
 const MealItem: React.FC<MealItemProps> = ({ meal }) => {
@@ -72,7 +76,6 @@ const MealItem: React.FC<MealItemProps> = ({ meal }) => {
           </Button>
         </div>
       </div>
-      {console.log('🚀 ~ isDrawerOpen:', isDrawerOpen)}
       {isDrawerOpen && (
         <DrawerMealCheckout
           isOpen={isDrawerOpen}

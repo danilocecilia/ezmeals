@@ -211,7 +211,7 @@ const CheckoutPage: FC = () => {
                       <Image
                         src={item.image}
                         alt="Image"
-                        layout="intrinsic"
+                        priority={true}
                         width={48}
                         height={48}
                       />

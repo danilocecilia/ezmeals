@@ -43,7 +43,6 @@ export async function GET() {
     // Get the mealIds from the planner collection
     const mealIds = planner.map((meal) => meal.value);
     const mealObjectIds = mealIds.map((id) => new ObjectId(id));
-    console.log('🚀 ~ GET ~ mealIds:', mealIds);
 
     // loop through the mealIds and fetch the meals from the meals collection
     const meals = await db
@@ -58,7 +57,8 @@ export async function GET() {
       );
       return {
         ...meal,
-        maxQuantity: plannerItem ? plannerItem.quantity : 0
+        maxQuantity: plannerItem ? plannerItem.quantity : 0,
+        plannerId: plannerItem ? plannerItem._id : null
       };
     });
 

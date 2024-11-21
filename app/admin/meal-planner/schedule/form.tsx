@@ -121,9 +121,7 @@ const MealPlannerForm: React.FC = () => {
   React.useEffect(() => {
     async function fetchData() {
       const getAllMeals = async () => {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/admin/listMeal`
-        );
+        const response = await fetch(`/api/admin/listMeal`);
 
         const data = await response.json();
 

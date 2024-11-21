@@ -6,6 +6,7 @@ type Meal = {
   price: number;
   maxQuantity: number;
   image: { url: string }[];
+  plannerId: string;
 };
 
 export const addItemToCart = (
@@ -20,7 +21,8 @@ export const addItemToCart = (
       price: meal.price,
       quantity: 1,
       image: meal.image[0]?.url,
-      maxQuantity: meal.maxQuantity
+      maxQuantity: meal.maxQuantity,
+      plannerId: meal.plannerId
     }
   });
 };

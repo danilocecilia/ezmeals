@@ -53,9 +53,9 @@ export function MealFeaturesCarousel({
                     <Image
                       src={weeklyMeals[index].image[0].url}
                       alt="Image"
-                      layout="intrinsic"
                       width={500}
                       height={500}
+                      priority={true}
                       className="rounded-md"
                     ></Image>
                   </CardContent>

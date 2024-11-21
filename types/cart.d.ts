@@ -5,6 +5,7 @@ export interface CartItem {
   quantity: number;
   image: string;
   maxQuantity: number;
+  plannerId: string;
 }
 
 export interface CartState {

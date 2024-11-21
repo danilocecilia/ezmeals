@@ -26,9 +26,9 @@ const MealCard: React.FC<MealCardProps> = ({ meal, onCardClick }) => {
           <Image
             src={meal.image[0].url}
             alt={meal.name}
-            layout="intrinsic"
             width={500}
             height={500}
+            priority={true}
             className="h-auto w-auto object-cover transition-all hover:scale-105 aspect-[3/4]"
           />
         </div>

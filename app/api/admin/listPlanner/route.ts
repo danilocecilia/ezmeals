@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 import { NextResponse } from 'next/server';
 
 type MealPlanner = {
+  _id: string;
   value: string;
   label: string;
   quantity: number;
@@ -22,6 +23,7 @@ export async function GET() {
     const meals = await db.collection('planner').find({}).toArray();
 
     const listPlanner: MealPlanner[] = meals.map((meal) => ({
+      _id: meal._id.toString(),
       value: meal._id.toString(),
       label: meal.label,
       quantity: meal.quantity,

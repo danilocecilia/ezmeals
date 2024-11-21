@@ -1,8 +1,12 @@
 import { Meal } from '@types';
 import useSWR from 'swr';
 
+type MealPlanner = {
+  plannerId: string;
+};
+
 type FetcherResponse = {
-  meals: Meal[];
+  meals: Meal[] & MealPlanner;
   maxQuantity: number;
 };
 

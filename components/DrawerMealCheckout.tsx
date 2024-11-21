@@ -160,7 +160,6 @@ export function DrawerMealCheckout({
                         <Image
                           src={item.image}
                           alt="Image"
-                          layout="intrinsic"
                           width={48}
                           height={48}
                         />
