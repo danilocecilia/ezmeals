@@ -8,9 +8,8 @@ import {
   useElements,
   useStripe
 } from '@stripe/react-stripe-js';
-import { clearCart } from '@utils/cartUtils';
+import { clearCart, handlePaymentFailure } from '@utils/cartUtils';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
 interface CheckoutFormModalProps {
@@ -24,13 +23,149 @@ const CheckoutForm = ({
   onClose,
   totalAmount
 }: CheckoutFormModalProps) => {
-  const { dispatch } = useCart();
-  const rounter = useRouter();
+  const { state, dispatch } = useCart();
+  console.log('🚀 ~ state:', state);
   const stripe = useStripe();
   const elements = useElements();
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [isPaymentSuccessful, setIsPaymentSuccessful] = useState(false);
+
+  // /check - Check if all cart items are available
+  const checkAvailability = async (): Promise<boolean> => {
+    try {
+      const response = await fetch('/api/inventory/check', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          items: state.items
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to check availability.');
+      }
+
+      const data = await response.json();
+      if (!data.success) {
+        handlePaymentFailure(dispatch, data.updatedInventory);
+        return false;
+      } else {
+        return true;
+      }
+    } catch {
+      setMessage('Failed to check availability. Please try again.');
+      return false;
+    }
+  };
+
+  // /reserve - Reserve items in inventory
+  const reserveItems = async (): Promise<void> => {
+    try {
+      const response = await fetch('/api/inventory/reserve', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          items: state.items
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to reserve items.');
+      }
+
+      const data = await response.json();
+      console.log('🚀 ~ reserveItems ~ data:', data);
+
+      if (!data.success) {
+        setMessage('Failed to reserve items. Please try again.');
+      }
+    } catch {
+      setMessage('Failed to reserve items. Please try again.');
+    }
+  };
+
+  // /rollback - Rollback reservation if payment fails
+  const rollbackReservation = async (): Promise<void> => {
+    try {
+      const response = await fetch('/api/inventory/rollback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          items: state.items
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to rollback reservation.');
+      }
+
+      console.log('Reservation rolled back successfully');
+    } catch (error) {
+      console.error('Failed to rollback reservation:', error);
+    }
+  };
+
+  const saveOrder = async (paymentIntentId: string): Promise<void> => {
+    try {
+      const response = await fetch('/api/orders/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          paymentIntentId,
+          totalAmount,
+          items: state.items // Send cart items to save in the order
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save order. Please try again.');
+      }
+
+      const data = await response.json();
+      console.log('Order saved successfully:', data);
+    } catch (error) {
+      console.error(error);
+      setMessage('Failed to save the order. Please contact support.');
+    }
+  };
+
+  // const updateInventory = async (
+  //   plannerId: string,
+  //   quantityToRemove: number
+  // ) => {
+  //   try {
+  //     const response = await fetch('/api/inventory/update', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json'
+  //       },
+  //       body: JSON.stringify({
+  //         plannerId,
+  //         quantityToRemove
+  //       })
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error('Failed to update inventory. Please try again.');
+  //     }
+
+  //     const data = await response.json();
+  //     console.log('Inventory updated successfully:', data);
+  //   } catch (error) {
+  //     console.error(error);
+  //     setMessage('Failed to update inventory. Please contact support.');
+  //   }
+  // };
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -42,23 +177,70 @@ const CheckoutForm = ({
     setIsLoading(true);
 
     try {
-      const { error, paymentIntent } = await stripe.confirmPayment({
-        elements, // Automatically grabs clientSecret and PaymentElement
-        confirmParams: {
-          return_url: window.location.origin + '/payment-success' // Optional: redirect on success
-        },
-        redirect: 'if_required' // Prevent full-page redirect
+      // Check availability before proceeding
+      const isAvailable = await checkAvailability();
+      if (!isAvailable) {
+        setMessage(
+          'Some items are no longer available. They were removed from your cart. Please, review your cart summary again.'
+        );
+        return;
+      }
+
+      // Reserve items
+      await reserveItems();
+
+      // Confirm payment
+      // const { error, paymentIntent } = await stripe.confirmPayment({
+      //   elements,
+      //   confirmParams: {
+      //     return_url: window.location.origin + '/payment-success' // Optional: redirect on success
+      //   },
+      //   redirect: 'if_required' // Prevent full-page redirect
+      // });
+      //THIS IS FOR TESTING PURPOSES
+      const { error, paymentIntent } = await new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({
+            error: null,
+            paymentIntent: {
+              id: 'pi_123456789',
+              status: 'succeeded'
+            }
+          });
+        }, 1000);
       });
 
       if (error) {
         setMessage(`Payment failed: ${error.message}`);
+        await rollbackReservation(); // Rollback if payment fails
       } else if (paymentIntent?.status === 'succeeded') {
+        await saveOrder(paymentIntent.id);
+
+        // // Update inventory for all cart items
+        // const updateResults = await Promise.allSettled(
+        //   state.items.map((item) =>
+        //     updateInventory(item.plannerId, item.quantity)
+        //   )
+        // );
+
+        // Handle update results
+        // const failedUpdates = updateResults.filter(
+        //   (result) => result.status === 'rejected'
+        // );
+
+        // if (failedUpdates.length > 0) {
+        //   setMessage(
+        //     'Some items are out of stock. Your payment was successful.'
+        //   );
+        //   console.error('Failed updates:', failedUpdates);
+        // } else {
         clearCart(dispatch);
         setIsPaymentSuccessful(true);
+        // }
       } else {
         setMessage('Payment processing. Please wait.');
       }
-    } catch (err) {
+    } catch {
       setMessage('An unexpected error occurred.');
     } finally {
       setIsLoading(false);
@@ -94,7 +276,10 @@ const CheckoutForm = ({
         </h1>
         <div className="text-center space-y-10">
           <p>Thank you for your purchase!</p>
-          <Button onClick={() => rounter.push('/')} className="w-full py-2">
+          <Button
+            onClick={() => window.location.assign('/')}
+            className="w-full py-2"
+          >
             Return to Home
           </Button>
         </div>
@@ -119,7 +304,7 @@ const CheckoutForm = ({
         ) : (
           <form
             onSubmit={handleSubmit}
-            className="max-w-md mx-auto p-4 space-y-4"
+            className="w-full mx-auto p-4 space-y-4"
           >
             <h1 className="text-xl text-center font-bold mb-4">{`Place your Order`}</h1>
             <h3 className="text-center">Total: ${totalAmount}</h3>

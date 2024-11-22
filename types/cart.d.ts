@@ -19,4 +19,8 @@ export type CartAction =
   | { type: 'UPDATE_ITEM_QUANTITY'; itemId: string; quantity: number }
   | { type: 'REMOVE_ITEM'; id: string }
   | { type: 'CLEAR_CART' }
-  | { type: 'LOAD_CART'; payload: CartState };
+  | { type: 'LOAD_CART'; payload: CartState }
+  | {
+      type: 'UPDATE_CART_AFTER_PAYMENT_FAILURE';
+      updatedInventory: { [key: string]: number };
+    };

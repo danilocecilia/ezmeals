@@ -163,27 +163,27 @@ const CheckoutPage: FC = () => {
     );
   };
 
-  const PaymentDetailsPanel = () => {
-    return (
-      <Card className="w-[716px]">
-        <CardHeader>
-          <CardTitle>
-            <div>Payment</div>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="flex justify-between p-0 space-y-2 items-center">
-          <div className="flex gap-2 p-6 pt-0">
-            <Banknote />
-            <div>By Cash at delivery</div>
-          </div>
+  // const PaymentDetailsPanel = () => {
+  //   return (
+  //     <Card className="w-[716px]">
+  //       <CardHeader>
+  //         <CardTitle>
+  //           <div>Payment</div>
+  //         </CardTitle>
+  //       </CardHeader>
+  //       <CardContent className="flex justify-between p-0 space-y-2 items-center">
+  //         <div className="flex gap-2 p-6 pt-0">
+  //           <Banknote />
+  //           <div>By Cash at delivery</div>
+  //         </div>
 
-          <div className="p-6 pt-0">
-            <Button className="">Edit</Button>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  };
+  //         <div className="p-6 pt-0">
+  //           <Button className="">Edit</Button>
+  //         </div>
+  //       </CardContent>
+  //     </Card>
+  //   );
+  // };
 
   const OrderSummaryPanel = () => {
     return (

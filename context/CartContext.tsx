@@ -123,6 +123,35 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
       };
     }
 
+    case 'UPDATE_CART_AFTER_PAYMENT_FAILURE': {
+      const updatedItems = state.items
+        .map((item) => {
+          const availableQuantity = action.updatedInventory[item.plannerId];
+          if (availableQuantity !== undefined && availableQuantity <= 0) {
+            // Remove items that are no longer available
+            return null;
+          }
+
+          // Update item quantities based on available inventory
+          const updatedItem: CartItem = {
+            ...item,
+            quantity:
+              availableQuantity !== undefined
+                ? Math.min(item.quantity, availableQuantity)
+                : item.quantity,
+            maxQuantity: availableQuantity ?? item.quantity
+          };
+          return updatedItem;
+        })
+        .filter((item): item is CartItem => item !== null); // Filter out null values
+
+      return {
+        ...state,
+        items: updatedItems,
+        ...recalculateTotals(updatedItems)
+      };
+    }
+
     case 'CLEAR_CART':
       return initialCartState;
 

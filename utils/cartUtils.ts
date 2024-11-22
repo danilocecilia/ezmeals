@@ -1,4 +1,4 @@
-import { CartAction } from '@types';
+import { CartAction, CartItem } from '@types';
 
 type Meal = {
   _id: string;
@@ -41,4 +41,25 @@ export const updateItemQuantity = (
 
 export const clearCart = (dispatch: React.Dispatch<CartAction>) => {
   dispatch({ type: 'CLEAR_CART' });
+};
+
+type CartItemWith_Id = CartItem & { _id: number };
+
+export const handlePaymentFailure = (
+  dispatch: React.Dispatch<CartAction>,
+  updatedInventory: CartItemWith_Id[]
+) => {
+  const inventoryMap = updatedInventory.reduce(
+    (acc: { [key: string]: number }, item) => {
+      acc[item._id] = item.quantity;
+      return acc;
+    },
+    {}
+  );
+  // console.log('🚀 ~ inventoryMap:', inventoryMap);
+
+  dispatch({
+    type: 'UPDATE_CART_AFTER_PAYMENT_FAILURE',
+    updatedInventory: inventoryMap
+  });
 };
