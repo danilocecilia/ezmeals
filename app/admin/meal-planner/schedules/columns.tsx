@@ -7,8 +7,8 @@ import { ArrowUpDown } from 'lucide-react';
 // import Link from 'next/link';
 
 interface SelectedMeal {
-  value: string;
-  label: string;
+  mealId: string;
+  mealName: string;
   quantity: number;
   deliveryDate: string;
   dateFrom: string;
@@ -70,7 +70,7 @@ export const columns: ColumnDef<SelectedMeal>[] = [
     )
   },
   {
-    accessorKey: 'label',
+    accessorKey: 'mealName',
     header: ({ column }) => (
       <div className="text-center ">{handleSorting(column, 'Meal')}</div>
     ),

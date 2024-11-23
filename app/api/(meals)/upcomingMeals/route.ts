@@ -41,7 +41,7 @@ export async function GET() {
       .toArray();
 
     // Get the mealIds from the planner collection
-    const mealIds = planner.map((meal) => meal.value);
+    const mealIds = planner.map((meal) => meal.mealId);
     const mealObjectIds = mealIds.map((id) => new ObjectId(id));
 
     // loop through the mealIds and fetch the meals from the meals collection
@@ -53,7 +53,7 @@ export async function GET() {
     // Map the maxQuantity from the planner collection to the meals collection
     const mealsWithQuantity = meals.map((meal) => {
       const plannerItem = planner.find(
-        (item) => item.value === meal._id.toString()
+        (item) => item.mealId === meal._id.toString()
       );
       return {
         ...meal,

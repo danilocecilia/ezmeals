@@ -35,7 +35,7 @@ import { DataTable } from './data-table';
 
 import { mealPlannerSchema } from '@/schemas/mealPlanner';
 
-type Meal = {
+type OptionsMeal = {
   value: string;
   label: string;
 };
@@ -48,8 +48,8 @@ type Meal = {
 // }
 
 interface SelectedMeal {
-  value: string;
-  label: string;
+  mealId: string;
+  mealName: string;
   quantity: number;
   deliveryDate: string;
   dateFrom: string;
@@ -58,8 +58,10 @@ interface SelectedMeal {
 
 const MealPlannerForm: React.FC = () => {
   const router = useRouter();
-  const [meals, setMeals] = React.useState<Meal[]>([]);
+  const [meals, setMeals] = React.useState<OptionsMeal[]>([]);
+  console.log('🚀 ~ meals:', meals);
   const [selectedMeals, setSelectedMeals] = React.useState<SelectedMeal[]>([]);
+  console.log('🚀 ~ selectedMeals:', selectedMeals);
 
   const form = useForm<z.infer<typeof mealPlannerSchema>>({
     resolver: zodResolver(mealPlannerSchema),
@@ -153,23 +155,25 @@ const MealPlannerForm: React.FC = () => {
       dateRange: { from: dateFrom, to: dateTo }
     } = form.getValues();
 
-    const currentSelectedMeal = meals.reduce<SelectedMeal[]>((acc, meal) => {
-      const formatDate = (date: Date) => format(date, 'dd/MM/yyyy');
+    const currentSelectedMeal = meals.reduce<SelectedMeal[]>(
+      (acc, meal: OptionsMeal) => {
+        const formatDate = (date: Date) => format(date, 'dd/MM/yyyy');
+        if (selectedMeals.includes(meal.value)) {
+          const currentSelectedMealPlanner = {
+            mealId: meal.value,
+            mealName: meal.label,
+            quantity,
+            deliveryDate: formatDate(deliveryDate),
+            dateFrom: formatDate(dateFrom),
+            dateTo: formatDate(dateTo)
+          };
 
-      if (selectedMeals.includes(meal.value)) {
-        const currentSelectedMealPlanner = {
-          value: meal.value,
-          label: meal.label,
-          quantity,
-          deliveryDate: formatDate(deliveryDate),
-          dateFrom: formatDate(dateFrom),
-          dateTo: formatDate(dateTo)
-        };
-
-        acc.push(currentSelectedMealPlanner);
-      }
-      return acc;
-    }, []);
+          acc.push(currentSelectedMealPlanner);
+        }
+        return acc;
+      },
+      []
+    );
 
     setSelectedMeals(currentSelectedMeal);
   };

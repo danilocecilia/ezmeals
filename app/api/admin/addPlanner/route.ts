@@ -2,8 +2,8 @@ import clientPromise from '@lib/mongodb';
 import { NextResponse } from 'next/server';
 
 interface SelectedMeal {
-  value: string;
-  label: string;
+  mealId: string;
+  mealName: string;
   quantity: number;
   deliveryDate: string;
   dateFrom: string;

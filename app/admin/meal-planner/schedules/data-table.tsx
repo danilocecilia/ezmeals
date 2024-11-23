@@ -23,8 +23,8 @@ import { toast } from 'sonner';
 import { columns } from './columns';
 
 interface SelectedMeal {
-  value: string;
-  label: string;
+  mealId: string;
+  mealName: string;
   quantity: number;
   deliveryDate: string;
   dateFrom: string;
@@ -36,6 +36,7 @@ export function DataTable() {
   const [editedRows, setEditedRows] = useState({});
   const [validRows, setValidRows] = useState({});
   const [selectedMeals, setSelectedMeals] = useState<SelectedMeal[]>([]);
+  console.log('🚀 ~ DataTable ~ selectedMeals:', selectedMeals);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -43,6 +44,7 @@ export function DataTable() {
       setLoading(true);
       const response = await fetch('/api/admin/listPlanner');
       const data = await response.json();
+      console.log('🚀 ~ listMealPlanner ~ data:', data);
       setSelectedMeals(data);
       setLoading(false);
     };
@@ -84,7 +86,7 @@ export function DataTable() {
       setValidRows,
       removeSelectedRows: async (selectedRows: number[]) => {
         const rowsToDelete = selectedRows.map(
-          (index) => selectedMeals[index].value
+          (index) => selectedMeals[index].mealId
         );
         await handleDelete(rowsToDelete);
 

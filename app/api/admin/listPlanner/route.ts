@@ -4,8 +4,8 @@ import { NextResponse } from 'next/server';
 
 type MealPlanner = {
   _id: string;
-  value: string;
-  label: string;
+  mealId: string;
+  mealName: string;
   quantity: number;
   deliveryDate: string;
   dateFrom: string;
@@ -24,8 +24,8 @@ export async function GET() {
 
     const listPlanner: MealPlanner[] = meals.map((meal) => ({
       _id: meal._id.toString(),
-      value: meal._id.toString(),
-      label: meal.label,
+      mealId: meal._id.toString(),
+      mealName: meal.mealName,
       quantity: meal.quantity,
       deliveryDate: meal.deliveryDate,
       dateFrom: meal.dateFrom,

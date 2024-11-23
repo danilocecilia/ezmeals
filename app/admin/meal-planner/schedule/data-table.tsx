@@ -20,8 +20,8 @@ import {
 import { useState } from 'react';
 
 interface SelectedMeal {
-  value: string;
-  label: string;
+  mealId: string;
+  mealName: string;
   quantity: number;
   deliveryDate: string;
   dateFrom: string;
