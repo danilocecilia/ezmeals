@@ -7,7 +7,7 @@ export async function POST(req: Request) {
   const userSession = await auth();
 
   if (!userSession) {
-    return NextResponse.json({ error: 'Not authorized' }, { status: 400 });
+    return NextResponse.json({ error: 'Not authorized' }, { status: 401 });
   }
   // should check inventory against the items in the cart from planner collection
   const { items } = await req.json();

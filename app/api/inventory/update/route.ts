@@ -7,7 +7,7 @@ export async function POST(req: Request) {
   const session = await auth();
 
   if (!session) {
-    return NextResponse.json({ error: 'Not authorized' }, { status: 400 });
+    return NextResponse.json({ error: 'Not authorized' }, { status: 401 });
   }
   const { plannerId, quantityToRemove } = await req.json();
 

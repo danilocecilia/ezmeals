@@ -10,6 +10,7 @@ import { Orders, columns } from './Columns';
 type DateRange = { from: Date | undefined; to?: Date | undefined };
 
 const OrdersPage = ({ data }: { data: Orders[] }) => {
+  console.log('🚀 ~ OrdersPage ~ data:', data);
   const [ordersData, setOrdersData] = useState<Orders[]>(data);
   const [date, setDate] = useState<DateRange | undefined>({
     from: undefined,

@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     const session = await auth();
 
     if (!session) {
-      return NextResponse.json({ error: 'Not authorized' }, { status: 400 });
+      return NextResponse.json({ error: 'Not authorized' }, { status: 401 });
     }
 
     const client = await clientPromise;

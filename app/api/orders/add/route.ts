@@ -7,7 +7,7 @@ export async function POST(req: Request) {
     const session = await auth();
 
     if (!session) {
-      return NextResponse.json({ error: 'Not authorized' }, { status: 400 });
+      return NextResponse.json({ error: 'Not authorized' }, { status: 401 });
     }
 
     const { paymentIntentId, totalAmount, items } = await req.json();
@@ -22,7 +22,28 @@ export async function POST(req: Request) {
     const client = await clientPromise;
     const db = client.db();
 
+    const generateOrderId = async (db: unknown) => {
+      const today = new Date();
+      const datePart = `${today.getFullYear()}${(today.getMonth() + 1)
+        .toString()
+        .padStart(2, '0')}${today.getDate().toString().padStart(2, '0')}`;
+
+      const lastOrder = await db
+        .collection('orders')
+        .findOne({}, { sort: { createdAt: -1 } });
+
+      let orderNumber = 1;
+      if (lastOrder?.orderId?.startsWith(`ORD-${datePart}`)) {
+        orderNumber = parseInt(lastOrder.orderId.split('-')[2]) + 1 || 1;
+      }
+
+      return `ORD-${datePart}-${orderNumber.toString().padStart(4, '0')}`;
+    };
+
+    const orderId = await generateOrderId(db);
+
     const orderData = {
+      orderId: orderId,
       customerEmail: session?.user?.email,
       paymentIntentId,
       totalAmount,
@@ -40,7 +61,14 @@ export async function POST(req: Request) {
       );
     }
 
-    return NextResponse.json({ success: true, orderResult: result });
+    return NextResponse.json({
+      success: true,
+      order: {
+        orderId,
+        customerEmail: session?.user?.email,
+        status: 'succeeded'
+      }
+    });
   } catch (error) {
     console.error('Error updating inventory:', error);
 
