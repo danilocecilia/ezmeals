@@ -1,5 +1,7 @@
 import clientPromise from '@lib/mongodb';
+import { generateOrderEmailContent } from '@root/app/utils/generateOrderEmailContent';
 import { auth } from '@root/auth';
+import { sendEmail } from '@root/utils/emailSenderUtility';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
@@ -44,7 +46,8 @@ export async function POST(req: Request) {
 
     const orderData = {
       orderId: orderId,
-      customerEmail: session?.user?.email,
+      customerName: session?.user?.name || '',
+      customerEmail: session?.user?.email || '',
       paymentIntentId,
       totalAmount,
       items,
@@ -59,6 +62,19 @@ export async function POST(req: Request) {
         { error: 'Failed to create order' },
         { status: 500 }
       );
+    }
+
+    // Send email
+    const emailContent = generateOrderEmailContent(orderData);
+
+    const emailSent = await sendEmail(
+      orderData.customerEmail as string,
+      `Your Order Confirmation - ${orderData.orderId}`,
+      emailContent
+    );
+
+    if (!emailSent) {
+      console.error('Failed to send confirmation email');
     }
 
     return NextResponse.json({
