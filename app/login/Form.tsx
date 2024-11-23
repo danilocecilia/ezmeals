@@ -148,7 +148,13 @@ const LoginForm = () => {
             </div>
           </div>
           <div className="hidden lg:block self-center">
-            <Image src="/logo.jpg" alt="Image" priority={true} />
+            <Image
+              src="/logo.jpg"
+              alt="Image"
+              priority={true}
+              width={500} // Required, but sets the aspect ratio
+              height={500} // Will adjust automatically based on width
+            />
           </div>
         </div>
       </form>

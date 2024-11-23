@@ -54,15 +54,17 @@ const Navbar = () => {
           </Link>
         </div>
         <div className="flex gap-8">
-          {pathname !== '/checkout' && (
-            <>
-              <DynamicHeaderAuth session={session} status={status} />
+          <>
+            {!pathname.includes('admin') && (
+              <>
+                <DynamicHeaderAuth session={session} status={status} />
 
-              <span className="self-center">
-                <Checkout />
-              </span>
-            </>
-          )}
+                <span className="self-center">
+                  <Checkout />
+                </span>
+              </>
+            )}
+          </>
         </div>
       </nav>
       <Sheet>

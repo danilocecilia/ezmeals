@@ -25,7 +25,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import * as React from 'react';
 
-const DynamicHeaderAuth = dynamic(() => import('./HeaderAuth'), {
+const DynamicSideBarAuth = dynamic(() => import('./SideBarAuth'), {
   ssr: false
 });
 
@@ -91,7 +91,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuButton size="lg" asChild>
               <Link
                 href="/"
-                className="hidden flex md:flex items-center gap-2 text-lg font-semibold md:text-base"
+                className="sm:hidden flex md:flex items-center gap-2 text-lg font-semibold md:text-base"
               >
                 <Image
                   src="/logo_nav.png"
@@ -149,7 +149,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <DynamicHeaderAuth session={session} status={status} />
+            <DynamicSideBarAuth session={session} status={status} />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>

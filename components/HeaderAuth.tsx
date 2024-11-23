@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
-import { ChevronsUpDown } from 'lucide-react';
+import { BadgeCheck, ChevronsUpDown } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 
@@ -47,18 +47,18 @@ const HeaderAuth: React.FC = ({ session, status }) => {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <Link href="/profile">
-                <DropdownMenuItem>
+                <DropdownMenuItem className="gap-2 cursor-pointer">
+                  <BadgeCheck />
                   Profile
-                  <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                 </DropdownMenuItem>
               </Link>
-              <DropdownMenuItem>
+              {/* <DropdownMenuItem>
                 Settings
                 <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <SignOutButton></SignOutButton>
+            <SignOutButton />
           </DropdownMenuContent>
         </DropdownMenu>
       ) : (

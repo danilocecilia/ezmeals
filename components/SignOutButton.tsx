@@ -1,4 +1,5 @@
 'use client';
+import { LogOut } from 'lucide-react';
 import React from 'react';
 
 import { DropdownMenuShortcut } from './ui/dropdown-menu';
@@ -8,9 +9,12 @@ import { signout } from '@/actions';
 
 const SignOutButton = () => {
   return (
-    <DropdownMenuItem onClick={() => signout()}>
+    <DropdownMenuItem
+      onClick={() => signout()}
+      className="gap-2 cursor-pointer"
+    >
+      <LogOut />
       Logout
-      <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
     </DropdownMenuItem>
   );
 };
