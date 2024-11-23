@@ -21,6 +21,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
 import { GoogleMapsEmbed } from '@next/third-parties/google';
 import { Separator } from '@root/components/ui/separator';
 import { useCart } from '@root/context/CartContext';
+import { cn } from '@root/lib/utils';
+import { handlePaymentFailure } from '@utils/cartUtils';
+import { checkAvailability } from '@utils/inventoryUtils';
 import {
   MapPinHouseIcon,
   User,
@@ -38,7 +41,8 @@ const CheckoutPage: FC = () => {
   const [locationAdressModal, setLocationAdressModal] = React.useState(false);
   const [dropOffOptionsModal, setDropOffOptionsModal] = React.useState(false);
   const [checkoutFormModal, setCheckoutFormModal] = React.useState(false);
-  const { state } = useCart();
+  const { state, dispatch } = useCart();
+  const [message, setMessage] = React.useState('');
 
   const DeliveryDetailsPanel = () => {
     return (
@@ -163,42 +167,32 @@ const CheckoutPage: FC = () => {
     );
   };
 
-  // const PaymentDetailsPanel = () => {
-  //   return (
-  //     <Card className="w-[716px]">
-  //       <CardHeader>
-  //         <CardTitle>
-  //           <div>Payment</div>
-  //         </CardTitle>
-  //       </CardHeader>
-  //       <CardContent className="flex justify-between p-0 space-y-2 items-center">
-  //         <div className="flex gap-2 p-6 pt-0">
-  //           <Banknote />
-  //           <div>By Cash at delivery</div>
-  //         </div>
-
-  //         <div className="p-6 pt-0">
-  //           <Button className="">Edit</Button>
-  //         </div>
-  //       </CardContent>
-  //     </Card>
-  //   );
-  // };
-
   const OrderSummaryPanel = () => {
     return (
-      <Accordion type="single" collapsible>
+      <Accordion
+        type="single"
+        collapsible
+        defaultValue={message ? 'item-1' : ''}
+      >
         <AccordionItem value="item-1">
           <Card className="w-[420px] flex mt-10 flex-col gap-6">
             <AccordionTrigger className="pr-5 hover:no-underline">
               <CardHeader>
                 <CardTitle>
-                  <div className="flex gap-4 items-center">
+                  <div
+                    className={cn(
+                      'flex gap-4 justify-items-center items-center',
+                      message ? 'flex-col' : 'flex-row'
+                    )}
+                  >
                     <ShoppingCart className="w-6 h-6" />
                     <div className="text-[16px]">
                       Cart Summary ({state.totalItemsQuantity}{' '}
                       {state.totalItemsQuantity > 1 ? 'items' : 'item'})
                     </div>
+                    {message && (
+                      <div className="flex text-sm text-red-400">{message}</div>
+                    )}
                   </div>
                 </CardTitle>
               </CardHeader>
@@ -236,6 +230,28 @@ const CheckoutPage: FC = () => {
     );
   };
 
+  const handlePlaceOrder = async (): Promise<boolean> => {
+    try {
+      const availabilityResponse = await checkAvailability(state.items);
+      if (!availabilityResponse.success) {
+        if (availabilityResponse.updatedInventory) {
+          handlePaymentFailure(dispatch, availabilityResponse.updatedInventory);
+        }
+
+        setMessage(
+          'Some items are no longer available. They were removed from your cart.'
+        );
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Error placing order:', error);
+      setMessage('An unexpected error occurred. Please try again.');
+      return false;
+    }
+  };
+
   const OrderTotalPanel = () => {
     return (
       <Card className="w-[420px] flex flex-col gap-6">
@@ -268,7 +284,15 @@ const CheckoutPage: FC = () => {
           </div>
         </CardContent>
         <CardFooter>
-          <Button onClick={() => setCheckoutFormModal(true)} className="w-full">
+          <Button
+            onClick={async () => {
+              const canProceed = await handlePlaceOrder();
+              if (canProceed) {
+                setCheckoutFormModal(true); // Open the modal only if inventory checks pass
+              }
+            }}
+            className="w-full"
+          >
             Place your order
           </Button>
         </CardFooter>

@@ -24,3 +24,5 @@ export type CartAction =
       type: 'UPDATE_CART_AFTER_PAYMENT_FAILURE';
       updatedInventory: { [key: string]: number };
     };
+
+export type CartItemWith_Id = CartItem & { _id: number };

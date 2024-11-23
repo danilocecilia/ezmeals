@@ -1,7 +1,7 @@
 import { DefaultSession } from 'next-auth';
 import { type ClientUploadedFileData } from 'uploadthing/types';
 
-import { CartItem, CartAction, CartState } from './cart';
+import { CartItem, CartAction, CartState, CartItemWith_Id } from './cart';
 import { Meal, MealFeature } from './meal';
 
 export interface UploadedFile<T = unknown> extends ClientUploadedFileData<T> {
@@ -46,4 +46,12 @@ declare module 'next-auth' {
   }
 }
 
-export type { CartItem, Meal, CartAction, CartState, UserProps, MealFeature };
+export type {
+  CartItem,
+  Meal,
+  CartAction,
+  CartState,
+  UserProps,
+  MealFeature,
+  CartItemWith_Id
+};

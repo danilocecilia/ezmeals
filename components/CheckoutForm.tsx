@@ -9,6 +9,11 @@ import {
   useStripe
 } from '@stripe/react-stripe-js';
 import { clearCart, handlePaymentFailure } from '@utils/cartUtils';
+import {
+  checkAvailability,
+  reserveItems,
+  rollbackReservation
+} from '@utils/inventoryUtils';
 import Image from 'next/image';
 import React, { useState } from 'react';
 
@@ -24,93 +29,11 @@ const CheckoutForm = ({
   totalAmount
 }: CheckoutFormModalProps) => {
   const { state, dispatch } = useCart();
-  console.log('🚀 ~ state:', state);
   const stripe = useStripe();
   const elements = useElements();
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [isPaymentSuccessful, setIsPaymentSuccessful] = useState(false);
-
-  // /check - Check if all cart items are available
-  const checkAvailability = async (): Promise<boolean> => {
-    try {
-      const response = await fetch('/api/inventory/check', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          items: state.items
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to check availability.');
-      }
-
-      const data = await response.json();
-      if (!data.success) {
-        handlePaymentFailure(dispatch, data.updatedInventory);
-        return false;
-      } else {
-        return true;
-      }
-    } catch {
-      setMessage('Failed to check availability. Please try again.');
-      return false;
-    }
-  };
-
-  // /reserve - Reserve items in inventory
-  const reserveItems = async (): Promise<void> => {
-    try {
-      const response = await fetch('/api/inventory/reserve', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          items: state.items
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to reserve items.');
-      }
-
-      const data = await response.json();
-      console.log('🚀 ~ reserveItems ~ data:', data);
-
-      if (!data.success) {
-        setMessage('Failed to reserve items. Please try again.');
-      }
-    } catch {
-      setMessage('Failed to reserve items. Please try again.');
-    }
-  };
-
-  // /rollback - Rollback reservation if payment fails
-  const rollbackReservation = async (): Promise<void> => {
-    try {
-      const response = await fetch('/api/inventory/rollback', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          items: state.items
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to rollback reservation.');
-      }
-
-      console.log('Reservation rolled back successfully');
-    } catch (error) {
-      console.error('Failed to rollback reservation:', error);
-    }
-  };
 
   const saveOrder = async (paymentIntentId: string): Promise<void> => {
     try {
@@ -138,34 +61,6 @@ const CheckoutForm = ({
     }
   };
 
-  // const updateInventory = async (
-  //   plannerId: string,
-  //   quantityToRemove: number
-  // ) => {
-  //   try {
-  //     const response = await fetch('/api/inventory/update', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json'
-  //       },
-  //       body: JSON.stringify({
-  //         plannerId,
-  //         quantityToRemove
-  //       })
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error('Failed to update inventory. Please try again.');
-  //     }
-
-  //     const data = await response.json();
-  //     console.log('Inventory updated successfully:', data);
-  //   } catch (error) {
-  //     console.error(error);
-  //     setMessage('Failed to update inventory. Please contact support.');
-  //   }
-  // };
-
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -178,69 +73,58 @@ const CheckoutForm = ({
 
     try {
       // Check availability before proceeding
-      const isAvailable = await checkAvailability();
-      if (!isAvailable) {
+      const availabilityResponse = await checkAvailability(state.items);
+      if (!availabilityResponse.success) {
+        if (availabilityResponse.updatedInventory) {
+          handlePaymentFailure(dispatch, availabilityResponse.updatedInventory);
+        }
         setMessage(
-          'Some items are no longer available. They were removed from your cart. Please, review your cart summary again.'
+          'Some items are no longer available. They were removed from your cart. Please review your cart.'
         );
         return;
       }
 
       // Reserve items
-      await reserveItems();
+      const reservationSuccess = await reserveItems(state.items);
+      if (!reservationSuccess) {
+        setMessage('Failed to reserve items. Please try again.');
+        return;
+      }
 
       // Confirm payment
-      // const { error, paymentIntent } = await stripe.confirmPayment({
-      //   elements,
-      //   confirmParams: {
-      //     return_url: window.location.origin + '/payment-success' // Optional: redirect on success
-      //   },
-      //   redirect: 'if_required' // Prevent full-page redirect
-      // });
-      //THIS IS FOR TESTING PURPOSES
-      const { error, paymentIntent } = await new Promise((resolve) => {
-        setTimeout(() => {
-          resolve({
-            error: null,
-            paymentIntent: {
-              id: 'pi_123456789',
-              status: 'succeeded'
-            }
-          });
-        }, 1000);
+      const { error, paymentIntent } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: window.location.origin + '/payment-success'
+        },
+        redirect: 'if_required'
       });
 
+      //THIS IS FOR TESTING PURPOSES
+      // const { error, paymentIntent } = await new Promise((resolve) => {
+      //   setTimeout(() => {
+      //     resolve({
+      //       error: true,
+      //       paymentIntent: {
+      //         id: 'pi_123456789',
+      //         status: 'succeeded'
+      //       }
+      //     });
+      //   }, 1000);
+      // });
+
       if (error) {
-        setMessage(`Payment failed: ${error.message}`);
-        await rollbackReservation(); // Rollback if payment fails
+        setMessage(`Payment failed, please try again.`);
+        await rollbackReservation(state.items); // Rollback reservation if payment fails
       } else if (paymentIntent?.status === 'succeeded') {
         await saveOrder(paymentIntent.id);
-
-        // // Update inventory for all cart items
-        // const updateResults = await Promise.allSettled(
-        //   state.items.map((item) =>
-        //     updateInventory(item.plannerId, item.quantity)
-        //   )
-        // );
-
-        // Handle update results
-        // const failedUpdates = updateResults.filter(
-        //   (result) => result.status === 'rejected'
-        // );
-
-        // if (failedUpdates.length > 0) {
-        //   setMessage(
-        //     'Some items are out of stock. Your payment was successful.'
-        //   );
-        //   console.error('Failed updates:', failedUpdates);
-        // } else {
         clearCart(dispatch);
         setIsPaymentSuccessful(true);
-        // }
       } else {
         setMessage('Payment processing. Please wait.');
       }
-    } catch {
+    } catch (error) {
+      console.error('Unexpected error:', error);
       setMessage('An unexpected error occurred.');
     } finally {
       setIsLoading(false);
@@ -312,7 +196,7 @@ const CheckoutForm = ({
             <Button
               type="submit"
               className="w-full py-2"
-              disabled={!stripe || isLoading}
+              disabled={!stripe || isLoading || !state.items.length}
             >
               {isLoading ? 'Processing your payment...' : `Pay ${totalAmount}`}
             </Button>
