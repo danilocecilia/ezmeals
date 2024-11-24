@@ -7,6 +7,7 @@ type Order = {
   orderId: string;
   userId: string;
   customerName: string;
+  customerEmail: string;
   items: Array<{ name: string; quantity: number; price: number }>;
   total: number;
   deliveryAddress: string;
@@ -41,14 +42,18 @@ export async function GET(req: Request) {
       orderId: order.orderId,
       userId: order.userId,
       customerName: order.customerName,
+      customerEmail: order.customerEmail,
       items: order.items,
-      total: order.total,
-      deliveryAddress: order.deliveryAddress,
-      deliveryMethod: order.deliveryMethod,
-      quantity: order.quantity,
-      createdAt: formatDate(order.createdAt)
+      total: order.items
+        .reduce((acc, item) => acc + item.price * item.quantity, 0)
+        .toFixed(2),
+      quantity: order.items.reduce((acc, item) => acc + item.quantity, 0),
+      createdAt: order.createdAt
     }));
-
+    console.log(
+      '🚀 ~ consttransformedOrders:Order[]=orders.map ~ transformedOrders:',
+      transformedOrders
+    );
     return NextResponse.json({ orders: transformedOrders }, { status: 200 });
   } catch (error) {
     console.error(error);

@@ -15,10 +15,10 @@ export async function middleware(req: NextRequest) {
   });
 
   if (process.env.NODE_ENV === 'development') {
-    console.log('Cookies:', req.cookies);
-    console.log('Headers:', req.headers);
-    console.log('Request URL:', req.nextUrl.href);
-    console.log('Token:', token);
+    // console.log('Cookies:', req.cookies);
+    // console.log('Headers:', req.headers);
+    // console.log('Request URL:', req.nextUrl.href);
+    // console.log('Token:', token);
   }
 
   const url = req.nextUrl.clone();

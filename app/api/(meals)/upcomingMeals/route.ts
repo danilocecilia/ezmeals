@@ -1,5 +1,5 @@
 import clientPromise from '@lib/mongodb';
-import { format, nextSaturday, nextSunday, addDays } from 'date-fns';
+import { addDays, format } from 'date-fns';
 import { ObjectId } from 'mongodb';
 import { NextResponse } from 'next/server';
 
@@ -8,49 +8,43 @@ export async function GET() {
     const client = await clientPromise;
     const db = client.db();
     const today = new Date();
-    // Determine the start and end dates for the upcoming weekend
+
     let saturday, sunday;
 
-    // If today is Saturday, set the start date to today and end date to tomorrow (Sunday).
-    if (today.getDay() === 6) {
-      saturday = today;
-      sunday = addDays(today, 1);
-    }
-    // If today is Sunday, set the start date to next Saturday (6 days from now) and end date to next Sunday.
-    else if (today.getDay() === 0) {
-      saturday = addDays(today, 6);
-      sunday = addDays(today, 7);
+    // Determine the start and end dates for the upcoming weekend
+    if (today.getDay() === 0) {
+      // If today is Sunday, get the next weekend
+      saturday = addDays(today, 6); // Next Saturday
+      sunday = addDays(today, 7); // Next Sunday
     } else {
-      // If today is a weekday, calculate the next Saturday and Sunday.
-      saturday = addDays(today, 6 - today.getDay());
-      sunday = addDays(today, 7 - today.getDay());
+      // For other days, calculate the next Saturday and Sunday
+      saturday = addDays(today, 6 - today.getDay()); // Next Saturday
+      sunday = addDays(today, 7 - today.getDay()); // Next Sunday
     }
-    const startDate = format(saturday, 'dd-MM-yyyy');
-    console.log('🚀 ~ GET ~ startDate:', startDate);
-    const endDate = format(sunday, 'dd-MM-yyyy');
-    console.log('🚀 ~ GET ~ endDate:', endDate);
-
-    // Fetch upcoming meals from planner collection
-    // Query meals with a date in the upcoming weekend range
+    console.log('🚀 ~ GET ~ saturday:', format(saturday, 'dd-MM-yyyy'));
+    console.log('🚀 ~ GET ~ sunday:', format(sunday, 'dd-MM-yyyy'));
+    // Use the dates directly without formatting for querying if date fields in the DB are of Date type
     const planner = await db
       .collection('planner')
       .find({
-        dateFrom: { $lte: endDate }, // Ensure dateFrom is on or before the end date
-        dateTo: { $gte: startDate } // Ensure dateTo is on or after the start date
+        dateFrom: { $lte: format(saturday, 'dd/MM/yyyy') }, // Scheduled from before or on the upcoming Saturday
+        dateTo: { $gte: format(sunday, 'dd/MM/yyyy') } // Scheduled to after or on the upcoming Sunday
       })
       .toArray();
 
-    // Get the mealIds from the planner collection
+    // Extract meal IDs and validate them
     const mealIds = planner.map((meal) => meal.mealId);
-    const mealObjectIds = mealIds.map((id) => new ObjectId(id));
+    const mealObjectIds = mealIds
+      .filter((id) => ObjectId.isValid(id))
+      .map((id) => new ObjectId(id));
 
-    // loop through the mealIds and fetch the meals from the meals collection
+    // Fetch meals by IDs
     const meals = await db
       .collection('meals')
       .find({ _id: { $in: mealObjectIds } })
       .toArray();
 
-    // Map the maxQuantity from the planner collection to the meals collection
+    // Map maxQuantity and plannerId from planner data to meals
     const mealsWithQuantity = meals.map((meal) => {
       const plannerItem = planner.find(
         (item) => item.mealId === meal._id.toString()
@@ -64,11 +58,10 @@ export async function GET() {
 
     return NextResponse.json(mealsWithQuantity, { status: 200 });
   } catch (error) {
-    console.error(error);
-
+    console.error('Error in GET handler:', error);
     return NextResponse.json(
-      { error: 'Error fetching meals' },
-      { status: 400 }
+      { error: error.message || 'Error fetching meals' },
+      { status: 500 }
     );
   }
 }

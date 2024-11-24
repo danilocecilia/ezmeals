@@ -15,7 +15,7 @@ async function getData(): Promise<Orders[]> {
 
 export default async function page() {
   const session = await auth();
-  const { orders } = await getData();
+  const {orders} = await getData();
 
   if (!session) {
     redirect('/login');

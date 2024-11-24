@@ -33,28 +33,27 @@ const handleSorting = (
 
 export const columns: ColumnDef<Orders>[] = [
   {
-    accessorKey: 'userId',
-    header: ({ column }) => handleSorting(column, 'User ID')
+    accessorKey: 'orderId',
+    header: ({ column }) => handleSorting(column, 'Order ID')
   },
   {
     accessorKey: 'customerName',
-    header: ({ column }) => handleSorting(column, 'Customer Name')
-  },
-  {
-    accessorKey: 'deliveryAddress',
-    header: ({ column }) => handleSorting(column, 'Delivery Address')
-  },
-  {
-    accessorKey: 'deliveryMethod',
-    header: ({ column }) => handleSorting(column, 'Delivery Method')
+    header: ({ column }) => handleSorting(column, 'Customer')
   },
   {
     accessorKey: 'createdAt',
-    header: ({ column }) => handleSorting(column, 'Created At')
-  },
-  {
-    accessorKey: 'orderId',
-    header: ({ column }) => handleSorting(column, 'Order ID')
+    header: ({ column }) => handleSorting(column, 'Date'),
+    cell: ({ row }) => {
+      const date = new Date(row.original.createdAt);
+      return date.toLocaleString('en-US', {
+        month: 'short',
+        day: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      });
+    }
   },
   {
     accessorKey: 'quantity',
@@ -62,6 +61,7 @@ export const columns: ColumnDef<Orders>[] = [
   },
   {
     accessorKey: 'total',
-    header: ({ column }) => handleSorting(column, 'Total')
+    header: ({ column }) => handleSorting(column, 'Amount'),
+    cell: ({ row }) => `$${row.original.total}`
   }
 ];

@@ -46,8 +46,9 @@ export async function POST(req: Request) {
 
     const orderData = {
       orderId: orderId,
-      customerName: session?.user?.name || '',
-      customerEmail: session?.user?.email || '',
+      userId: session?.user?.id,
+      customerName: session?.user?.name,
+      customerEmail: session?.user?.email,
       paymentIntentId,
       totalAmount,
       items,

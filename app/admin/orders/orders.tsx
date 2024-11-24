@@ -38,7 +38,9 @@ const OrdersPage = ({ data }: { data: Orders[] }) => {
     <div className="w-full container hidden h-full flex-1 flex-col space-y-6 p-8 md:flex ">
       <div className="flex items-center justify-between space-y-2">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Orders History</h2>
+          <h2 className="text-[28px] font-bold tracking-tight">
+            Orders History
+          </h2>
         </div>
       </div>
       <div>
@@ -47,14 +49,6 @@ const OrdersPage = ({ data }: { data: Orders[] }) => {
       </div>
       <DataTable columns={columns} data={ordersData} />
     </div>
-
-    // <div className="flex flex-col space-y-4 container mx-auto py-10 bg-white">
-    //   <div className="self-end">
-    //     <div>Filter:</div>
-    //     <DatePickerWithRange setDate={setDate} date={date} />
-    //   </div>
-    //   <DataTable columns={columns} data={ordersData} />
-    // </div>
   );
 };
 
