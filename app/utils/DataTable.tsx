@@ -21,9 +21,11 @@ import { useState } from 'react';
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  onClick: (data: TData) => void;
 }
 
 export function DataTable<TData, TValue>({
+  onClick,
   columns,
   data
 }: DataTableProps<TData, TValue>) {
@@ -39,7 +41,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <Table>
-      <TableHeader>
+      <TableHeader className="bg-gray-100">
         {table.getHeaderGroups().map((headerGroup) => (
           <TableRow key={headerGroup.id}>
             {headerGroup.headers.map((header) => {
@@ -61,9 +63,10 @@ export function DataTable<TData, TValue>({
         {table.getRowModel().rows?.length ? (
           table.getRowModel().rows.map((row) => (
             <TableRow
-              className="hover:bg-violet-100 cursor-pointer"
+              className="hover:bg-violet-100 cursor-pointer text-[#353a44]"
               key={row.id}
               data-state={row.getIsSelected() && 'selected'}
+              onClick={() => onClick(row.original)}
             >
               {row.getVisibleCells().map((cell) => (
                 <TableCell className="text-[13px] text-center" key={cell.id}>

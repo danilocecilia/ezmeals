@@ -42,8 +42,8 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  console.log('🚀 ~ middleware ~ token:', token);
-  console.log('🚀 ~ middleware ~ url:', url);
+  // console.log('🚀 ~ middleware ~ token:', token);
+  // console.log('🚀 ~ middleware ~ url:', url);
 
   // Check if the user is authenticated
   if (!token) {

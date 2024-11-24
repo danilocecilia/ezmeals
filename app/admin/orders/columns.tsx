@@ -62,6 +62,8 @@ export const columns: ColumnDef<Orders>[] = [
   {
     accessorKey: 'total',
     header: ({ column }) => handleSorting(column, 'Amount'),
-    cell: ({ row }) => `$${row.original.total}`
+    cell: ({ row }) => (
+      <span className="font-semibold text-[14px]">${row.original.total}</span>
+    )
   }
 ];
