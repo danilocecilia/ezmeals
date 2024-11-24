@@ -21,6 +21,7 @@ const handleSorting = (
 ) => {
   return (
     <Button
+      className="text-xs font-bold text-black hover:text-primary"
       variant="ghost"
       onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
     >

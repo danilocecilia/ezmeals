@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
-import { BadgeCheck, ChevronsUpDown } from 'lucide-react';
+import { BadgeCheck, LockKeyholeIcon } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 
@@ -17,6 +17,7 @@ import {
 } from './ui/dropdown-menu';
 
 const HeaderAuth: React.FC = ({ session, status }) => {
+  // console.log('🚀 ~ session:', session);
   return (
     <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
       <form className="ml-auto flex-1 sm:flex-initial"></form>
@@ -52,10 +53,14 @@ const HeaderAuth: React.FC = ({ session, status }) => {
                   Profile
                 </DropdownMenuItem>
               </Link>
-              {/* <DropdownMenuItem>
-                Settings
-                <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-              </DropdownMenuItem> */}
+              {session.user?.role === 'admin' && (
+                <Link href="/admin">
+                  <DropdownMenuItem className="gap-2 cursor-pointer">
+                    <LockKeyholeIcon />
+                    Admin Panel
+                  </DropdownMenuItem>
+                </Link>
+              )}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <SignOutButton />
