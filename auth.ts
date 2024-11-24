@@ -52,7 +52,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             province: user?.province,
             phone: user?.phone,
             image: user?.image,
-            privilege: user?.privilege
+            role: user?.role
           };
         }
         return null;
