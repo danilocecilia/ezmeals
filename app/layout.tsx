@@ -33,7 +33,7 @@ interface ExtendedUserType {
   phone?: string;
   postal_code?: string;
   province?: string;
-  privilege: 'admin' | 'user';
+  role: 'admin' | 'user';
 }
 
 export default async function RootLayout({

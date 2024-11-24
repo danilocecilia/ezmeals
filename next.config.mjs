@@ -23,15 +23,6 @@ const nextConfig = {
     });
 
     return config;
-  },
-  async redirects() {
-    return [
-      {
-        source: '/403',
-        destination: '/error/403',
-        permanent: false
-      }
-    ];
   }
 };
 
