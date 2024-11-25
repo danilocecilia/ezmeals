@@ -21,8 +21,11 @@ interface MealCardProps {
 
 const MealCard: React.FC<MealCardProps> = ({ meal, onCardClick }) => {
   return (
-    <Card className="max-w-[350px] pt-6">
-      <CardContent className="pb-0 cursor-pointer" onClick={onCardClick}>
+    <Card className="max-w-[250px] lg:max-w-[350px]">
+      <CardContent
+        className="relative flex aspect-square md:items-center p-2 md:p-6 cursor-pointer"
+        onClick={onCardClick}
+      >
         <div className="relative overflow-hidden rounded-md">
           {meal?.maxQuantity === 0 && (
             <Image

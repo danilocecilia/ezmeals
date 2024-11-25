@@ -2,7 +2,6 @@
 import { LogOut } from 'lucide-react';
 import React from 'react';
 
-import { DropdownMenuShortcut } from './ui/dropdown-menu';
 import { DropdownMenuItem } from './ui/dropdown-menu';
 
 import { signout } from '@/actions';

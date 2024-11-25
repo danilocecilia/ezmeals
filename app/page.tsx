@@ -9,7 +9,7 @@ const HomeContent: React.FC = () => {
   const { isModalOpen, selectedMeal, closeModal } = useModal();
 
   return (
-    <main className="container mx-auto p-4">
+    <main className="container mx-auto p-2 md:p-4">
       <CardCarousel />
 
       <MealItemModal isOpen={isModalOpen} onClose={closeModal}>

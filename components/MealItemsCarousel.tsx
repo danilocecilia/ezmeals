@@ -23,9 +23,11 @@ const MealItemsCarousel: React.FC<MealItemsCarouselProps> = ({
   openModal,
   title
 }) => (
-  <div className="flex flex-col justify-center p-10">
-    <h1 className="flex justify-center text-4xl font-bold">{title}</h1>
-    <Separator className="w-[280px] my-4 self-center" />
+  <div className="flex flex-col justify-center p-0 md:p-10 my-10">
+    <h1 className="flex justify-start md:justify-center text-2xl md:text-4xl  font-bold">
+      {title}
+    </h1>
+    <Separator className="md:w-[280px] my-4 md:self-center" />
 
     <Carousel>
       <CarouselContent>

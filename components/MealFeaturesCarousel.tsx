@@ -23,9 +23,11 @@ export function MealFeaturesCarousel({
   setIsModalOpen: (isOpen: boolean) => void;
 }) {
   return (
-    <div className="flex flex-col justify-center p-10">
-      <h1 className="flex justify-center text-4xl font-bold">Weekly Meal</h1>
-      <Separator className="w-[280px] my-4 self-center" />
+    <div className="flex flex-col justify-center pt-10 md:p-10">
+      <h1 className="flex md:justify-center text-2xl md:text-4xl font-bold">
+        Weekly Meal
+      </h1>
+      <Separator className="md:w-[280px] my-4 self-center" />
       <Carousel
         className="max-w-[900px] flex justify-center m-auto my-8"
         // plugins={[
@@ -38,7 +40,7 @@ export function MealFeaturesCarousel({
           {weeklyMeals.map((meal, index: number) => (
             <CarouselItem
               key={index}
-              className="flex-[0_0_80%] md:flex-[0_0_40%]"
+              className="flex-[0_0_70%] md:flex-[0_0_40%]"
               onClick={() => {
                 setIsModalOpen(true);
                 setSelectedMeal(meal);
@@ -46,8 +48,8 @@ export function MealFeaturesCarousel({
             >
               <div className="p-1">
                 <Card>
-                  <CardContent className="relative flex aspect-square items-center justify-center p-6 cursor-pointer text-center">
-                    <div className="absolute flex justify-center items-center w-full h-[67px] max-w-[86%] mt-[26px] bg-[white] top-3 opacity-85 text-md md:text-xl font-bold px-2">
+                  <CardContent className="relative flex aspect-square items-center justify-center p-2 md:p-6 cursor-pointer text-center">
+                    <div className="absolute flex justify-center items-center w-full h-[67px] max-w-[86%] mt-[26px] bg-[white] top-3 opacity-85 md:text-sm lg:text-lg font-bold px-2">
                       <h2>{meal.name}</h2>
                     </div>
                     {meal?.maxQuantity === 0 && (
@@ -66,7 +68,7 @@ export function MealFeaturesCarousel({
                       width={500}
                       height={500}
                       priority={true}
-                      className="rounded-md"
+                      className="rounded-md w-60 h-60 md:w-[400px] md:h-[400px] object-cover"
                     ></Image>
                   </CardContent>
                 </Card>

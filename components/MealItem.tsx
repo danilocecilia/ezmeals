@@ -18,13 +18,11 @@ export type Meal = {
   description?: string;
   category?: string;
   maxQuantity: number;
+  plannerId: string;
 };
 
-interface MealPlanner {
-  plannerId: string;
-}
 interface MealItemProps {
-  meal: Meal & MealPlanner;
+  meal: Meal;
 }
 
 const MealItem: React.FC<MealItemProps> = ({ meal }) => {
@@ -41,10 +39,10 @@ const MealItem: React.FC<MealItemProps> = ({ meal }) => {
 
   return (
     <div
-      className="grid grid-cols-[auto,1fr] justify-center items-start gap-10 p-5"
+      className="grid grid-cols-[auto] lg:grid-cols-[auto,1fr] justify-center items-start gap-2 lg:gap-10 p-0 lg:p-5"
       key={meal?._id}
     >
-      <div className="relative flex justify-center overflow-hidden rounded-md max-h-[492px] max-w-[492px]">
+      <div className="relative flex justify-center overflow-hidden rounded-md lg:max-h-[492px] lg:max-w-[492px]">
         {meal?.maxQuantity === 0 && (
           <Image
             src={'/images/out_of_stock.png'}
@@ -61,14 +59,14 @@ const MealItem: React.FC<MealItemProps> = ({ meal }) => {
           width={492}
           height={492}
           className={cn(
-            'h-auto w-auto object-cover transition-all hover:scale-110 aspect-[3/4]'
+            'w-60 h-60 lg:h-auto lg:w-auto object-cover transition-all hover:scale-110 aspect-[3/4]'
           )}
         />
       </div>
       <div className="flex flex-col h-full space-y-4">
-        <h1 className="text-4xl font-semibold">{meal?.name}</h1>
+        <h1 className="text-xl lg:text-4xl font-semibold">{meal?.name}</h1>
         <Separator className="max-w-[500px]" />
-        <p className="max-w-[700px]">{meal?.description}</p>
+        <p className="text-sm lg:text-md max-w-[700px]">{meal?.description}</p>
         <p className="text-xl font-semibold text-[#5e5e5e]">
           Price: &nbsp;
           <span className="text-sm relative top-[-5.75px]">$</span>
@@ -78,7 +76,7 @@ const MealItem: React.FC<MealItemProps> = ({ meal }) => {
         <div className="flex h-full w-full items-end">
           <Button
             className={cn(
-              'cursor-pointer mt-5 w-full',
+              'cursor-pointer mt-0 lg:mt-5 w-full',
               meal?.maxQuantity === 0 &&
                 'cursor-not-allowed bg-gray-300 hover:bg-gray-200'
             )}
