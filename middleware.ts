@@ -13,7 +13,8 @@ export async function middleware(req: NextRequest) {
   // @ts-expect-error - req.cookies is not defined in the NextRequest type
   const token = await getToken({
     req,
-    secret
+    secret,
+    cookieName: '__Secure-authjs.session-token'
   });
 
   // if (process.env.NODE_ENV === 'development') {
@@ -21,6 +22,7 @@ export async function middleware(req: NextRequest) {
   console.log('Headers:', req.headers);
   console.log('Request URL:', req.nextUrl.href);
   console.log('Token:', token);
+  console.log('Request protocol:', req.nextUrl.protocol);
   // }
 
   const url = req.nextUrl.clone();
