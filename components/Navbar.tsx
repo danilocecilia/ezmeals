@@ -73,12 +73,23 @@ const Navbar = () => {
         </div>
       </nav>
       <Sheet>
-        <SheetTrigger asChild>
-          <Button variant="ghost" size="icon" className="shrink-0 md:hidden">
-            <Menu className="h-5 w-5" />
-            <span className="sr-only">Toggle navigation menu</span>
-          </Button>
-        </SheetTrigger>
+        <div className="flex justify-between items-center">
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon" className="shrink-0 md:hidden">
+              <Menu className="h-5 w-5" />
+              <span className="sr-only">Toggle navigation menu</span>
+            </Button>
+          </SheetTrigger>
+          <div className="flex gap-8">
+            {!pathname.includes('admin') && (
+              <div>
+                <span className="self-center">
+                  <Checkout />
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
         <SheetContent side="left" className="bg-[#f3f4f6]">
           <nav className="grid gap-6 text-lg font-medium">
             <Link href="#" className="flex items-center gap-4">

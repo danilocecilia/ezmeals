@@ -126,7 +126,7 @@ export function DrawerMealCheckout({
     >
       <DrawerOverlay className="z-[50]" />
 
-      <DrawerContent className="right-2 top-0 bottom-0 fixed z-[50] outline-none w-[400px] bg-white flex mt-0">
+      <DrawerContent className="overflow-y-auto overflow-x-hidden right-0 top-0 bottom-0 fixed z-[50] outline-none w-[400px] bg-white flex mt-0">
         <DrawerClose className="flex absolute top-0 left-0 m-4 bg-violet-100 rounded-full w-10 h-10 items-center justify-center hover:bg-violet-200">
           <X />
         </DrawerClose>
