@@ -4,6 +4,7 @@ import { getToken } from 'next-auth/jwt';
 
 export async function middleware(req: NextRequest) {
   const secret = process.env.AUTH_SECRET || '';
+  console.log('🚀 ~ middleware ~ secret:', secret);
   if (!secret) {
     console.error('AUTH_SECRET is not defined');
     return NextResponse.next(); // Allow traffic but log the issue
@@ -15,12 +16,12 @@ export async function middleware(req: NextRequest) {
     secret
   });
 
-  if (process.env.NODE_ENV === 'development') {
-    // console.log('Cookies:', req.cookies);
-    // console.log('Headers:', req.headers);
-    // console.log('Request URL:', req.nextUrl.href);
-    // console.log('Token:', token);
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  console.log('Cookies:', req.cookies);
+  console.log('Headers:', req.headers);
+  console.log('Request URL:', req.nextUrl.href);
+  console.log('Token:', token);
+  // }
 
   const url = req.nextUrl.clone();
 
@@ -43,8 +44,8 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // console.log('🚀 ~ middleware ~ token:', token);
-  // console.log('🚀 ~ middleware ~ url:', url);
+  console.log('🚀 ~ middleware ~ token:', token);
+  console.log('🚀 ~ middleware ~ url:', url);
 
   // Check if the user is authenticated
   if (!token) {
