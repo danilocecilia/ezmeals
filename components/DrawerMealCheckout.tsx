@@ -133,7 +133,7 @@ export function DrawerMealCheckout({
         </DrawerClose>
         {state.totalItemsQuantity !== 0 && <MoreOptions />}
 
-        <ScrollArea className="h-auto overflow-y-auto">
+        <ScrollArea className="h-full overflow-y-auto">
           {state.totalItemsQuantity === 0 ? (
             <EmptyCart />
           ) : (
