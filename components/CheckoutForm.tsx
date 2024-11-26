@@ -2,6 +2,7 @@
 
 import { Button } from '@components/ui/button';
 import { Dialog, DialogClose, DialogContent } from '@components/ui/dialog';
+import { ScrollArea } from '@components/ui/scroll-area';
 import { useCart } from '@root/context/CartContext';
 import {
   PaymentElement,
@@ -183,27 +184,31 @@ const CheckoutForm = ({
         {!isPaymentSuccessful && (
           <DialogClose className="flex w-10 h-10 justify-center items-center" />
         )}
-        {isPaymentSuccessful ? (
-          <SuccessPayment />
-        ) : (
-          <form
-            onSubmit={handleSubmit}
-            className="w-full mx-auto p-4 space-y-4"
-          >
-            <h1 className="text-xl text-center font-bold mb-4">{`Place your Order`}</h1>
-            <h3 className="text-center">Total: ${totalAmount}</h3>
-            <PaymentElement />
-            <Button
-              type="submit"
-              className="w-full py-2"
-              disabled={!stripe || isLoading || !state.items.length}
+        <ScrollArea className="h-full overflow-y-auto">
+          {isPaymentSuccessful ? (
+            <SuccessPayment />
+          ) : (
+            <form
+              onSubmit={handleSubmit}
+              className="w-full mx-auto p-4 space-y-10"
             >
-              {isLoading ? 'Processing your payment...' : `Pay ${totalAmount}`}
-            </Button>
+              <h1 className="text-xl text-center font-bold mb-4">{`Place your Order`}</h1>
+              <h3 className="text-center">Total: ${totalAmount}</h3>
+              <PaymentElement />
+              <Button
+                type="submit"
+                className="w-full py-2"
+                disabled={!stripe || isLoading || !state.items.length}
+              >
+                {isLoading
+                  ? 'Processing your payment...'
+                  : `Pay ${totalAmount}`}
+              </Button>
 
-            {message && <p className="mt-4 text-red-500">{message}</p>}
-          </form>
-        )}
+              {message && <p className="mt-4 text-red-500">{message}</p>}
+            </form>
+          )}
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );
