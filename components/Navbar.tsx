@@ -36,10 +36,10 @@ const Navbar = () => {
           <div className="flex gap-8 items-center">
             <Link
               href="/"
-              className="hidden md:flex items-center gap-4 text-lg font-semibold md:text-base"
+              className="flex items-center gap-4 text-lg font-semibold md:text-base"
             >
               <ArrowLeft />
-              <span className="hidden text-sm font-bold lg:inline-block">
+              <span className="text-sm font-bold lg:inline-block">
                 Back to store
               </span>
             </Link>
@@ -80,7 +80,23 @@ const Navbar = () => {
               <span className="sr-only">Toggle navigation menu</span>
             </Button>
           </SheetTrigger>
-          <div className="flex gap-8 md:hidden">
+          <div
+            className={cn('flex gap-8 items-center px-8', {
+              hidden: pathname !== '/checkout'
+            })}
+          >
+            <Link href="/" className="flex gap-2 text-lg md:text-base">
+              <ArrowLeft className="w-5 h-5" />
+              <span className="text-sm font-semibold lg:inline-block">
+                Back to Store
+              </span>
+            </Link>
+          </div>
+          <div
+            className={cn('flex gap-8 md:hidden', {
+              hidden: pathname === '/checkout'
+            })}
+          >
             {!pathname.includes('admin') && (
               <div>
                 <span className="self-center">

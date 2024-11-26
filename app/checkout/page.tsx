@@ -50,12 +50,12 @@ const CheckoutPage: FC = () => {
       >
         <Card className="w-auto lg:w-[716px]">
           <CardHeader className="flex">
-            <CardTitle className="flex justify-between items-center">
+            <CardTitle className="flex flex-col lg:flex-row gap-10 lg:gap-0 justify-between items-center">
               <div>
                 {deliveryType === 'delivery' ? 'Delivery' : 'Pickup'} Details
               </div>
 
-              <TabsList className="grid w-full grid-cols-2 max-w-48">
+              <TabsList className="grid w-full grid-cols-2 max-w-auto lg:max-w-48">
                 <TabsTrigger value="delivery">Delivery</TabsTrigger>
                 <TabsTrigger value="pickup">Pickup</TabsTrigger>
               </TabsList>
@@ -66,7 +66,7 @@ const CheckoutPage: FC = () => {
               <Card className="border-0 shadow-none">
                 <div
                   onClick={() => setLocationAdressModal(true)}
-                  className="flex space-y-1 items-center py-4 justify-between  cursor-pointer"
+                  className="flex space-y-1 items-center py-4 justify-between  cursor-pointer flex-col md:flex-row gap-5 lg:gap-0"
                 >
                   <div className="flex gap-4 items-center">
                     <MapPinHouseIcon className="w-6 h-6" />
@@ -81,14 +81,16 @@ const CheckoutPage: FC = () => {
                       </div>
                     </div>
                   </div>
-                  <div>
-                    <Button>Edit</Button>
+                  <div className="w-full md:w-auto">
+                    <Button className="w-full lg:w-auto" variant="outline">
+                      Edit
+                    </Button>
                   </div>
                 </div>
                 <Separator />
                 <div
                   onClick={() => setDropOffOptionsModal(true)}
-                  className="flex space-y-1 items-center py-4 cursor-pointer justify-between"
+                  className="flex space-y-1 items-center py-4 cursor-pointer justify-between flex-col md:flex-row gap-5 lg:gap-0"
                 >
                   <div className="flex gap-4 items-center">
                     <User className="w-6 h-6" />
@@ -103,8 +105,10 @@ const CheckoutPage: FC = () => {
                       </div>
                     </div>
                   </div>
-                  <div>
-                    <Button className="">Edit</Button>
+                  <div className="w-full md:w-auto">
+                    <Button className="w-full lg:w-auto" variant="outline">
+                      Edit
+                    </Button>
                   </div>
                 </div>
                 <Separator />
@@ -114,7 +118,7 @@ const CheckoutPage: FC = () => {
               <Card>
                 <CardHeader>
                   <CardTitle>
-                    <div className="p-0">10318 Shenandoah Cresent</div>
+                    <div className="p-0 text-xl">10318 Shenandoah Cresent</div>
                   </CardTitle>
                   <div
                     className="mt-12"

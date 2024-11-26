@@ -21,7 +21,7 @@ interface MealCardProps {
 
 const MealCard: React.FC<MealCardProps> = ({ meal, onCardClick }) => {
   return (
-    <Card className="max-w-[250px] lg:max-w-[350px]">
+    <Card className="max-w-[250px] lg:max-w-[350px] bg-violet-50">
       <CardContent
         className="relative flex aspect-square md:items-center p-2 md:p-6 cursor-pointer"
         onClick={onCardClick}
@@ -34,7 +34,7 @@ const MealCard: React.FC<MealCardProps> = ({ meal, onCardClick }) => {
               width={350}
               height={350}
               priority={true}
-              className="absolute opacity-60 bottom-12"
+              className="absolute opacity-50 bottom-12 z-20"
             ></Image>
           )}
           <Image
@@ -43,7 +43,7 @@ const MealCard: React.FC<MealCardProps> = ({ meal, onCardClick }) => {
             width={500}
             height={500}
             priority={true}
-            className="h-auto w-auto object-cover transition-all hover:scale-105 aspect-[3/4]"
+            className="h-auto w-auto object-cover transition-all hover:scale-105 aspect-[3/4] mask-gradient"
           />
         </div>
       </CardContent>

@@ -1,6 +1,7 @@
 'use client';
 
 import { DrawerMealCheckout } from '@components/DrawerMealCheckout';
+import { useIsMobile } from '@hooks/use-mobile';
 import { useCart } from '@root/context/CartContext';
 import { motion } from 'framer-motion';
 import { ShoppingCart } from 'lucide-react';
@@ -10,14 +11,17 @@ const Checkout = () => {
   const { state } = useCart();
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
   const [focus, setFocus] = useState(false);
+  const isMobile = useIsMobile();
 
   React.useEffect(() => {
-    if (state.items.length > 0) {
+    if (state.items.length > 0 && !isMobile) {
       setFocus(true);
       const timer = setTimeout(() => setFocus(false), 2000); // Remove focus after 2 seconds
       return () => clearTimeout(timer);
+    } else if (state.items.length > 0 && isMobile) {
+      setFocus(true);
     }
-  }, [state.items]);
+  }, [isMobile, state.items]);
 
   const handleCheckout = () => {
     setIsDrawerOpen((prev) => !prev);
@@ -32,12 +36,12 @@ const Checkout = () => {
       <div className="h-full w-full center">
         <div className="relative z-0 ">
           <motion.button
-            onClick={() => handleCheckout()} // Add onClick handler
+            onClick={() => handleCheckout()}
             onMouseEnter={() => setFocus(true)}
             onMouseLeave={() => setFocus(false)}
-            className="h-12 px-10 overflow-hidden z-10 flex items-center gap-2 rounded-xl"
+            className="h-12 px-4 lg:px-10 overflow-hidden z-10 flex items-center gap-2 rounded-xl"
           >
-            <span className="relative flex w-10 h-10 hover:bg-violet-100 justify-center items-center rounded-full">
+            <span className="relative flex h-8 w-8 lg:w-10 lg:h-10 hover:bg-violet-100 justify-center items-center rounded-full">
               <ShoppingCart className="h-5 w-5" />
               {state.items.length > 0 && (
                 <motion.span
@@ -56,7 +60,7 @@ const Checkout = () => {
                 </motion.span>
               )}
             </span>
-            <span className="text-md font-semibold">Cart</span>
+            <span className="hidden lg:block text-md font-semibold">Cart</span>
           </motion.button>
         </div>
       </div>
