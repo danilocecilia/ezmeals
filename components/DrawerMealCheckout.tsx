@@ -14,6 +14,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@components/ui/dropdown-menu';
+import { ScrollArea } from '@components/ui/scroll-area';
 import {
   Select,
   SelectContent,
@@ -126,107 +127,111 @@ export function DrawerMealCheckout({
     >
       <DrawerOverlay className="z-[50]" />
 
-      <DrawerContent className="overflow-y-auto overflow-x-hidden right-0 top-0 bottom-0 fixed z-[50] outline-none w-[400px] bg-white flex mt-0">
+      <DrawerContent className="right-0 top-0 bottom-0 fixed z-[50] outline-none w-[400px] bg-white flex mt-0">
         <DrawerClose className="flex absolute top-0 left-0 m-4 bg-violet-100 rounded-full w-10 h-10 items-center justify-center hover:bg-violet-200">
           <X />
         </DrawerClose>
         {state.totalItemsQuantity !== 0 && <MoreOptions />}
 
-        {state.totalItemsQuantity === 0 ? (
-          <EmptyCart />
-        ) : (
-          <>
-            <div className="p-4 mt-8 space-y-4">
-              <div className="flex justify-between">
-                <div>
-                  {state.totalItemsQuantity}{' '}
-                  {state.totalItemsQuantity > 1 ? 'items' : 'item'}
+        <ScrollArea className="h-auto overflow-y-auto">
+          {state.totalItemsQuantity === 0 ? (
+            <EmptyCart />
+          ) : (
+            <>
+              <div className="p-4 mt-8 space-y-4">
+                <div className="flex justify-between">
+                  <div>
+                    {state.totalItemsQuantity}{' '}
+                    {state.totalItemsQuantity > 1 ? 'items' : 'item'}
+                  </div>
+                  <div className="flex gap-2">
+                    <div className="text-[#4b4b4b]">Subtotal:</div>
+                    <div>${state.totalAmount.toFixed(2)}</div>
+                  </div>
                 </div>
-                <div className="flex gap-2">
-                  <div className="text-[#4b4b4b]">Subtotal:</div>
+                <Separator className="bg-[#F3F3F3]" />
+                <div>
+                  {state.items.map((item) => (
+                    <div key={item.id} className="py-4">
+                      <div
+                        className="flex justify-between items-center cursor-pointer"
+                        onClick={() => handleMealClick(item.id)}
+                      >
+                        <div>{item.name}</div>
+                        <div>
+                          <Image
+                            src={item.image}
+                            alt="Image"
+                            width={48}
+                            height={48}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex justify-between space-y-10 pb-4">
+                        <div className="self-end">
+                          <Select
+                            value={item.quantity.toString()}
+                            onValueChange={(value) =>
+                              handleQuantityChange(item.id, parseInt(value))
+                            }
+                          >
+                            <SelectTrigger className="gap-2">
+                              <SelectValue placeholder="Select" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectGroup>
+                                <SelectItem value="-1">Remove</SelectItem>
+                                {[...Array(item.maxQuantity).keys()].map(
+                                  (i) => (
+                                    <SelectItem
+                                      key={i + 1}
+                                      value={(i + 1).toString()}
+                                    >
+                                      {i + 1}
+                                    </SelectItem>
+                                  )
+                                )}
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="text-sm text-[#4b4b4b] self-center">
+                          ${item.price.toFixed(2)}
+                        </div>
+                      </div>
+                      <Separator className="bg-[#F3F3F3]" />
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex justify-between pt-4">
+                  <div>Subtotal</div>
                   <div>${state.totalAmount.toFixed(2)}</div>
                 </div>
               </div>
-              <Separator className="bg-[#F3F3F3]" />
-              <div>
-                {state.items.map((item) => (
-                  <div key={item.id} className="py-4">
-                    <div
-                      className="flex justify-between items-center cursor-pointer"
-                      onClick={() => handleMealClick(item.id)}
-                    >
-                      <div>{item.name}</div>
-                      <div>
-                        <Image
-                          src={item.image}
-                          alt="Image"
-                          width={48}
-                          height={48}
-                        />
-                      </div>
-                    </div>
 
-                    <div className="flex justify-between space-y-10 pb-4">
-                      <div className="self-end">
-                        <Select
-                          value={item.quantity.toString()}
-                          onValueChange={(value) =>
-                            handleQuantityChange(item.id, parseInt(value))
-                          }
-                        >
-                          <SelectTrigger className="gap-2">
-                            <SelectValue placeholder="Select" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectGroup>
-                              <SelectItem value="-1">Remove</SelectItem>
-                              {[...Array(item.maxQuantity).keys()].map((i) => (
-                                <SelectItem
-                                  key={i + 1}
-                                  value={(i + 1).toString()}
-                                >
-                                  {i + 1}
-                                </SelectItem>
-                              ))}
-                            </SelectGroup>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="text-sm text-[#4b4b4b] self-center">
-                        ${item.price.toFixed(2)}
-                      </div>
-                    </div>
-                    <Separator className="bg-[#F3F3F3]" />
-                  </div>
-                ))}
-              </div>
-
-              <div className="flex justify-between pt-4">
-                <div>Subtotal</div>
-                <div>${state.totalAmount.toFixed(2)}</div>
-              </div>
-            </div>
-
-            <DrawerFooter className="p-4">
-              <Button
-                className="w-full h-12"
-                onClick={() => {
-                  onClose();
-                  router.push('/checkout');
-                }}
-              >
-                Checkout
-              </Button>
-              <Button
-                className="w-full h-12"
-                variant="secondary"
-                onClick={() => onClose()}
-              >
-                Add more items
-              </Button>
-            </DrawerFooter>
-          </>
-        )}
+              <DrawerFooter className="p-4">
+                <Button
+                  className="w-full h-12"
+                  onClick={() => {
+                    onClose();
+                    router.push('/checkout');
+                  }}
+                >
+                  Checkout
+                </Button>
+                <Button
+                  className="w-full h-12"
+                  variant="secondary"
+                  onClick={() => onClose()}
+                >
+                  Add more items
+                </Button>
+              </DrawerFooter>
+            </>
+          )}
+        </ScrollArea>
       </DrawerContent>
     </Drawer>
   );
