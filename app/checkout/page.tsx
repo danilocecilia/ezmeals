@@ -48,7 +48,7 @@ const CheckoutPage: FC = () => {
         value={deliveryType}
         className="self-center"
       >
-        <Card className="w-[716px]">
+        <Card className="w-auto lg:w-[716px]">
           <CardHeader className="flex">
             <CardTitle className="flex justify-between items-center">
               <div>
@@ -166,10 +166,11 @@ const CheckoutPage: FC = () => {
       <Accordion
         type="single"
         collapsible
+        className="lg-w-auto"
         defaultValue={message ? 'item-1' : ''}
       >
         <AccordionItem value="item-1">
-          <Card className="w-[420px] flex mt-10 flex-col gap-6">
+          <Card className="w-auto md:w-[420px] flex mt-0 lg:mt-10 flex-col gap-6">
             <AccordionTrigger className="pr-5 hover:no-underline">
               <CardHeader>
                 <CardTitle>
@@ -248,7 +249,7 @@ const CheckoutPage: FC = () => {
 
   const OrderTotalPanel = () => {
     return (
-      <Card className="w-[420px] flex flex-col gap-6">
+      <Card className="w-auto lg:w-[420px] flex flex-col gap-6">
         <CardHeader>
           <CardTitle>
             <div className="flex gap-4 items-center">
@@ -305,8 +306,8 @@ const CheckoutPage: FC = () => {
         setDropOffOptionsModal={setDropOffOptionsModal}
         onClose={() => setLocationAdressModal(false)}
       />
-      <div className="flex gap-4 justify-center">
-        <div className="flex py-10 flex-col gap-4">
+      <div className="flex flex-col md:flex-row gap-4 justify-center p-6">
+        <div className="flex py-0 lg:py-10 flex-col gap-4">
           <DeliveryDetailsPanel />
         </div>
         <div className="flex flex-col gap-4">
