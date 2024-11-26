@@ -41,8 +41,10 @@ const DialogContent = React.forwardRef<
       onInteractOutside={(e) => {
         const classes: Array<Array<string>> = [];
 
-        e.composedPath().forEach((el: any) => {
+        e.composedPath().forEach((el: unknown) => {
+          // @ts-expect-error - TS doesn't know classList exists
           if (el.classList) {
+            // @ts-expect-error - TS doesn't know classList exists
             classes.push(Array.from(el.classList));
           }
         });

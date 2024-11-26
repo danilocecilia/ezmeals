@@ -9,7 +9,7 @@ const f = createUploadthing();
 export const ourFileRouter = {
   imageUploader: f({ image: { maxFileSize: '4MB', maxFileCount: 8 } })
     // Set permissions and file types for this FileRoute
-    .middleware(async ({ req }) => {
+    .middleware(async () => {
       // This code runs on your server before upload
       const session = await auth();
 
@@ -18,7 +18,7 @@ export const ourFileRouter = {
       // Whatever is returned here is accessible in onUploadComplete as `metadata`
       return { userId: session?.user?.email };
     })
-    .onUploadComplete(async ({ metadata, file }) => {
+    .onUploadComplete(async ({ metadata }) => {
       // This code RUNS ON YOUR SERVER after upload
       // console.log('Upload complete for userId:', metadata.userId);
 

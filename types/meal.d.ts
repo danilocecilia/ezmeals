@@ -34,3 +34,7 @@ export interface Meal {
 export type MealFeature = Meal & {
   maxQuantity: number;
 };
+
+export interface MealWithPlanner extends Meal {
+  plannerId: string;
+}

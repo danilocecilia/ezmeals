@@ -9,8 +9,6 @@ interface AddressAutocompleteProps {
   handlePlaceChanged: (place: google.maps.places.Autocomplete) => void;
 }
 
-
-
 const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   isLoaded,
   loadError,

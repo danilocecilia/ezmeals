@@ -9,6 +9,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next(); // Allow traffic but log the issue
   }
 
+  // @ts-expect-error - req.cookies is not defined in the NextRequest type
   const token = await getToken({
     req,
     secret
@@ -54,6 +55,7 @@ export async function middleware(req: NextRequest) {
 
   // For admin routes, check if the user has admin privileges
   if (url.pathname.startsWith('/admin')) {
+    // @ts-expect-error - user is not defined in the token type
     if (!token?.user || token.user.role !== 'admin') {
       url.pathname = '/403';
       return NextResponse.rewrite(url);

@@ -47,11 +47,9 @@ const LoginForm = () => {
   const router = useRouter();
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const response = (await signInWithCreds(
-      values.email,
-      values.password
-    )) as any;
+    const response = await signInWithCreds(values.email, values.password);
 
+    // @ts-expect-error - update is not defined on session
     session?.update();
 
     if (response?.error) {

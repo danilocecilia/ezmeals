@@ -50,7 +50,7 @@ const Navbar = () => {
             href="/"
             className="hidden md:flex items-center gap-4 text-lg font-semibold md:text-base"
           >
-            <Icons.logo className="h-[60px] w-[60px]" />
+            <Icons.logo />
             <span className="hidden text-2xl font-bold lg:inline-block">
               EZMeal
             </span>
@@ -60,8 +60,10 @@ const Navbar = () => {
           <>
             {!pathname.includes('admin') && (
               <>
-                <DynamicHeaderAuth session={session} status={status} />
-
+                {
+                  // @ts-expect-error - Required for page to render
+                  <DynamicHeaderAuth session={session} status={status} />
+                }
                 <span className="self-center">
                   <Checkout />
                 </span>

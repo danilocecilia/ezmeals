@@ -4,15 +4,36 @@ import { Separator } from '@components/ui/separator';
 import LoadingComponent from '@root/components/loading';
 import { Receipt } from 'lucide-react';
 import Image from 'next/image';
-import { useSearchParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import useSWR from 'swr';
 
-const OrderDetailsPage: React.FC = ({ params }) => {
-  const fetcher = (url: string): Promise<any> =>
+interface OrderDetailsPageProps {
+  params: {
+    id: string;
+  };
+}
+
+interface Order {
+  orderId: string;
+  paymentIntentId: string;
+  customerName: string;
+  customerEmail: string;
+  createdAt: string;
+  totalAmount: number;
+  items: {
+    id: string;
+    name: string;
+    image: string;
+    price: number;
+    quantity: number;
+  }[];
+}
+
+const OrderDetailsPage: React.FC<OrderDetailsPageProps> = ({ params }) => {
+  const fetcher = (url: string): Promise<{ order: Order }> =>
     fetch(url).then((res) => res.json());
 
-  const { data, isLoading, error } = useSWR(
+  const { data, isLoading, error } = useSWR<{ order: Order }>(
     `/api/admin/orders/get/${params.id}`,
     fetcher
   );

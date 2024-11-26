@@ -9,7 +9,6 @@ import {
 } from '@components/ui/carousel';
 import { Separator } from '@components/ui/separator';
 import { MealFeature } from '@types';
-import Autoplay from 'embla-carousel-autoplay';
 import Image from 'next/image';
 import * as React from 'react';
 

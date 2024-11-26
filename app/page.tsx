@@ -3,6 +3,7 @@ import CardCarousel from '@components/CardCarousel';
 import MealItem from '@components/MealItem';
 import { MealItemModal } from '@components/MealItemModal';
 import { useModal } from '@root/context/ModalContext';
+import { MealWithPlanner } from '@types';
 import React from 'react';
 
 const HomeContent: React.FC = () => {
@@ -17,7 +18,8 @@ const HomeContent: React.FC = () => {
           <MealItem
             meal={{
               ...selectedMeal,
-              maxQuantity: selectedMeal.maxQuantity ?? 0
+              maxQuantity: selectedMeal.maxQuantity ?? 0,
+              plannerId: (selectedMeal as MealWithPlanner).plannerId ?? ''
             }}
           />
         )}

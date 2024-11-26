@@ -3,37 +3,43 @@ import { Button } from '@components/ui/button';
 import { Separator } from '@components/ui/separator';
 import { cn } from '@lib/utils';
 import { useCart } from '@root/context/CartContext';
-import { useModal } from '@root/context/ModalContext';
+// import { useModal } from '@root/context/ModalContext';
 import { addItemToCart } from '@utils/cartUtils';
 import Image from 'next/image';
 import React from 'react';
 
 import { DrawerMealCheckout } from './DrawerMealCheckout';
 
-export type Meal = {
+export interface Meal {
   _id: string;
   name: string;
   price: number;
   image: { url: string }[];
   description?: string;
   category?: string;
-  maxQuantity: number;
+  maxQuantity?: number;
+}
+
+export interface MealWithPlanner extends Meal {
   plannerId: string;
-};
+}
 
 interface MealItemProps {
-  meal: Meal;
+  meal: MealWithPlanner;
 }
 
 const MealItem: React.FC<MealItemProps> = ({ meal }) => {
   const cart = useCart();
-  const { closeModal } = useModal();
+  // const { closeModal } = useModal();
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
 
   const handleAddToCart = () => {
-    if (meal && meal.maxQuantity > 0) {
+    if (meal && (meal.maxQuantity ?? 0) > 0) {
       setIsDrawerOpen(true);
-      addItemToCart(cart.dispatch, meal);
+      addItemToCart(cart.dispatch, {
+        ...meal,
+        maxQuantity: meal.maxQuantity ?? 0
+      });
     }
   };
 

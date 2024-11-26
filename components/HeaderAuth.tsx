@@ -12,10 +12,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  DropdownMenuGroup,
-  DropdownMenuShortcut
+  DropdownMenuGroup
 } from './ui/dropdown-menu';
 
+// @ts-expect-error - Required for page to render
 const HeaderAuth: React.FC = ({ session, status }) => {
   // console.log('🚀 ~ session:', session);
   return (

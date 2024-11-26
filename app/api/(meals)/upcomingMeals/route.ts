@@ -59,9 +59,8 @@ export async function GET() {
     return NextResponse.json(mealsWithQuantity, { status: 200 });
   } catch (error) {
     console.error('Error in GET handler:', error);
-    return NextResponse.json(
-      { error: error.message || 'Error fetching meals' },
-      { status: 500 }
-    );
+    const errorMessage =
+      error instanceof Error ? error.message : 'Error fetching meals';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

@@ -175,6 +175,7 @@ export function FileUploader(props: FileUploaderProps) {
     return () => {
       if (!files) return;
       files.forEach((file) => {
+        // @ts-expect-error preview is not in the File type
         if (isFileWithPreview(file)) {
           URL.revokeObjectURL(file.preview);
         }
@@ -274,7 +275,10 @@ function FileCard({ file, progress, onRemove }: FileCardProps) {
   return (
     <div className="relative flex items-center gap-2.5">
       <div className="flex flex-1 gap-2.5">
-        {isFileWithPreview(file) ? <FilePreview file={file} /> : null}
+        {
+          // @ts-expect-error preview is not in the File type
+          isFileWithPreview(file) ? <FilePreview file={file} /> : null
+        }
         <div className="flex w-full flex-col gap-2">
           <div className="flex flex-col gap-px">
             <p className="line-clamp-1 text-sm font-medium text-foreground/80">

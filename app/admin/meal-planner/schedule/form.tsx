@@ -99,7 +99,7 @@ const MealPlannerForm: React.FC = () => {
         }
       );
 
-      const data = await response.json();
+      await response.json();
       if (!response.ok) {
         form.setError('root', {
           type: 'manual',

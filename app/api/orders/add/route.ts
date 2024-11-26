@@ -2,6 +2,7 @@ import clientPromise from '@lib/mongodb';
 import { generateOrderEmailContent } from '@root/app/utils/generateOrderEmailContent';
 import { auth } from '@root/auth';
 import { sendEmail } from '@root/utils/emailSenderUtility';
+import { Db } from 'mongodb';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
@@ -24,7 +25,7 @@ export async function POST(req: Request) {
     const client = await clientPromise;
     const db = client.db();
 
-    const generateOrderId = async (db: unknown) => {
+    const generateOrderId = async (db: Db) => {
       const today = new Date();
       const datePart = `${today.getFullYear()}${(today.getMonth() + 1)
         .toString()
@@ -47,8 +48,8 @@ export async function POST(req: Request) {
     const orderData = {
       orderId: orderId,
       userId: session?.user?.id,
-      customerName: session?.user?.name,
-      customerEmail: session?.user?.email,
+      customerName: session?.user?.name ?? '',
+      customerEmail: session?.user?.email ?? '',
       paymentIntentId,
       totalAmount,
       items,

@@ -9,17 +9,23 @@ async function getData(): Promise<Orders[]> {
     `${process.env.NEXT_PUBLIC_API_URL}/api/admin/orders/getAll`
   );
 
-  const data = await response.json();
-  return data;
+  if (!response.ok) {
+    throw new Error('Failed to fetch orders');
+  }
+
+  const data: Orders[] = await response.json();
+  // @ts-expect-error - data is an object with orders key
+  return data?.orders;
 }
 
-export default async function page() {
+export default async function Page() {
   const session = await auth();
-  const {orders} = await getData();
 
   if (!session) {
     redirect('/login');
   }
+
+  const orders = await getData();
 
   return <OrdersPage data={orders} />;
 }

@@ -2,7 +2,7 @@
 import { Button } from '@components/ui/button';
 import { Checkbox } from '@components/ui/checkbox';
 import { ColumnDef, HeaderContext } from '@tanstack/react-table';
-import { ArrowUpDown, Ellipsis } from 'lucide-react';
+import { ArrowUpDown } from 'lucide-react';
 
 // import Link from 'next/link';
 

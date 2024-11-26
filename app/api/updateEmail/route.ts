@@ -26,7 +26,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const updateEmail = await db.collection('users').updateOne(
+    await db.collection('users').updateOne(
       { email: session?.user?.email },
       {
         $set: {
@@ -36,7 +36,13 @@ export async function POST(request: Request) {
     );
 
     return NextResponse.json({ success: 'Email changed' }, { status: 200 });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    return NextResponse.json(
+      { error: 'An unknown error occurred' },
+      { status: 500 }
+    );
   }
 }

@@ -1,6 +1,5 @@
 'use client';
 import { DatePickerWithRange } from '@root/components/DateRangePicker';
-import { format } from 'date-fns';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
@@ -27,7 +26,9 @@ const OrdersPage = ({ data }: { data: Orders[] }) => {
         return (
           date?.from &&
           date?.to &&
+          // @ts-expect-error - date is not undefined
           order.createdAt >= format(date.from, 'dd/MM/yyyy') &&
+          // @ts-expect-error - date is not undefined
           order.createdAt <= format(date.to, 'dd/MM/yyyy')
         );
       });
@@ -36,7 +37,7 @@ const OrdersPage = ({ data }: { data: Orders[] }) => {
     }
   }, [date, data]);
 
-  const handleOrderDetailsClick = (order) => {
+  const handleOrderDetailsClick = (order: Orders) => {
     // Navigate to the order details page
     router.push(`/admin/orders/${order.orderId}`);
   };

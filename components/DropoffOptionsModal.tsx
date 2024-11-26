@@ -80,11 +80,18 @@ export function DropOffOptionsModal({
     [session, update]
   );
 
-  const form = useForm({
+  const form = useForm<{
+    apartmentNumber?: string;
+    dropoffOption: 'leave_at_door' | 'hand_to_customer';
+    additionalNotes?: string;
+  }>({
     resolver: zodResolver(schema),
     defaultValues: {
       apartmentNumber: session?.user?.apt_suite,
-      dropoffOption: session?.user?.dropoffLocation || 'leave_at_door',
+      dropoffOption:
+        (session?.user?.dropoffLocation as
+          | 'leave_at_door'
+          | 'hand_to_customer') || 'leave_at_door',
       additionalNotes: session?.user?.deliveryNotes
     }
   });

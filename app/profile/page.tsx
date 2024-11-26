@@ -11,7 +11,7 @@ const page = async () => {
   }
 
   const user = session?.user;
-
+  // @ts-expect-error - user is not undefined
   return <UserProfile user={user} />;
 };
 

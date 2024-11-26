@@ -2,7 +2,7 @@ import { DefaultSession } from 'next-auth';
 import { type ClientUploadedFileData } from 'uploadthing/types';
 
 import { CartItem, CartAction, CartState, CartItemWith_Id } from './cart';
-import { Meal, MealFeature } from './meal';
+import { Meal, MealFeature, MealWithPlanner } from './meal';
 
 export interface UploadedFile<T = unknown> extends ClientUploadedFileData<T> {
   customProperty?: string;
@@ -19,13 +19,31 @@ declare global {
     image?: string | null;
   }
 
+  // export interface UserProps extends Partial<User> {
+  //   phone?: string | undefined;
+  //   address?: string | undefined;
+  //   city?: string | undefined;
+  //   postal_code?: string | undefined;
+  //   phone_number?: string | undefined;
+  //   province?: string | undefined;
+  // }
+
   export interface UserProps extends Partial<User> {
-    phone?: string | undefined;
-    address?: string | undefined;
-    city?: string | undefined;
-    postal_code?: string | undefined;
-    phone_number?: string | undefined;
-    province?: string | undefined;
+    name?: string;
+    email?: string;
+    address?: string;
+    city?: string;
+    phone?: string;
+    postal_code?: string;
+    province?: string;
+    deliveryPreference?: 'pickup' | 'delivery';
+    dropoffLocation?: string;
+    coordinates?: {
+      lat: number;
+      lng: number;
+    };
+    apt_suite?: string;
+    deliveryInstructions?: string;
   }
 }
 
@@ -53,5 +71,6 @@ export type {
   CartState,
   UserProps,
   MealFeature,
-  CartItemWith_Id
+  CartItemWith_Id,
+  MealWithPlanner
 };

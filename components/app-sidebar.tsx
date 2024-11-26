@@ -54,7 +54,8 @@ const data = {
       items: [
         {
           title: 'Add Meal',
-          url: '/admin/meals/add'
+          url: '/admin/meals/add',
+          isActive: true
         },
         {
           title: 'List Meals',
@@ -149,7 +150,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <DynamicSideBarAuth session={session} status={status} />
+            {session && (
+              //@ts-expect-error - This is a dynamic import
+              <DynamicSideBarAuth session={session} status={status} />
+            )}
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>

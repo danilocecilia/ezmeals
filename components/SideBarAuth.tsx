@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger
 } from '@components/ui/dropdown-menu';
 import { SidebarMenuButton } from '@components/ui/sidebar';
-import { BadgeCheck, Bell, ChevronsUpDown, LogOut } from 'lucide-react';
+import { BadgeCheck, Bell, ChevronsUpDown } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';
 
@@ -20,15 +20,15 @@ import SignOutButton from './SignOutButton';
 interface SideBarAuthProps {
   session: {
     user: {
-      image: string;
-      name: string;
-      email: string;
+      image: string | undefined;
+      name: string | undefined;
+      email: string | undefined;
     };
   };
   status: string;
 }
 
-const SideBarAuth: React.FC<SideBarAuthProps> = ({ session, status }) => {
+const SideBarAuth: React.FC<SideBarAuthProps> = ({ session }) => {
   return (
     <>
       <DropdownMenu>

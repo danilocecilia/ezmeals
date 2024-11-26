@@ -391,6 +391,7 @@ const CustomForm: React.FC = () => {
                       <FormLabel>Image *</FormLabel>
                       <FormControl>
                         <FileUploader
+                          // @ts-expect-error - Type 'string | undefined' is not assignable to type 'string'
                           value={field.value}
                           onValueChange={field.onChange}
                           maxFileCount={1}

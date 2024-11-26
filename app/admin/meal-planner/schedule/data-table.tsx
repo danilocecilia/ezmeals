@@ -121,6 +121,7 @@ export function DataTable<TData, TValue>({
   );
 }
 
+// @ts-expect-error table prop is not typed
 export const FooterCell = ({ table }) => {
   if (table.length === 0) return null;
 
@@ -129,6 +130,7 @@ export const FooterCell = ({ table }) => {
 
   const removeRows = () => {
     meta.removeSelectedRows(
+      // @ts-expect-error: table prop is not typed
       table.getSelectedRowModel().rows.map((row) => row.index)
     );
     table.resetRowSelection();

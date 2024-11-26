@@ -4,7 +4,6 @@ import { cn } from '@lib/utils';
 import { auth } from '@root/auth';
 import { CartProvider } from '@root/context/CartContext';
 import { ModalProvider } from '@root/context/ModalContext';
-import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
 import { Session } from 'next-auth';
 import React from 'react';

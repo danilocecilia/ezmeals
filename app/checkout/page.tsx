@@ -24,13 +24,7 @@ import { useCart } from '@root/context/CartContext';
 import { cn } from '@root/lib/utils';
 import { handlePaymentFailure } from '@utils/cartUtils';
 import { checkAvailability } from '@utils/inventoryUtils';
-import {
-  MapPinHouseIcon,
-  User,
-  Banknote,
-  ShoppingCart,
-  StoreIcon
-} from 'lucide-react';
+import { MapPinHouseIcon, User, ShoppingCart, StoreIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import React, { FC } from 'react';
