@@ -92,27 +92,27 @@ const CheckoutForm = ({
       }
 
       // Confirm payment
-      // const { error, paymentIntent } = await stripe.confirmPayment({
-      //   elements,
-      //   confirmParams: {
-      //     return_url: window.location.origin + '/payment-success'
-      //   },
-      //   redirect: 'if_required'
-      // });
+      const { error, paymentIntent } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: window.location.origin + '/payment-success'
+        },
+        redirect: 'if_required'
+      });
 
       //THIS IS FOR TESTING PURPOSES
       //@ts-expect-error - This is a mock paymentIntent object
-      const { error, paymentIntent } = await new Promise((resolve) => {
-        setTimeout(() => {
-          resolve({
-            error: false,
-            paymentIntent: {
-              id: 'pi_123456789',
-              status: 'succeeded'
-            }
-          });
-        }, 1000);
-      });
+      // const { error, paymentIntent } = await new Promise((resolve) => {
+      //   setTimeout(() => {
+      //     resolve({
+      //       error: false,
+      //       paymentIntent: {
+      //         id: 'pi_123456789',
+      //         status: 'succeeded'
+      //       }
+      //     });
+      //   }, 1000);
+      // });
 
       if (error) {
         setMessage(`Payment failed, please try again.`);
