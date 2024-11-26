@@ -178,7 +178,7 @@ const CheckoutForm = ({
     >
       <DialogContent
         onClick={(e) => e.stopPropagation()}
-        className="sm:max-w-[700px] sm:h-auto"
+        className="sm:max-w-[700px] sm:h-auto z-50"
       >
         {!isPaymentSuccessful && (
           <DialogClose className="flex w-10 h-10 justify-center items-center" />
