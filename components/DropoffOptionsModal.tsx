@@ -108,7 +108,7 @@ export function DropOffOptionsModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[700px] sm:h-auto">
+      <DialogContent className="overflow-y-auto overflow-x-none sm:max-w-[700px] sm:h-auto">
         <DialogClose className="flex w-10 h-10 justify-center items-center" />
         <div className="mt-12" style={{ height: '150px', width: '100%' }}>
           <GoogleMapsEmbed

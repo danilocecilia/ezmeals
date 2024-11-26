@@ -124,7 +124,7 @@ export function DeliveryAddressModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px] sm:h-[300px]">
+      <DialogContent className="overflow-y-auto overflow-x-none sm:max-w-[500px] sm:h-[300px]">
         <DialogClose className="flex w-10 h-10 justify-center items-center" />
         <DialogHeader>
           <DialogTitle>Change Address</DialogTitle>

@@ -80,7 +80,7 @@ const Navbar = () => {
               <span className="sr-only">Toggle navigation menu</span>
             </Button>
           </SheetTrigger>
-          <div className="flex gap-8">
+          <div className="flex gap-8 md:hidden">
             {!pathname.includes('admin') && (
               <div>
                 <span className="self-center">
@@ -108,14 +108,17 @@ const Navbar = () => {
                 <div className="text-violet-700">Edit Profile</div>
               </div>
             </Link>
-            <Link href="#" className="flex gap-2 py-4 hover:text-foreground">
+            <Link
+              href="#"
+              className="flex gap-2 items-center py-4 hover:text-foreground"
+            >
               <ReceiptTextIcon /> Orders
             </Link>
 
             <Link
               href="#"
               onClick={() => signout()}
-              className="flex gap-2 py-0 hover:text-foreground"
+              className="flex gap-2 items-center py-0 hover:text-foreground"
             >
               <LogOut /> Logout
             </Link>

@@ -22,7 +22,7 @@ export function MealItemModal({
 }: MealItemModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[1056px] z-50">
+      <DialogContent className="overflow-y-auto overvlow-x-none sm:max-w-[1056px] z-50">
         <DialogClose className="flex w-5 h-5 lg:w-10 lg:h-10 justify-center items-center" />
         <DialogHeader>
           <DialogTitle></DialogTitle>
