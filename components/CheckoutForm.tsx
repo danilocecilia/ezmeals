@@ -101,7 +101,6 @@ const CheckoutForm = ({
       });
 
       //THIS IS FOR TESTING PURPOSES
-      //@ts-expect-error - This is a mock paymentIntent object
       // const { error, paymentIntent } = await new Promise((resolve) => {
       //   setTimeout(() => {
       //     resolve({
