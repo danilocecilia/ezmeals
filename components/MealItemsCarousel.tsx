@@ -49,8 +49,8 @@ const MealItemsCarousel: React.FC<MealItemsCarouselProps> = ({
         ))}
       </CarouselContent>
 
-      <CarouselPrevious className="left-6 -top-4 hover:bg-violet-200 hover:font-bold" />
-      <CarouselNext className="-top-4 left-16 hover:bg-violet-200 hover:font-bold" />
+      <CarouselPrevious className="left-0 lg:left-6 -top-4 hover:bg-violet-200 hover:font-bold" />
+      <CarouselNext className="-top-4 left-10 lg:left-16 hover:bg-violet-200 hover:font-bold" />
     </Carousel>
   </div>
 );

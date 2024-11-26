@@ -47,7 +47,7 @@ const MealCard: React.FC<MealCardProps> = ({ meal, onCardClick }) => {
           />
         </div>
       </CardContent>
-      <CardHeader>
+      <CardHeader className="p-2 lg:p-6">
         <CardTitle
           className="h-14 cursor-pointer hover:text-primary"
           onClick={onCardClick}
@@ -59,7 +59,7 @@ const MealCard: React.FC<MealCardProps> = ({ meal, onCardClick }) => {
           {meal.description.substring(0, 100)}...
         </CardDescription>
       </CardHeader>
-      <CardFooter className="flex justify-between">
+      <CardFooter className="flex justify-between p-2 lg:p-6">
         <div>
           <p className="text-xl text-[#5e5e5e]">
             <span className="text-sm relative top-[-5.75px] text-[#5e5e5e]">
