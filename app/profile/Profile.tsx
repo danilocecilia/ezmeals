@@ -23,8 +23,8 @@ const UserProfile = ({ user }: { user: UserProps | undefined }) => {
 
   return (
     <div className="px-4">
-      <div className="grid grid-cols-2 divide-x min-h-[800px]">
-        <div className="flex flex-col justify-center items-end space-y-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 lg:divide-x h-[800px]">
+        <div className="flex flex-row lg:flex-col justify-center items-end space-y-8">
           {sections.map((section) => (
             <NavigationButton
               type={section.type}

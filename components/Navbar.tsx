@@ -1,12 +1,13 @@
 'use client';
 
-import { Icons } from '@components/icons';
 import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
 import Checkout from '@components/ui/checkout';
+import { useIsMobile } from '@hooks/use-mobile';
 import { useCurrentSession } from '@hooks/useCurrentSession';
 import { cn } from '@lib/utils';
 import { Menu, ReceiptTextIcon, ArrowLeft, LogOut } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
@@ -21,6 +22,7 @@ const DynamicHeaderAuth = dynamic(() => import('./HeaderAuth'), {
 });
 
 const Navbar = () => {
+  const isMobile = useIsMobile();
   const pathname = usePathname();
   const { session, status } = useCurrentSession();
 
@@ -50,8 +52,15 @@ const Navbar = () => {
             href="/"
             className="hidden md:flex items-center gap-4 text-lg font-semibold md:text-base"
           >
-            <Icons.logo />
-            <span className="hidden text-2xl font-bold lg:inline-block">
+            <Image
+              src="/logo_nav.png"
+              width={50}
+              height={50}
+              alt="Eazy Meal Logo"
+              style={{ objectFit: 'cover', maxWidth: 'unset' }}
+            />
+            <span className="sr-only">EazyMeal corp</span>
+            <span className="hidden text-2xl font-semibold lg:inline-block">
               EZMeal
             </span>
           </Link>
@@ -80,18 +89,22 @@ const Navbar = () => {
               <span className="sr-only">Toggle navigation menu</span>
             </Button>
           </SheetTrigger>
-          <div
-            className={cn('flex gap-8 items-center px-8', {
-              hidden: pathname !== '/checkout'
-            })}
-          >
-            <Link href="/" className="flex gap-2 text-lg md:text-base">
-              <ArrowLeft className="w-5 h-5" />
-              <span className="text-sm font-semibold lg:inline-block">
-                Back to Store
-              </span>
-            </Link>
-          </div>
+
+          {isMobile && (
+            <div
+              className={cn('flex gap-8 items-center px-8', {
+                hidden: pathname !== '/checkout'
+              })}
+            >
+              <Link href="/" className="flex gap-2 text-lg md:text-base">
+                <ArrowLeft className="w-5 h-5" />
+                <span className="text-sm font-semibold lg:inline-block">
+                  Back to Store
+                </span>
+              </Link>
+            </div>
+          )}
+
           <div
             className={cn('flex gap-8 md:hidden', {
               hidden: pathname === '/checkout'

@@ -48,35 +48,37 @@ export function MealFeaturesCarousel({
               <div className="p-1">
                 <Card className="bg-violet-50">
                   <CardContent className="relative flex aspect-square items-center justify-center p-2 md:p-6 cursor-pointer text-center z-1">
-                    <div className="absolute flex justify-center items-center w-full h-[67px] max-w-[86%] mt-[26px] bg-[white] top-3 opacity-85 md:text-sm lg:text-lg font-bold px-2 z-10">
-                      <h2>{meal.name}</h2>
-                    </div>
-                    {meal?.maxQuantity === 0 && (
+                    <figure className="text-center relative">
+                      {meal?.maxQuantity === 0 && (
+                        <Image
+                          src={'/images/out_of_stock.png'}
+                          alt="Out of Stock"
+                          width={150}
+                          height={150}
+                          priority={true}
+                          className="absolute opacity-50 bottom-12 z-20"
+                        />
+                      )}
                       <Image
-                        src={'/images/out_of_stock.png'}
-                        alt="Image"
-                        width={150}
-                        height={150}
+                        src={weeklyMeals[index].image[0].url}
+                        alt="Meal Image"
+                        width={500}
+                        height={500}
                         priority={true}
-                        className="absolute opacity-50 bottom-12 z-20"
-                      ></Image>
-                    )}
-                    <Image
-                      src={weeklyMeals[index].image[0].url}
-                      alt="Image"
-                      width={500}
-                      height={500}
-                      priority={true}
-                      className="rounded-md w-60 h-60 md:w-[400px] md:h-[400px] object-cover mask-gradient"
-                    ></Image>
+                        className="rounded-md w-60 h-60 md:w-[400px] md:h-[400px] object-cover mask-gradient"
+                      />
+                      <figcaption className="absolute flex justify-center items-center top-3 left-0 right-0 h-[67px] md:text-sm lg:text-lg text-center text-white bg-black bg-opacity-50 py-2">
+                        {meal.name}
+                      </figcaption>
+                    </figure>
                   </CardContent>
                 </Card>
               </div>
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="hover:bg-violet-200 hover:font-bold w-10 h-10" />
-        <CarouselNext className=" hover:bg-violet-200 hover:font-bold" />
+        <CarouselPrevious className="hover:bg-violet-200 hover:font-bold w-10 h-10 hidden lg:inline-flex" />
+        <CarouselNext className=" hover:bg-violet-200 hover:font-bold w-10 h-10 hidden lg:inline-flex" />
       </Carousel>
     </div>
   );

@@ -16,8 +16,8 @@ const NavigationButton = (props: NavigationButtonProps) => {
   return (
     <div
       onClick={() => props.onClick(props.type)}
-      className={cn('w-[200px] cursor-pointer', {
-        'font-bold border-r-4 border-primary rounded-l-lg bg-violet-50':
+      className={cn('w-[137px] lg:w-[200px] cursor-pointer', {
+        'font-bold lg:border-r-4 border-primary rounded-none lg:rounded-l-lg bg-violet-50':
           props.isSelected,
         'hover:bg-violet-200': props.isSelected,
         'hover:border-r-4 hover::border-primary hover:bg-violet-50':

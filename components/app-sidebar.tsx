@@ -21,7 +21,6 @@ import {
   CalendarRange
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
-import Image from 'next/image';
 import Link from 'next/link';
 import * as React from 'react';
 
@@ -29,7 +28,6 @@ const DynamicSideBarAuth = dynamic(() => import('./SideBarAuth'), {
   ssr: false
 });
 
-// This is sample data.
 const data = {
   user: {
     name: 'shadcn',
@@ -93,21 +91,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <Link
                 href="/"
                 className="sm:hidden flex md:flex items-center gap-2 text-lg font-semibold md:text-base"
-              >
-                <Image
-                  src="/logo_nav.png"
-                  width={50}
-                  height={50}
-                  alt="Eazy Meal Logo"
-                  style={{ objectFit: 'cover', maxWidth: 'unset' }}
-                />
-                <span className="sr-only">Acme Inc</span>
-
-                <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-semibold">Eazy Meal</span>
-                  {/* <span className="">v1.0.0</span> */}
-                </div>
-              </Link>
+              ></Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
