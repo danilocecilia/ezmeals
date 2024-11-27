@@ -44,6 +44,11 @@ export async function middleware(req: NextRequest) {
       return NextResponse.next();
     }
 
+    // Specifically allow Google OAuth callback
+    if (url.pathname.startsWith('/api/auth/callback')) {
+      return NextResponse.next();
+    }
+
     // Exclude certain public paths from authentication checks
     const publicPaths = new Set(['/', '/login', '/403']);
     if (publicPaths.has(url.pathname)) {
