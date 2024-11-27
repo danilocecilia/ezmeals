@@ -43,7 +43,11 @@ export async function middleware(req: NextRequest) {
 
   // Authenticate for protected routes
   // @ts-expect-error - req.cookies is not defined in the NextRequest type
-  const token = await getToken({ req, secret });
+  const token = await getToken({
+    req,
+    secret,
+    cookieName: '__Secure-next-auth.session-token' // should add for production ONLY!
+  });
   console.log('🚀 ~ middleware ~ token:', token);
   if (!token && PROTECTED_ROUTES.has(url.pathname)) {
     console.log(
