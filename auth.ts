@@ -16,8 +16,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       options: {
         httpOnly: true,
         sameSite: 'strict',
-        secure: true, // Ensure this is true in production
-        domain: 'ezmeals.vercel.app' // Your production domain
+        secure: process.env.NODE_ENV === 'production', // Ensure this is true in production,
+        path: '/'
       }
     }
   },
