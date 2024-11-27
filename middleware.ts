@@ -2,7 +2,22 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 
+const staticFileExtensions =
+  /\.(png|jpg|jpeg|gif|svg|webp|ico|css|js|woff|woff2|ttf|eot|otf|map)$/;
+
+// Define your public and protected routes
+const PUBLIC_ROUTES = new Set([
+  '/',
+  '/login',
+  '/register',
+  '/forgot-password',
+  '/403'
+]);
+
+const PROTECTED_ROUTES = new Set(['/profile', '/admin', '/checkout']);
+
 export async function middleware(req: NextRequest) {
+  const url = req.nextUrl.clone();
   const secret = process.env.AUTH_SECRET || '';
   console.log('🚀 ~ middleware ~ secret:', secret);
   if (!secret) {
@@ -25,7 +40,23 @@ export async function middleware(req: NextRequest) {
   console.log('Request protocol:', req.nextUrl.protocol);
   // }
 
-  const url = req.nextUrl.clone();
+  // Allow static files and internal API routes
+  if (
+    url.pathname.startsWith('/_next/') ||
+    url.pathname.startsWith('/api/') ||
+    url.pathname.match(staticFileExtensions)
+  ) {
+    return NextResponse.next();
+  }
+
+  // Allow OAuth callback (Google Auth)
+  if (url.pathname.startsWith('/api/auth/callback')) {
+    return NextResponse.next();
+  }
+
+  if (PUBLIC_ROUTES.has(url.pathname)) {
+    return NextResponse.next();
+  }
 
   // Skip API routes
   if (url.pathname.startsWith('/api/')) {
@@ -38,6 +69,15 @@ export async function middleware(req: NextRequest) {
 
   if (req.nextUrl.pathname.startsWith('/_next/')) {
     return NextResponse.next(); // Skip middleware for static files
+  }
+
+  if (!token && PROTECTED_ROUTES.has(url.pathname)) {
+    console.log(
+      `Redirecting unauthenticated user from ${url.pathname} to /login`
+    );
+    url.pathname = '/login';
+    url.searchParams.set('redirectTo', req.nextUrl.pathname); // Preserve original path for redirect
+    return NextResponse.redirect(url);
   }
 
   // Exclude certain paths from authentication checks
@@ -63,6 +103,14 @@ export async function middleware(req: NextRequest) {
       url.pathname = '/403';
       return NextResponse.rewrite(url);
     }
+  }
+
+  if (url.pathname.startsWith('/admin') && token?.role !== 'admin') {
+    console.log(
+      'Access denied: Non-admin user attempting to access admin page.'
+    );
+    url.pathname = '/403';
+    return NextResponse.rewrite(url);
   }
 
   // Allow access to the requested page
