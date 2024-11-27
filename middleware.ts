@@ -100,17 +100,10 @@ export async function middleware(req: NextRequest) {
   if (url.pathname.startsWith('/admin')) {
     // @ts-expect-error - user is not defined in the token type
     if (!token?.user || token.user.role !== 'admin') {
+      console.log('User is not an admin');
       url.pathname = '/403';
       return NextResponse.rewrite(url);
     }
-  }
-
-  if (url.pathname.startsWith('/admin') && token?.role !== 'admin') {
-    console.log(
-      'Access denied: Non-admin user attempting to access admin page.'
-    );
-    url.pathname = '/403';
-    return NextResponse.rewrite(url);
   }
 
   // Allow access to the requested page
