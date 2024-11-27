@@ -5,17 +5,24 @@ import { getToken } from 'next-auth/jwt';
 const staticFileExtensions =
   /\.(png|jpg|jpeg|gif|svg|webp|ico|css|js|woff|woff2|ttf|eot|otf|map)$/;
 
+// Define your public and protected routes
+const PUBLIC_ROUTES = new Set([
+  '/',
+  '/login',
+  '/register',
+  '/forgot-password',
+  '/403'
+]);
+const PROTECTED_ROUTES = new Set(['/profile', '/admin', '/checkout']);
+
 export async function middleware(req: NextRequest) {
+  const url = req.nextUrl.clone();
   const secret = process.env.AUTH_SECRET || '';
 
-  if (!secret) {
-    console.error('AUTH_SECRET is missing. Allowing all traffic.');
-    return NextResponse.next();
-  }
+  // Log the request for debugging
+  console.log('Processing URL:', url.pathname);
 
-  const url = req.nextUrl.clone();
-
-  // Allow static files, API routes, and Next.js internal files
+  // Allow static files and internal API routes
   if (
     url.pathname.startsWith('/_next/') ||
     url.pathname.startsWith('/api/') ||
@@ -24,32 +31,37 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // Allow Google OAuth callback
+  // Allow OAuth callback (Google Auth)
   if (url.pathname.startsWith('/api/auth/callback')) {
     return NextResponse.next();
   }
 
-  // Allow public paths
-  const publicPaths = new Set(['/', '/login', '/403']);
-  if (publicPaths.has(url.pathname)) {
+  // Handle public routes
+  if (PUBLIC_ROUTES.has(url.pathname)) {
     return NextResponse.next();
   }
 
-  // Authenticate user
+  // Authenticate for protected routes
   // @ts-expect-error - req.cookies is not defined in the NextRequest type
   const token = await getToken({ req, secret });
-  if (!token) {
+  if (!token && PROTECTED_ROUTES.has(url.pathname)) {
+    console.log(
+      `Redirecting unauthenticated user from ${url.pathname} to /login`
+    );
     url.pathname = '/login';
-    url.searchParams.set('redirectTo', req.nextUrl.pathname);
+    url.searchParams.set('redirectTo', req.nextUrl.pathname); // Preserve original path for redirect
     return NextResponse.redirect(url);
   }
 
-  // Additional role-based checks (if required)
-  if (url.pathname.startsWith('/admin') && token.role !== 'admin') {
+  // Role-based access for admin
+  if (url.pathname.startsWith('/admin') && token?.role !== 'admin') {
+    console.log(
+      'Access denied: Non-admin user attempting to access admin page.'
+    );
     url.pathname = '/403';
     return NextResponse.rewrite(url);
   }
 
-  // Allow authenticated access
+  // Allow the request to proceed
   return NextResponse.next();
 }
