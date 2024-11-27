@@ -68,7 +68,7 @@ const HeaderAuth: React.FC = ({ session, status }) => {
         </DropdownMenu>
       ) : (
         <>
-          <Button asChild>
+          <Button variant="outline" asChild>
             <Link href={`/login`}>Sign in</Link>
           </Button>
           <Button asChild>
