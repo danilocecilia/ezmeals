@@ -7,6 +7,13 @@ import GitHub from 'next-auth/providers/github';
 import Google from 'next-auth/providers/google';
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
+  pages: {
+    signIn: '/login',
+    signOut: '/login',
+    error: '/login',
+    verifyRequest: '/login',
+    newUser: '/register'
+  },
   session: {
     strategy: 'jwt'
   },
