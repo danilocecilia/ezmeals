@@ -17,20 +17,23 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   session: {
     strategy: 'jwt'
   },
-  cookies: {
-    sessionToken: {
-      name: `__Secure-authjs.session-token`,
-      options: {
-        httpOnly: true,
-        sameSite: 'strict',
-        secure: process.env.NODE_ENV === 'production', // Ensure this is true in production,
-        domain: 'ezmeals.vercel.app' // Your production domain
-      }
-    }
-  },
+  // cookies: {
+  //   sessionToken: {
+  //     name: `__Secure-authjs.session-token`,
+  //     options: {
+  //       httpOnly: true,
+  //       sameSite: 'strict',
+  //       secure: process.env.NODE_ENV === 'production', // Ensure this is true in production,
+  //       domain: 'ezmeals.vercel.app' // Your production domain
+  //     }
+  //   }
+  // },
   providers: [
     GitHub,
-    Google,
+    Google({
+      clientId: process.env.AUTH_GOOGLE_ID,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET
+    }),
     Credentials({
       name: 'Credentials',
       credentials: {
@@ -99,24 +102,24 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           image: session.user?.image || ''
         }
       };
-    },
-    // Define custom redirection logic for different scenarios
-    async redirect({ url, baseUrl }) {
-      console.log('Redirecting to:', url);
-      console.log('Base URL:', baseUrl);
-      // Check if the URL is a relative path
-      if (url.startsWith('/')) {
-        // Redirect to the requested relative URL within the same site
-        return `${baseUrl}${url}`;
-      }
-
-      // Allow redirection to URLs from the same origin (domain)
-      if (new URL(url).origin === baseUrl) {
-        return url;
-      }
-
-      // If no valid redirect option is found, default to the base URL
-      return baseUrl;
     }
+    // Define custom redirection logic for different scenarios
+    // async redirect({ url, baseUrl }) {
+    //   console.log('Redirecting to:', url);
+    //   console.log('Base URL:', baseUrl);
+    //   // Check if the URL is a relative path
+    //   if (url.startsWith('/')) {
+    //     // Redirect to the requested relative URL within the same site
+    //     return `${baseUrl}${url}`;
+    //   }
+
+    //   // Allow redirection to URLs from the same origin (domain)
+    //   if (new URL(url).origin === baseUrl) {
+    //     return url;
+    //   }
+
+    //   // If no valid redirect option is found, default to the base URL
+    //   return baseUrl;
+    // }
   }
 });
