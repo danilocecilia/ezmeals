@@ -19,7 +19,7 @@ const PROTECTED_ROUTES = new Set(['/profile', '/admin', '/checkout']);
 export async function middleware(req: NextRequest) {
   const url = req.nextUrl.clone();
   const secret = process.env.AUTH_SECRET || '';
-  console.log('🚀 ~ middleware ~ secret:', secret);
+  // console.log('🚀 ~ middleware ~ secret:', secret);
   if (!secret) {
     console.error('AUTH_SECRET is not defined');
     return NextResponse.next(); // Allow traffic but log the issue
@@ -81,13 +81,19 @@ export async function middleware(req: NextRequest) {
   }
 
   // Exclude certain paths from authentication checks
-  const excludedPaths = new Set(['/', '/login', '/403']);
+  const excludedPaths = new Set([
+    '/',
+    '/login',
+    '/403',
+    '/register',
+    '/forgot-password'
+  ]);
   if (excludedPaths.has(url.pathname)) {
     return NextResponse.next();
   }
 
-  console.log('🚀 ~ middleware ~ token:', token);
-  console.log('🚀 ~ middleware ~ url:', url);
+  // console.log('🚀 ~ middleware ~ token:', token);
+  // console.log('🚀 ~ middleware ~ url:', url);
 
   // Check if the user is authenticated
   if (!token) {
@@ -100,7 +106,7 @@ export async function middleware(req: NextRequest) {
   if (url.pathname.startsWith('/admin')) {
     // @ts-expect-error - user is not defined in the token type
     if (!token?.user || token.user.role !== 'admin') {
-      console.log('User is not an admin');
+      // console.log('User is not an admin');
       url.pathname = '/403';
       return NextResponse.rewrite(url);
     }
