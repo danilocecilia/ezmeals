@@ -92,6 +92,24 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           image: session.user?.image || ''
         }
       };
+    },
+    // Define custom redirection logic for different scenarios
+    async redirect({ url, baseUrl }) {
+      console.log('Redirecting to:', url);
+      console.log('Base URL:', baseUrl);
+      // Check if the URL is a relative path
+      if (url.startsWith('/')) {
+        // Redirect to the requested relative URL within the same site
+        return `${baseUrl}${url}`;
+      }
+
+      // Allow redirection to URLs from the same origin (domain)
+      if (new URL(url).origin === baseUrl) {
+        return url;
+      }
+
+      // If no valid redirect option is found, default to the base URL
+      return baseUrl;
     }
   }
 });
