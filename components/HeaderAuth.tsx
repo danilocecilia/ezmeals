@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
-import { BadgeCheck, LockKeyholeIcon } from 'lucide-react';
+import { BadgeCheck, LockKeyholeIcon, Package2 } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 
@@ -17,7 +17,6 @@ import {
 
 // @ts-expect-error - Required for page to render
 const HeaderAuth: React.FC = ({ session, status }) => {
-  // console.log('🚀 ~ session:', session);
   return (
     <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
       <form className="ml-auto flex-1 sm:flex-initial"></form>
@@ -51,6 +50,12 @@ const HeaderAuth: React.FC = ({ session, status }) => {
                 <DropdownMenuItem className="gap-2 cursor-pointer">
                   <BadgeCheck />
                   Profile
+                </DropdownMenuItem>
+              </Link>
+              <Link href="/orders">
+                <DropdownMenuItem className="gap-2 cursor-pointer">
+                  <Package2 />
+                  Recent Orders
                 </DropdownMenuItem>
               </Link>
               {session.user?.role === 'admin' && (

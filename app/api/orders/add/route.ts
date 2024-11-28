@@ -54,6 +54,16 @@ export async function POST(req: Request) {
       totalAmount,
       items,
       status: 'succeeded',
+      fulfillment: {
+        status: 'pending',
+        address: session?.user?.address ?? '',
+        city: session?.user?.city ?? '',
+        postalCode: session?.user?.postal_code ?? '',
+        apt_suite: session?.user?.apt_suite ?? '',
+        deliveryDate: null,
+        province: session?.user?.province ?? '',
+        type: session?.user?.deliveryPreference ?? 'pickup'
+      },
       createdAt: new Date()
     };
 

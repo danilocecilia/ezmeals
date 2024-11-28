@@ -138,7 +138,7 @@ const Navbar = () => {
               </div>
             </Link>
             <Link
-              href="#"
+              href="/orders"
               className="flex gap-2 items-center py-4 hover:text-foreground"
             >
               <ReceiptTextIcon /> Orders

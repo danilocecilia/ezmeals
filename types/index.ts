@@ -3,6 +3,7 @@ import { type ClientUploadedFileData } from 'uploadthing/types';
 
 import { CartItem, CartAction, CartState, CartItemWith_Id } from './cart';
 import { Meal, MealFeature, MealWithPlanner } from './meal';
+import { OrderProps } from './order';
 
 export interface UploadedFile<T = unknown> extends ClientUploadedFileData<T> {
   customProperty?: string;
@@ -50,6 +51,8 @@ declare global {
 declare module 'next-auth' {
   interface Session {
     user: {
+      id: string;
+      name?: string;
       address?: string;
       city?: string;
       phone?: string;
@@ -72,5 +75,6 @@ export type {
   UserProps,
   MealFeature,
   CartItemWith_Id,
-  MealWithPlanner
+  MealWithPlanner,
+  OrderProps
 };
