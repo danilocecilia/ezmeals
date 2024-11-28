@@ -10,7 +10,7 @@ const OrdersPage = async () => {
   }
 
   return (
-    <div className="flex justify-center p-10">
+    <div className="flex justify-center p-2 lg:p-10">
       <Orders userId={session.user.id} />
     </div>
   );

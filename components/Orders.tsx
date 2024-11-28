@@ -46,11 +46,11 @@ interface Order {
   };
 }
 
-const statusColors = {
-  processing: 'bg-yellow-500',
-  shipped: 'bg-blue-500',
-  delivered: 'bg-green-500'
-};
+// const statusColors = {
+//   processing: 'bg-yellow-500',
+//   shipped: 'bg-blue-500',
+//   delivered: 'bg-green-500'
+// };
 
 const handleNoOrders = () => {
   return (
@@ -103,13 +103,14 @@ export default function OrderCard({ userId }: { userId: string | undefined }) {
       <CardHeader>
         <CardTitle>Recent Orders</CardTitle>
         <CardDescription>
-          You have {ordersList?.length} recent orders.
+          You have <span className="font-semibold">{ordersList?.length}</span>{' '}
+          recent orders.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <ScrollArea className="h-[600px] pr-4">
           {ordersList?.map((order: Order) => (
-            <div key={order.id} className="mb-6 last:mb-0">
+            <div key={order.id} className="mb-10 last:mb-0">
               <div className="flex items-center justify-between space-x-4 mb-4">
                 <div className="flex items-center space-x-4">
                   <PackageIcon className="h-6 w-6 text-gray-400" />
@@ -122,9 +123,9 @@ export default function OrderCard({ userId }: { userId: string | undefined }) {
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Badge className={statusColors[order.status]}>
+                  {/* <Badge className={statusColors[order.status]}>
                     {order.status}
-                  </Badge>
+                  </Badge> */}
                   <div className="flex items-center text-sm font-medium">
                     <CreditCardIcon className="mr-1 h-4 w-4 text-gray-400" />$
                     {order.total.toFixed(2)}

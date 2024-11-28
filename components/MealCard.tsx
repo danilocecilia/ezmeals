@@ -31,10 +31,10 @@ const MealCard: React.FC<MealCardProps> = ({ meal, onCardClick }) => {
             <Image
               src={'/images/out_of_stock.png'}
               alt="Image"
-              width={350}
-              height={350}
+              width={300}
+              height={300}
               priority={true}
-              className="absolute opacity-50 bottom-12 z-20"
+              className="absolute w-40 h-40 opacity-50 bottom-8 left-10 z-20"
             ></Image>
           )}
           <Image

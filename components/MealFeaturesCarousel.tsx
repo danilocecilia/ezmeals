@@ -56,7 +56,7 @@ export function MealFeaturesCarousel({
                           width={150}
                           height={150}
                           priority={true}
-                          className="absolute opacity-50 bottom-12 z-20"
+                          className="absolute w-20 h-20 opacity-50 bottom-2 left-2 z-20"
                         />
                       )}
                       <Image
