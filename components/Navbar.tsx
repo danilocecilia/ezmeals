@@ -2,6 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
 import Checkout from '@components/ui/checkout';
+import { Separator } from '@components/ui/separator';
 import { useIsMobile } from '@hooks/use-mobile';
 import { useCurrentSession } from '@hooks/useCurrentSession';
 import { cn } from '@lib/utils';
@@ -9,7 +10,7 @@ import { Menu, ReceiptTextIcon, ArrowLeft, LogOut } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import React from 'react';
 
 import { Button } from './ui/button';
@@ -22,9 +23,28 @@ const DynamicHeaderAuth = dynamic(() => import('./HeaderAuth'), {
 });
 
 const Navbar = () => {
+  const router = useRouter();
   const isMobile = useIsMobile();
   const pathname = usePathname();
   const { session, status } = useCurrentSession();
+  console.log('🚀 ~ Navbar ~ session:', session);
+  const [isSheetOpen, setIsSheetOpen] = React.useState(false);
+
+  const handleSignout = async () => {
+    await signout();
+    setIsSheetOpen(false);
+    router.push('/');
+  };
+
+  const handleSignIn = () => {
+    setIsSheetOpen(false);
+    router.push('/login');
+  };
+
+  const handleSignUp = () => {
+    setIsSheetOpen(false);
+    router.push('/register');
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full bg-[#f3f4f6] border-b-[1px]">
@@ -81,7 +101,10 @@ const Navbar = () => {
           </>
         </div>
       </nav>
-      <Sheet>
+      <Sheet
+        open={isSheetOpen}
+        onOpenChange={() => setIsSheetOpen((prev) => !prev)}
+      >
         <div className="flex justify-between items-center">
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="shrink-0 md:hidden">
@@ -121,36 +144,70 @@ const Navbar = () => {
         </div>
         <SheetContent side="left" className="bg-[#f3f4f6]">
           <nav className="grid gap-6 text-lg font-medium">
-            <Link href="#" className="flex items-center gap-4">
-              <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                <Avatar>
-                  <AvatarImage
-                    src={session?.user?.image || './avatar.png'}
-                    alt={`${session?.user?.name}`}
-                  />
-                  <AvatarFallback className="rounded-lg">{`${session?.user?.name?.substring(0, 1)}`}</AvatarFallback>
-                </Avatar>
-              </Button>
-              <span className="sr-only">Acme Inc</span>
-              <div className="flex h-[40px] flex-col text-xs justify-evenly">
-                <div>{session?.user?.name}</div>
-                <div className="text-violet-700">Edit Profile</div>
-              </div>
-            </Link>
             <Link
-              href="/orders"
-              className="flex gap-2 items-center py-4 hover:text-foreground"
+              href="/"
+              className="flex items-center gap-4 text-lg font-semibold md:text-base"
             >
-              <ReceiptTextIcon /> Orders
+              <Image
+                src="/logo_nav.png"
+                width={50}
+                height={50}
+                alt="Eazy Meal Logo"
+                style={{ objectFit: 'cover', maxWidth: 'unset' }}
+              />
+              <span className="sr-only">EazyMeal corp</span>
+              <span className="text-2xl font-semibold lg:inline-block">
+                EZMeal
+              </span>
             </Link>
+            <Separator />
+            {session ? (
+              <>
+                <Link href="#" className="flex items-center gap-4">
+                  <Button
+                    variant="ghost"
+                    className="relative h-10 w-10 rounded-full"
+                  >
+                    <Avatar>
+                      <AvatarImage
+                        src={session?.user?.image || './avatar.jpg'}
+                        alt={`${session?.user?.name}`}
+                      />
+                      <AvatarFallback className="rounded-lg">{`${session?.user?.name?.substring(0, 1)}`}</AvatarFallback>
+                    </Avatar>
+                  </Button>
+                  <span className="sr-only">Acme Inc</span>
 
-            <Link
-              href="#"
-              onClick={() => signout()}
-              className="flex gap-2 items-center py-0 hover:text-foreground"
-            >
-              <LogOut /> Logout
-            </Link>
+                  <div className="flex h-[40px] flex-col text-xs justify-evenly">
+                    <div>{session?.user?.name}</div>
+                    <div className="text-violet-700">Edit Profile</div>
+                  </div>
+                </Link>
+
+                <Link
+                  href="/orders"
+                  onClick={() => setIsSheetOpen(false)}
+                  className="flex gap-2 items-center py-4 hover:text-foreground"
+                >
+                  <ReceiptTextIcon /> Orders
+                </Link>
+                <Button
+                  aria-label="Logout"
+                  onClick={handleSignout}
+                  variant="ghost"
+                  className="flex gap-2 justify-start px-0 items-center py-0 hover:text-foreground text-md"
+                >
+                  <LogOut /> Logout
+                </Button>
+              </>
+            ) : (
+              <div className="flex flex-col gap-4 mt-10">
+                <Button variant="outline" onClick={handleSignIn}>
+                  Sign in
+                </Button>
+                <Button onClick={handleSignUp}>Sign up</Button>
+              </div>
+            )}
           </nav>
         </SheetContent>
       </Sheet>

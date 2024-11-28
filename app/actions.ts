@@ -10,7 +10,9 @@ export const signinWithGitHub = async () => {
 };
 
 export const signout = async () => {
-  await signOut();
+  await signOut({
+    redirectTo: '/'
+  });
 };
 
 export const signInWithCreds = async (
