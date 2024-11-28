@@ -11,8 +11,15 @@ const page = async () => {
   }
 
   const user = session?.user;
-  // @ts-expect-error - user is not undefined
-  return <UserProfile user={user} />;
+
+  return (
+    <div className="flex justify-center p-2 lg:p-10">
+      {
+        // @ts-expect-error - user is not defined
+        <UserProfile user={user} />
+      }
+    </div>
+  );
 };
 
 export default page;
