@@ -133,6 +133,7 @@ const RegisterForm = () => {
                 onClick={(e) => {
                   e.preventDefault();
                   signInWithGoogle();
+                  window.location.reload();
                 }}
                 variant="outline"
                 className="w-full"
