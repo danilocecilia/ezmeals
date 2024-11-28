@@ -1,7 +1,7 @@
 import useSWR from 'swr';
 import { OrderProps } from 'types';
 
-const useCustomerOrders = ({ userId }: { userId: string }) => {
+const useCustomerOrders = ({ userId }: { userId: string | undefined }) => {
   const fetcher = (url: string): Promise<OrderProps[]> =>
     fetch(url).then((res) => res.json());
 

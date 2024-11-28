@@ -63,7 +63,7 @@ const handleNoOrders = () => {
   );
 };
 
-export default function OrderCard({ userId }: { userId: string }) {
+export default function OrderCard({ userId }: { userId: string | undefined }) {
   const { data, isLoading, isError } = useCustomerOrders({ userId });
   // @ts-expect-error - data is not defined
   const { ordersList } = data || {};
