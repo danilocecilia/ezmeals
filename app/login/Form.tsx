@@ -127,9 +127,9 @@ const LoginForm = () => {
                   Login
                 </Button>
                 <Button
-                  onClick={(e) => {
+                  onClick={async (e) => {
                     e.preventDefault();
-                    signInWithGoogle();
+                    await signInWithGoogle();
                     window.location.reload();
                   }}
                   variant="outline"
