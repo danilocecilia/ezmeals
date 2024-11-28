@@ -60,7 +60,7 @@ const LoginForm = () => {
     }
 
     if (!response?.error) {
-      router.push('/dashboard');
+      router.push('/');
     }
 
     toast.success('You are now signed in!');
