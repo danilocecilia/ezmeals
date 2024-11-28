@@ -53,10 +53,10 @@ const MealItem: React.FC<MealItemProps> = ({ meal }) => {
           <Image
             src={'/images/out_of_stock.png'}
             alt="Image"
-            width={350}
-            height={350}
+            width={200}
+            height={200}
             priority={true}
-            className="absolute opacity-60 bottom-12"
+            className="absolute opacity-60 bottom-6"
           ></Image>
         )}
         <Image
