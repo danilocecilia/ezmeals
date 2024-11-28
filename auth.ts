@@ -17,17 +17,17 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   session: {
     strategy: 'jwt'
   },
-  cookies: {
-    sessionToken: {
-      name: `__Secure-authjs.session-token`,
-      options: {
-        httpOnly: true,
-        sameSite: 'strict',
-        secure: process.env.NODE_ENV === 'production', // Ensure this is true in production,
-        domain: 'ezmeals.vercel.app' // Your production domain
-      }
-    }
-  },
+  // cookies: {
+  //   sessionToken: {
+  //     name: `__Secure-authjs.session-token`,
+  //     options: {
+  //       httpOnly: true,
+  //       sameSite: 'strict',
+  //       secure: process.env.NODE_ENV === 'production', // Ensure this is true in production,
+  //       domain: 'ezmeals.vercel.app' // Your production domain
+  //     }
+  //   }
+  // },
   providers: [
     GitHub,
     Google({
