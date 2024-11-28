@@ -51,8 +51,6 @@ declare global {
 declare module 'next-auth' {
   interface Session {
     user: {
-      id: string;
-      name?: string;
       address?: string;
       city?: string;
       phone?: string;
