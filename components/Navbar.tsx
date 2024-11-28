@@ -163,7 +163,11 @@ const Navbar = () => {
             <Separator />
             {session ? (
               <>
-                <Link href="#" className="flex items-center gap-4">
+                <Link
+                  href="/profile"
+                  className="flex items-center gap-4"
+                  onClick={() => setIsSheetOpen(false)}
+                >
                   <Button
                     variant="ghost"
                     className="relative h-10 w-10 rounded-full"

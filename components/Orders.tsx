@@ -108,7 +108,7 @@ export default function OrderCard({ userId }: { userId: string | undefined }) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <ScrollArea className="h-[600px] pr-4">
+        <ScrollArea className="h-[600px]">
           {ordersList?.map((order: Order) => (
             <div key={order.id} className="mb-10 last:mb-0">
               <div className="flex items-center justify-between space-x-4 mb-4">
