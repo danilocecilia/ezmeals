@@ -2,7 +2,7 @@
 import { signIn, signOut } from '@root/auth';
 
 export const signInWithGoogle = async () => {
-  await signIn('google');
+  await signIn('google', { callbackUrl: '/' });
 };
 
 export const signinWithGitHub = async () => {

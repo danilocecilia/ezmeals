@@ -130,7 +130,6 @@ const LoginForm = () => {
                   onClick={async (e) => {
                     e.preventDefault();
                     await signInWithGoogle();
-                    window.location.reload();
                   }}
                   variant="outline"
                   className="w-full"
