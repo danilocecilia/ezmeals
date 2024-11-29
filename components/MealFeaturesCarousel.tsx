@@ -26,13 +26,13 @@ export function MealFeaturesCarousel({
         <CarouselContent>
           {weeklyMeals.map((meal, index: number) => (
             <CarouselItem key={index}>
-              <div className="relative h-[600px] w-full overflow-hidden">
+              <div className="relative h-screen-minus-49 lg:h-[600px] w-full overflow-hidden">
                 <Image
                   width={500}
                   height={500}
                   src={weeklyMeals[index].image[0].url}
                   alt={weeklyMeals[index].image[0].name}
-                  className="rounded-md h-full w-full object-cover mask-gradient"
+                  className="h-full w-full object-cover mask-gradient"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-8 text-white">
