@@ -24,11 +24,11 @@ const MealItemsCarousel: React.FC<MealItemsCarouselProps> = ({
   title
 }) => (
   <div className="flex flex-col justify-center p-0 md:p-10 my-10">
-    <h1 className="flex justify-start md:justify-center text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+    <h1 className="flex justify-center text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
       {title}
     </h1>
-    <Separator className="md:w-[280px] my-4 md:self-center" />
-    <div className="mt-4 justify-start lg:justify-center">
+    <Separator className="hidden lg:block md:w-[280px] my-4 md:self-center" />
+    <div className="mt-12 lg:mt-4 justify-start lg:justify-center">
       <Carousel>
         <CarouselContent className="mt-4 container">
           {weeklyMeals.map((meal, index: number) => (

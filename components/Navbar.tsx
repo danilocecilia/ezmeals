@@ -165,7 +165,7 @@ const Navbar = () => {
                     aria-label="Logout"
                     onClick={handleSignout}
                     variant="ghost"
-                    className="flex items-center gap-2 text-md hover:text-foreground"
+                    className="flex items-center p-0 justify-start gap-2 text-md hover:text-foreground"
                   >
                     <LogOut /> Logout
                   </Button>
@@ -187,6 +187,7 @@ const Navbar = () => {
           </SheetContent>
         </Sheet>
       </header>
+      {/* <div ref={ref} className="h-[1px]"></div> */}
     </>
   );
 };

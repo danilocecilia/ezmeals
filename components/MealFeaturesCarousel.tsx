@@ -30,12 +30,12 @@ export function MealFeaturesCarousel({
   const { ref } = useInView({
     triggerOnce: false, // Keep triggering as long as it intersects
     onChange: (inView) => setIsIntersecting && setIsIntersecting(inView),
-    rootMargin: `0px 0px ${isMobile ? '-35%' : '17%'} 0px`
+    rootMargin: `0px 0px ${isMobile ? '-100%' : '17%'} 0px`
   });
 
   return (
     <>
-      <section className="relative target-element">
+      <section className="relative target-element" ref={ref}>
         <Carousel className="w-full">
           <CarouselContent>
             {weeklyMeals.map((meal, index: number) => (
@@ -75,7 +75,6 @@ export function MealFeaturesCarousel({
           <CarouselNext className="right-4 bg-white" />
         </Carousel>
       </section>
-      <div ref={ref} className="h-[1px]"></div>
     </>
   );
 }
