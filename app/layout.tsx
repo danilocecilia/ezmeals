@@ -47,7 +47,7 @@ export default async function RootLayout({
       <html lang="en" className={`${poppinsFont.variable} font-sans`}>
         <body
           className={cn(
-            'min-h-screen bg-background font-poppins antialiased',
+            'flex min-h-screen flex-col bg-background font-poppins',
             poppinsFont.variable
           )}
         >
@@ -55,8 +55,10 @@ export default async function RootLayout({
             <ModalProvider>
               <CartProvider>
                 <Navbar />
-                {children}
-                <Toaster />
+                <main className="flex-1">
+                  {children}
+                  <Toaster />
+                </main>
               </CartProvider>
             </ModalProvider>
           </div>

@@ -14,7 +14,7 @@ body {
 
 @layer base {
   :root {
-    --background: hsla(262, 83%, 58%, 0.02);
+    --background: 0 0% 100%;
     --foreground: 224 71.4% 4.1%;
     --card: 0 0% 100%;
     --card-foreground: 224 71.4% 4.1%;
