@@ -4,6 +4,7 @@ import { cn } from '@lib/utils';
 import { auth } from '@root/auth';
 import { CartProvider } from '@root/context/CartContext';
 import { ModalProvider } from '@root/context/ModalContext';
+import { IntersectionProvider } from '@root/context/TargetRefContext';
 import { Poppins } from 'next/font/google';
 import { Session } from 'next-auth';
 import React from 'react';
@@ -43,30 +44,20 @@ export default async function RootLayout({
   const session = (await auth()) as ExtendedSessionType | null;
 
   return (
-    <SessionWrapper session={session}>
-      <html lang="en" className={`${poppinsFont.variable} font-sans`}>
-        <body
-          className={cn(
-            'flex min-h-screen flex-col bg-background font-poppins',
-            poppinsFont.variable
-          )}
-        >
-          <div className="relative flex min-h-screen flex-col bg-background">
+    <html lang="en">
+      <body className={cn(poppinsFont.variable, 'font-sans antialiased')}>
+        <SessionWrapper session={session}>
+          <CartProvider>
             <ModalProvider>
-              <CartProvider>
+              <IntersectionProvider>
                 <Navbar />
-                <main className="flex-1">
-                  {children}
-                  <Toaster />
-                </main>
-              </CartProvider>
+                {children}
+                <Toaster />
+              </IntersectionProvider>
             </ModalProvider>
-          </div>
-
-          {/* <div className="mx-auto relative flex min-h-screen flex-col"> */}
-          {/* {session?.user?.privilege !== 'admin' && <Navbar />} */}
-        </body>
-      </html>
-    </SessionWrapper>
+          </CartProvider>
+        </SessionWrapper>
+      </body>
+    </html>
   );
 }

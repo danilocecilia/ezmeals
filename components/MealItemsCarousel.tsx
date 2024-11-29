@@ -24,34 +24,33 @@ const MealItemsCarousel: React.FC<MealItemsCarouselProps> = ({
   title
 }) => (
   <div className="flex flex-col justify-center p-0 md:p-10 my-10">
-    <h1 className="flex justify-start md:justify-center text-2xl md:text-4xl  font-bold">
+    <h1 className="flex justify-start md:justify-center text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
       {title}
     </h1>
     <Separator className="md:w-[280px] my-4 md:self-center" />
-
-    <Carousel>
-      <CarouselContent>
-        {weeklyMeals.map((meal, index: number) => (
-          <CarouselItem
-            key={index}
-            className="flex-none"
-            onClick={() => openModal(meal)}
-          >
-            <div className="grid grid-flow-col auto-cols-max mt-4">
+    <div className="mt-4 justify-start lg:justify-center">
+      <Carousel>
+        <CarouselContent className="mt-4 container">
+          {weeklyMeals.map((meal, index: number) => (
+            <CarouselItem
+              key={index}
+              className="flex-none"
+              onClick={() => openModal(meal)}
+            >
               <MealCard
                 key={meal._id}
                 // @ts-expect-error - Required for page to render
                 meal={meal}
                 onCardClick={() => openModal(meal)}
               />
-            </div>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
 
-      <CarouselPrevious className="left-0 lg:left-6 -top-4 hover:bg-violet-200 hover:font-bold" />
-      <CarouselNext className="-top-4 left-10 lg:left-16 hover:bg-violet-200 hover:font-bold" />
-    </Carousel>
+        <CarouselPrevious className="left-0 lg:left-6 -top-4 hover:bg-violet-200 hover:font-bold" />
+        <CarouselNext className="-top-4 left-10 lg:left-16 hover:bg-violet-200 hover:font-bold" />
+      </Carousel>
+    </div>
   </div>
 );
 

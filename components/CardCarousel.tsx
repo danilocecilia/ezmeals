@@ -66,7 +66,7 @@ const CardCarousel: React.FC = () => {
           {Array.isArray(mainMeals) && (
             <MealItemsCarousel
               openModal={openModal}
-              title="Main Meals"
+              title="Weekly Special Meals"
               weeklyMeals={mainMeals}
             />
           )}
