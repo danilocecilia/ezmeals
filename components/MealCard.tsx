@@ -12,7 +12,7 @@ interface MealCardProps {
 
 const MealCard: React.FC<MealCardProps> = ({ meal, onCardClick }) => {
   return (
-    <Card key={meal.name}>
+    <Card key={meal.name} className="max-w-[304px]">
       <div className="relative overflow-hidden rounded-t-lg">
         {meal?.maxQuantity === 0 && (
           <Image

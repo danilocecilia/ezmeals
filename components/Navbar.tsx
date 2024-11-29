@@ -69,7 +69,11 @@ const Navbar = () => {
             </div>
           )}
           <div className="flex items-center gap-8">
-            <Link href="/" className="hidden md:flex items-center gap-4">
+            <Link
+              href="/"
+              onClick={() => setIsSheetOpen(false)}
+              className="hidden md:flex items-center gap-4"
+            >
               <Image
                 src="/logo_nav.png"
                 width={50}
@@ -111,8 +115,12 @@ const Navbar = () => {
                 <span className="sr-only">Toggle navigation menu</span>
               </Button>
             </SheetTrigger>
-            {isMobile && pathname !== '/checkout' && (
-              <div className="flex items-center gap-8 px-8">
+            {isMobile && (
+              <div
+                className={cn('flex gap-8 items-center px-8', {
+                  hidden: pathname !== '/checkout'
+                })}
+              >
                 <Link href="/" className="flex gap-2 text-lg md:text-base">
                   <ArrowLeft className="w-5 h-5" />
                   <span className="text-sm font-semibold lg:inline-block">
@@ -121,6 +129,20 @@ const Navbar = () => {
                 </Link>
               </div>
             )}
+
+            <div
+              className={cn('flex gap-8 md:hidden', {
+                hidden: pathname === '/checkout'
+              })}
+            >
+              {!pathname.includes('admin') && (
+                <div>
+                  <span className="self-center">
+                    <Checkout />
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
 
           <SheetContent side="left" className="bg-[#f3f4f6]">
