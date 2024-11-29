@@ -12,7 +12,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Button } from './ui/button';
 import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
@@ -40,6 +40,11 @@ const Navbar = () => {
     setIsSheetOpen(false);
     router.push(path);
   };
+
+  useEffect(() => {
+    intersection?.setIsIntersecting(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
 
   return (
     <>
@@ -147,7 +152,11 @@ const Navbar = () => {
 
           <SheetContent side="left" className="bg-[#f3f4f6]">
             <nav className="grid gap-6 text-lg font-medium">
-              <Link href="/" className="flex items-center gap-4">
+              <Link
+                href="/"
+                className="flex items-center gap-4"
+                onClick={() => setIsSheetOpen(false)}
+              >
                 <Image
                   src="/logo_nav.png"
                   width={50}
