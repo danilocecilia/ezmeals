@@ -7,7 +7,6 @@ import {
   CarouselNext,
   CarouselPrevious
 } from '@components/ui/carousel';
-import { useIsMobile } from '@hooks/use-mobile';
 import { useIntersection } from '@root/context/TargetRefContext';
 import { MealFeature } from '@types';
 import Image from 'next/image';
@@ -23,14 +22,13 @@ export function MealFeaturesCarousel({
   setSelectedMeal: (meal: MealFeature) => void;
   setIsModalOpen: (isOpen: boolean) => void;
 }) {
-  const isMobile = useIsMobile();
   const intersection = useIntersection();
   const setIsIntersecting = intersection?.setIsIntersecting;
 
   const { ref } = useInView({
     triggerOnce: false, // Keep triggering as long as it intersects
     onChange: (inView) => setIsIntersecting && setIsIntersecting(inView),
-    rootMargin: `0px 0px ${isMobile ? '-100%' : '17%'} 0px`
+    rootMargin: `0px 0px -100% 0px`
   });
 
   return (
